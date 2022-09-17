@@ -1,9 +1,9 @@
 media player
 
-- 라이브러리 다운
+라이브러리 다운
 
-$ npm install
+- $ npm install
 
-- start react app
+start react app
 
-$ npm start
+- $ npm start
