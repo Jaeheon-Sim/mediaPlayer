@@ -17,18 +17,32 @@ const Wrapper = styled.div`
   grid-template-columns: 75% 25%;
   justify-content: center;
   background-color: white;
-  width: 100%;
+  width: 95%;
+  @media screen and (max-width: 1000px) {
+    grid-template-columns: 100%;
+  }
 `;
 
+const VideoTab = styled.div`
+  height: 100%;
+  width: 100%;
+`;
+const BarTab = styled.div`
+  @media screen and (max-width: 1000px) {
+    display: none;
+  }
+`;
 export default function MediaPlayer() {
   return (
     <Hm>
       <Wrapper>
-        <div>
+        <VideoTab>
           <Player />
           <Controller />
-        </div>
-        <SideBar />
+        </VideoTab>
+        <BarTab>
+          <SideBar />
+        </BarTab>
       </Wrapper>
     </Hm>
   );

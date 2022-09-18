@@ -9,6 +9,7 @@ import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 import { faVolumeXmark } from "@fortawesome/free-solid-svg-icons";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
+import ProgressBar from "react-animated-progress-bar";
 
 const BarWarpper = styled.div`
   height: 10%;
@@ -32,6 +33,7 @@ const Icon = styled(FontAwesomeIcon)`
   font-size: 2vw;
   cursor: pointer;
   margin-left: 10px;
+  margin-right: 5px;
 `;
 export default function Controller() {
   return (
@@ -45,7 +47,9 @@ export default function Controller() {
           시간 : 시간
         </div>
         <div>
-          <Icon icon={faVolumeUp}></Icon>
+          <span>
+            <Icon icon={faVolumeUp} onClick={() => {}} />
+          </span>
           <Icon icon={faGear}></Icon>
           <Icon icon={faExpand}></Icon>
         </div>

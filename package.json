@@ -14,6 +14,7 @@
     "framer-motion": "^7.3.5",
     "macaddress": "^0.5.3",
     "react": "^18.2.0",
+    "react-animated-progress-bar": "^1.1.1",
     "react-dom": "^18.2.0",
     "react-player": "^2.11.0",
     "react-query": "^3.39.2",

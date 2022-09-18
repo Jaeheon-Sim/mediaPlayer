@@ -1,5 +1,10 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import styled from "styled-components";
+import Coding from "./Coding";
+import Data from "./Data";
+import List from "./List";
+import Question from "./Question";
 
 const BarWrapper = styled.div`
   display: flex;
@@ -11,7 +16,7 @@ const BarWrapper = styled.div`
 const NoticeTab = styled(motion.div)`
   border-bottom: 1px solid;
   width: 100%;
-  height: 2vh;
+  height: 4vh;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -19,33 +24,64 @@ const NoticeTab = styled(motion.div)`
 
 const Notice = styled(motion.div)`
   width: 25%;
+  height: 100%;
   border: 1px solid;
-  text-align: center;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  cursor: pointer;
 `;
 
 const ListTab = styled(motion.ol)`
   width: 100%;
-`;
-const List = styled(motion.li)`
-  width: 100%;
-  border: 1px solid;
+  height: 2.5vh;
 `;
 
 export default function SideBar() {
-  const list = [1, 2, 3, 4, 5];
+  const menuList = {
+    0: <List />,
+    1: <Data />,
+    2: <Question />,
+    3: <Coding />,
+  };
+
+  const [menu, setMenu] = useState(0);
+
   return (
     <BarWrapper>
       <NoticeTab>
-        <Notice>A</Notice>
-        <Notice>B</Notice>
-        <Notice>C</Notice>
-        <Notice>C</Notice>
+        <Notice
+          onClick={() => {
+            setMenu(0);
+          }}
+        >
+          강의 목록
+        </Notice>
+        <Notice
+          onClick={() => {
+            setMenu(1);
+          }}
+        >
+          수업 자료
+        </Notice>
+        <Notice
+          onClick={() => {
+            setMenu(2);
+          }}
+        >
+          수업 질문
+        </Notice>
+        <Notice
+          onClick={() => {
+            setMenu(3);
+          }}
+        >
+          과제
+        </Notice>
       </NoticeTab>
-      <ListTab>
-        {list.map((e) => {
-          return <List>{e}</List>;
-        })}
-      </ListTab>
+      <ListTab>{menuList[menu]}</ListTab>
     </BarWrapper>
   );
 }
