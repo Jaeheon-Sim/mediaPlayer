@@ -35,22 +35,28 @@ const Icon = styled(FontAwesomeIcon)`
   margin-left: 10px;
   margin-right: 5px;
 `;
+const ProgressBars = styled.div`
+  width: 100%;
+  height: 1vh;
+  background-color: grey;
+`;
 export default function Controller() {
   return (
     <BarWarpper>
-      <ProgressTab></ProgressTab>
+      <ProgressTab>
+        <ProgressBars />
+      </ProgressTab>
       <ControlTab>
         <div>
           <Icon icon={faBackwardStep}></Icon>
           <Icon icon={faPlay}></Icon>
           <Icon icon={faForwardStep}></Icon>
+          <Icon icon={faVolumeUp} onClick={() => {}} />
           시간 : 시간
         </div>
         <div>
-          <span>
-            <Icon icon={faVolumeUp} onClick={() => {}} />
-          </span>
           <Icon icon={faGear}></Icon>
+          pip 자막 배속
           <Icon icon={faExpand}></Icon>
         </div>
       </ControlTab>
