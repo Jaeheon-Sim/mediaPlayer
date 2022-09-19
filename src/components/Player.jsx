@@ -1,6 +1,9 @@
 import ReactPlayer from "react-player/lazy";
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { VideoAtom } from "../atom";
+import Controller from "./Controller";
 
 const Splayer = styled(ReactPlayer)`
   background-color: black;
@@ -10,29 +13,35 @@ const Splayer = styled(ReactPlayer)`
 `;
 
 export default function Player() {
-  const videoRef = useRef(null);
+  const videoRef = useRef(null); //props로 컨트롤러로 슉 넘겨
+  const videoVal = useRecoilValue(VideoAtom);
+
   return (
-    <Splayer
-      ref={videoRef}
-      url={
-        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-      }
-      playing={true} // 자동 재생 on
-      muted={true} // 자동 재생 on
-      controls={false} // 플레이어 컨트롤 노출 여부
-      light={false} // 플레이어 모드
-      pip={true} // pip 모드 설정 여부
-      poster={
-        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"
-      } // 플레이어 초기 포스터 사진
-      // playing={playing} // true = 재생중 / false = 멈춤
-      // controls={false} // 기본 컨트롤러 사용 x
-      // muted={muted} // 음소거인지
-      // volume={volume} // 소리조절 기능
-      // playbackRate={true} // 배속기능
-      // onProgress={progressHandler} // 재생 및 로드된 시점을 반환
-      width="100%"
-      height="90%"
-    />
+    <>
+      <Splayer
+        ref={videoRef}
+        url={
+          "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        }
+        playing={videoVal.playing}
+        muted={videoVal.muted}
+        controls={false} // 플레이어 컨트롤 노출 여부
+        // light={false} // 플레이어 모드
+        pip={videoVal.pip} // pip 모드 설정 여부
+        poster={
+          "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"
+        } // 플레이어 초기 포스터 사진
+        // playing={playing} // true = 재생중 / false = 멈춤
+        // controls={false} // 기본 컨트롤러 사용 x
+        loop={false} // 반복안함
+        volume={videoVal.volume} // 소리조절 기능
+        playbackRate={videoVal.playbackRate} // 배속기능
+        // onProgress={progressHandler} // 재생 및 로드된 시점을 반환
+        onEnded={() => {}}
+        width="100%"
+        height="90%"
+      />
+      <Controller video={videoRef} />
+    </>
   );
 }

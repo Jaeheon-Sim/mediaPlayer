@@ -1,11 +1,12 @@
 import { atom } from "recoil";
 
-export const isUserAtom = atom({
-  key: "isUser",
+export const VideoAtom = atom({
+  key: "isVideo",
   default: {
     playing: true, // 재생중인지
     muted: false, // 음소거인지
     controls: false, // 기본으로 제공되는 컨트롤러 사용할건지
+    pip: false, //pipmode
     volume: 0.5, // 볼륨크기
     playbackRate: 1.0, // 배속
     played: 0, // 재생의 정도 (value)

@@ -3,6 +3,8 @@ import Player from "./components/Player";
 import SideBar from "./components/SideBar";
 import { motion } from "framer-motion";
 import styled from "styled-components";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { VideoAtom } from "./atom";
 
 const Hm = styled.div`
   display: flex;
@@ -38,7 +40,6 @@ export default function MediaPlayer() {
       <Wrapper>
         <VideoTab>
           <Player />
-          <Controller />
         </VideoTab>
         <BarTab>
           <SideBar />

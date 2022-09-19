@@ -14,7 +14,7 @@ export default function List() {
   return (
     <>
       {list.map((e) => {
-        return <Catalog>{e}</Catalog>;
+        return <Catalog key={e}>{e}</Catalog>;
       })}
     </>
   );
