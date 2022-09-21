@@ -10,11 +10,12 @@ import { faVolumeXmark } from "@fortawesome/free-solid-svg-icons";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
 import { faPause } from "@fortawesome/free-solid-svg-icons";
-import ProgressBar from "react-animated-progress-bar";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { VideoAtom } from "../atom";
 import screenfull from "screenfull";
 import pip from "../images/pip.png";
+import Slider from "@mui/material/Slider";
+import { useEffect, useRef, useState } from "react";
 
 const BarWarpper = styled.div`
   height: 10%;
@@ -59,17 +60,34 @@ const IconTab = styled.div`
   display: flex;
   align-items: center;
 `;
+
+const VolumnTab = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 10px;
+`;
+
+const VolumeBar = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4vw;
+`;
+
 export default function Controller(vRef) {
   const videoRef = vRef;
   const videoVal = useRecoilValue(VideoAtom);
   const setVideoVal = useSetRecoilState(VideoAtom);
-
+  const VolumnRef = useRef(null);
+  const [barOn, setBar] = useState(false);
   const playHandler = () => {
     setVideoVal({ ...videoVal, playing: !videoVal.playing });
   };
 
   const fullHandler = () => {
     //커지면 다른것도 다커짐 그러니 state 이용해 css 변경하자
+    setVideoVal({ ...videoVal, muted: !videoVal.full });
     screenfull.toggle(videoRef.current);
   };
 
@@ -77,8 +95,43 @@ export default function Controller(vRef) {
     setVideoVal({ ...videoVal, muted: !videoVal.muted });
   };
 
+  const volumeChangeHandler = (e, newValue) => {
+    setVideoVal({
+      ...videoVal,
+      volume: parseFloat(newValue / 100),
+      muted: newValue === 0 ? true : false,
+    });
+  };
+
+  const volumeSeekUpHandler = (e, newValue) => {
+    setVideoVal({
+      ...videoVal,
+      volume: parseFloat(newValue / 100),
+      muted: newValue === 0 ? true : false,
+    });
+  };
+
   const pipHandler = () => {
     setVideoVal({ ...videoVal, pip: !videoVal.pip });
+  };
+
+  const BarOff = () => {
+    setBar(false);
+  };
+
+  const BarOn = () => {
+    setBar(true);
+  };
+
+  const TabVari = {
+    hover: {
+      scale: "1.1",
+    },
+    tap: { scale: 1 },
+    push: (i) => ({
+      backgroundColor: i ? "rgb(69, 90, 228)" : "rgb(217, 217, 217)",
+      color: i ? "white" : "black",
+    }),
   };
 
   return (
@@ -88,19 +141,42 @@ export default function Controller(vRef) {
       </ProgressTab>
       <ControlTab>
         <IconTab>
-          <Icon icon={faBackwardStep}></Icon>
-          {!videoVal.playing ? (
-            <Icon icon={faPlay} onClick={playHandler}></Icon>
-          ) : (
-            <Icon icon={faPause} onClick={playHandler}></Icon>
-          )}
+          <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
+            <Icon icon={faBackwardStep}></Icon>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.1 }}>
+            {!videoVal.playing ? (
+              <Icon icon={faPlay} onClick={playHandler}></Icon>
+            ) : (
+              <Icon icon={faPause} onClick={playHandler}></Icon>
+            )}
+          </motion.div>
           <Icon icon={faForwardStep}></Icon>
-          {!videoVal.muted ? (
-            <Icon icon={faVolumeXmark} onClick={muteHandler} />
-          ) : (
-            <Icon icon={faVolumeUp} onClick={muteHandler} />
-          )}
-          시간 : 시간
+          <VolumnTab onMouseEnter={BarOn} onMouseLeave={BarOff}>
+            {videoVal.muted ? (
+              <Icon icon={faVolumeXmark} onClick={muteHandler} />
+            ) : (
+              <Icon icon={faVolumeUp} onClick={muteHandler} />
+            )}
+            <VolumeBar animate={{ scale: barOn ? 1 : 0 }}>
+              <Slider
+                min={0}
+                max={100}
+                value={
+                  videoVal.muted
+                    ? 0
+                    : !videoVal.muted && videoVal.volume === 0
+                    ? 50
+                    : videoVal.volume * 100
+                }
+                onChange={volumeChangeHandler}
+                aria-label="Default"
+                // onMouseDown={onSeekMouseDown}
+                onChangeCommitted={volumeSeekUpHandler}
+                valueLabelDisplay="off"
+              />
+            </VolumeBar>
+          </VolumnTab>
         </IconTab>
         <IconTab>
           <Img src={pip} alt="no" onClick={pipHandler} />
