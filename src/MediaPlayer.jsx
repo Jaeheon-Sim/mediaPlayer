@@ -28,6 +28,7 @@ const Wrapper = styled.div`
 const VideoTab = styled.div`
   height: 100%;
   width: 100%;
+  position: relative;
 `;
 const BarTab = styled.div`
   @media screen and (max-width: 1000px) {

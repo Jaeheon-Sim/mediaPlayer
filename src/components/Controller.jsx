@@ -23,11 +23,20 @@ const BarWarpper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  background-color: white;
+  position: absolute;
+  background-color: transparent;
+  @media screen and (max-width: 1000px) {
+    bottom: 5px;
+  }
+  bottom: -5px;
+  color: white;
 `;
 
-const ProgressTab = styled.div``;
+const ProgressTab = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
 const ControlTab = styled.div`
   display: flex;
   align-items: flex-end;
@@ -43,6 +52,7 @@ const Icon = styled(FontAwesomeIcon)`
   height: 2.5vh;
 `;
 const ProgressBars = styled.div`
+  margin-left: 15px;
   width: 100%;
   height: 1vh;
   background-color: grey;
@@ -69,17 +79,47 @@ const VolumnTab = styled(motion.div)`
 `;
 
 const VolumeBar = styled(motion.div)`
+  margin-left: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 4vw;
 `;
 
+const RateTab = styled(motion.div)`
+  margin-left: 15px;
+  margin-right: 15px;
+  height: 100%;
+  position: relative;
+`;
+
+const RateBar = styled(motion.div)`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  bottom: 3vh;
+  background-color: black;
+  text-align: center;
+`;
+
+const Rate = styled.div`
+  border-bottom: 1px solid white;
+  width: 100%;
+  padding: 5px;
+`;
+
+const TimeTab = styled.div`
+  margin-left: 15px;
+  margin-right: 5px;
+`;
+
 export default function Controller(vRef) {
   const videoRef = vRef;
   const videoVal = useRecoilValue(VideoAtom);
   const setVideoVal = useSetRecoilState(VideoAtom);
-  const VolumnRef = useRef(null);
+  const [rateOn, setRate] = useState(false);
   const [barOn, setBar] = useState(false);
   const playHandler = () => {
     setVideoVal({ ...videoVal, playing: !videoVal.playing });
@@ -111,8 +151,23 @@ export default function Controller(vRef) {
     });
   };
 
+  const rewindHandler = () => {
+    videoRef.video.current.seekTo(videoRef.video.current.getCurrentTime() - 5);
+  };
+
+  const forwardHandler = () => {
+    videoRef.video.current.seekTo(videoRef.video.current.getCurrentTime() + 5);
+  };
+
   const pipHandler = () => {
     setVideoVal({ ...videoVal, pip: !videoVal.pip });
+  };
+
+  const playBackChangeHandler = (rate) => {
+    setVideoVal({
+      ...videoVal,
+      playbackRate: rate,
+    });
   };
 
   const BarOff = () => {
@@ -127,22 +182,23 @@ export default function Controller(vRef) {
     hover: {
       scale: "1.1",
     },
-    tap: { scale: 1 },
-    push: (i) => ({
-      backgroundColor: i ? "rgb(69, 90, 228)" : "rgb(217, 217, 217)",
-      color: i ? "white" : "black",
-    }),
+    // tap: { scale: 1 },
+    // push: (i) => ({
+    //   backgroundColor: i ? "rgb(69, 90, 228)" : "rgb(217, 217, 217)",
+    //   color: i ? "white" : "black",
+    // }),
   };
 
   return (
     <BarWarpper>
       <ProgressTab>
         <ProgressBars />
+        <TimeTab>0:00/0:00</TimeTab>
       </ProgressTab>
       <ControlTab>
         <IconTab>
           <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
-            <Icon icon={faBackwardStep}></Icon>
+            <Icon icon={faBackwardStep} onClick={rewindHandler}></Icon>
           </motion.div>
           <motion.div whileHover={{ scale: 1.1 }}>
             {!videoVal.playing ? (
@@ -151,7 +207,7 @@ export default function Controller(vRef) {
               <Icon icon={faPause} onClick={playHandler}></Icon>
             )}
           </motion.div>
-          <Icon icon={faForwardStep}></Icon>
+          <Icon icon={faForwardStep} onClick={forwardHandler}></Icon>
           <VolumnTab onMouseEnter={BarOn} onMouseLeave={BarOff}>
             {videoVal.muted ? (
               <Icon icon={faVolumeXmark} onClick={muteHandler} />
@@ -180,7 +236,30 @@ export default function Controller(vRef) {
         </IconTab>
         <IconTab>
           <Img src={pip} alt="no" onClick={pipHandler} />
-          자막 배속
+          자막
+          <RateTab
+            onClick={() => {
+              setRate((prev) => !prev);
+            }}
+          >
+            {videoVal.playbackRate}X
+            {rateOn ? (
+              <RateBar>
+                {[0.5, 0.75, 1, 1, 1.25, 1.5, 2].map((rate) => {
+                  return (
+                    <Rate
+                      onClick={() => {
+                        playBackChangeHandler(rate);
+                      }}
+                      key={rate}
+                    >
+                      {rate}x
+                    </Rate>
+                  );
+                })}
+              </RateBar>
+            ) : null}
+          </RateTab>
           <Icon icon={faGear}></Icon>
           <Icon icon={faExpand} onClick={fullHandler}></Icon>
         </IconTab>

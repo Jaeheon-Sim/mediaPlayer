@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { VideoAtom } from "../atom";
 import Controller from "./Controller";
+import { MotionConfig } from "framer-motion";
+import { motion } from "framer-motion";
 
 const Splayer = styled(ReactPlayer)`
   background-color: black;
@@ -19,14 +21,24 @@ const Clicker = styled.span`
   height: 100%;
   background-color: transparent;
 `;
-
+const CControl = styled.span`
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+`;
 export default function Player() {
   const videoRef = useRef(null); //props로 컨트롤러로 슉 넘겨
   const videoVal = useRecoilValue(VideoAtom);
   const setVideoVal = useSetRecoilState(VideoAtom);
-
+  const [controlOn, setControl] = useState(false);
+  const cOnHandler = () => {
+    setControl(true);
+  };
+  const cOffHandler = () => {
+    setControl(false);
+  };
   return (
-    <>
+    <CControl onMouseEnter={cOnHandler} onMouseLeave={cOffHandler}>
       <Clicker
         onClick={() => {
           setVideoVal({ ...videoVal, playing: !videoVal.playing });
@@ -53,10 +65,12 @@ export default function Player() {
           // onProgress={progressHandler} // 재생 및 로드된 시점을 반환
           onEnded={() => {}}
           width="100%"
-          height="90%"
+          height="100%"
         />
       </Clicker>
-      <Controller video={videoRef} />
-    </>
+      <motion.div animate={{ opacity: controlOn ? 1 : 0 }}>
+        <Controller video={videoRef} />
+      </motion.div>
+    </CControl>
   );
 }
