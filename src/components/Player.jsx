@@ -4,8 +4,10 @@ import styled from "styled-components";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { VideoAtom } from "../atom";
 import Controller from "./Controller";
-import { MotionConfig } from "framer-motion";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePause } from "@fortawesome/free-solid-svg-icons";
 
 const Splayer = styled(ReactPlayer)`
   background-color: black;
@@ -25,6 +27,17 @@ const CControl = styled.span`
   width: 100%;
   height: 100%;
   background-color: transparent;
+  position: relative;
+`;
+const PlayAni = styled(motion.div)`
+  position: absolute;
+  bottom: 38%;
+  right: 42%;
+`;
+const Icon = styled(FontAwesomeIcon)`
+  width: 150px;
+  height: 150px;
+  color: rgba(0, 0, 0, 0.5);
 `;
 export default function Player() {
   const videoRef = useRef(null); //props로 컨트롤러로 슉 넘겨
@@ -39,6 +52,21 @@ export default function Player() {
   };
   return (
     <CControl onMouseEnter={cOnHandler} onMouseLeave={cOffHandler}>
+      <AnimatePresence>
+        <PlayAni
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: videoVal.playing && controlOn ? 1 : 0,
+          }}
+          exit={{ opacity: 0 }}
+        >
+          {!videoVal.playing ? (
+            <Icon icon={faCirclePlay} />
+          ) : (
+            <Icon icon={faCirclePause} />
+          )}
+        </PlayAni>
+      </AnimatePresence>
       <Clicker
         onClick={() => {
           setVideoVal({ ...videoVal, playing: !videoVal.playing });

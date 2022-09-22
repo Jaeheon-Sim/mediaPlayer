@@ -13,6 +13,7 @@ export const VideoAtom = atom({
     seeking: false, // 재생바를 움직이고 있는지
     duration: 0, // 전체 시간
     full: false, // 전체모드
+    cc: false,
   },
   storage: sessionStorage,
 });
