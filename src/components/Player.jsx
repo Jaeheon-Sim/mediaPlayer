@@ -52,7 +52,6 @@ export default function Player() {
   };
 
   const progressHandler = (changeState) => {
-    console.log(changeState.played);
     if (!videoVal.seeking) {
       setVideoVal({ ...videoVal, played: changeState.played });
     }

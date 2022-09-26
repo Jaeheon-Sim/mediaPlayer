@@ -150,7 +150,7 @@ export default function Controller(vRef) {
       : "00:00";
 
   // 남은시간
-  const [lastTime, setLastTime] = useState("00:00");
+
   const elapsedTime = format(currentTime);
 
   // 영상 총 시간을 00:00 형식으로 바꾼다. (영상 하단 00:00/00:00 에 들어갈 부분)
@@ -272,14 +272,14 @@ export default function Controller(vRef) {
     <BarWarpper>
       <ProgressTab>
         <Slider
-          valueLabelDisplay="off"
+          valueLabelDisplay="auto"
           min={0}
           max={100}
           value={videoVal.played * 100}
           onChange={onSeekChangeHandler}
           onMouseDown={seekMouseDownHandler}
           onChangeCommitted={seekMouseUpHandler}
-          valueLabelFormat={valueLabelFormat}
+          valueLabelFormat={"~개의 질문이 있어요"}
         />
 
         <TimeTab>

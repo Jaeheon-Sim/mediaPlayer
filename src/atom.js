@@ -17,3 +17,5 @@ export const VideoAtom = atom({
   },
   storage: sessionStorage,
 });
+
+// cc 배속 on 아톰 만들어서 컨트롤바 내려가면 없어지게 해야함
