@@ -50,6 +50,14 @@ export default function Player() {
   const cOffHandler = () => {
     setControl(false);
   };
+
+  const progressHandler = (changeState) => {
+    console.log(changeState.played);
+    if (!videoVal.seeking) {
+      setVideoVal({ ...videoVal, played: changeState.played });
+    }
+  };
+
   return (
     <CControl onMouseEnter={cOnHandler} onMouseLeave={cOffHandler}>
       <AnimatePresence>
@@ -67,6 +75,34 @@ export default function Player() {
           )}
         </PlayAni>
       </AnimatePresence>
+      {/* {controlOn ? (
+        videoVal.playing ? (
+          <PlayAni
+            initial={{ scale: 0 }}
+            animate={{}}
+            transition={{
+              duration: 0.5,
+            }}
+          >
+            <Icon icon={faCirclePlay} />
+          </PlayAni>
+        ) : (
+          <PlayAni
+            initial={{ scale: 0 }}
+            whileTap={{
+              scale: 1,
+              transitionEnd: {
+                scale: 0,
+              },
+            }}
+            transition={{
+              duration: 0.5,
+            }}
+          >
+            <Icon icon={faCirclePause} />
+          </PlayAni>
+        )
+      ) : null} */}
       <Clicker
         onClick={() => {
           setVideoVal({ ...videoVal, playing: !videoVal.playing });
@@ -90,7 +126,7 @@ export default function Player() {
           loop={false} // 반복안함
           volume={videoVal.volume} // 소리조절 기능
           playbackRate={videoVal.playbackRate} // 배속기능
-          // onProgress={progressHandler} // 재생 및 로드된 시점을 반환
+          onProgress={progressHandler} // 재생 및 로드된 시점을 반환
           onEnded={() => {}}
           width="100%"
           height="100%"

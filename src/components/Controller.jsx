@@ -138,13 +138,30 @@ export default function Controller(vRef) {
   const [rateOn, setRate] = useState(false);
   const [ccOn, setCC] = useState(false);
   const [barOn, setBar] = useState(false);
+
+  const currentTime =
+    videoRef && videoRef.video.current
+      ? videoRef.video.current.getCurrentTime()
+      : "00:00";
+
+  const duration =
+    videoRef && videoRef.video.current
+      ? videoRef.video.current.getDuration()
+      : "00:00";
+
+  // 남은시간
+  const [lastTime, setLastTime] = useState("00:00");
+  const elapsedTime = format(currentTime);
+
+  // 영상 총 시간을 00:00 형식으로 바꾼다. (영상 하단 00:00/00:00 에 들어갈 부분)
+  const totalDuration = format(duration);
+
   const playHandler = () => {
     setVideoVal({ ...videoVal, playing: !videoVal.playing });
   };
 
   const fullHandler = () => {
     //커지면 다른것도 다커짐 그러니 state 이용해 css 변경하자
-
     screenfull.toggle(videoRef.video.context);
   };
 
@@ -217,23 +234,6 @@ export default function Controller(vRef) {
     setVideoVal({ ...videoVal, seeking: false });
     videoRef.video.current.seekTo(newValue / 100, "fraction");
   };
-
-  const currentTime =
-    videoRef && videoRef.video.current
-      ? videoRef.video.current.getCurrentTime()
-      : "00:00";
-  // 영상 총 시간
-
-  const duration =
-    videoRef && videoRef.video.current
-      ? videoRef.video.current.getDuration()
-      : "00:00";
-
-  // 남은시간
-  const elapsedTime = format(currentTime);
-
-  // 영상 총 시간을 00:00 형식으로 바꾼다. (영상 하단 00:00/00:00 에 들어갈 부분)
-  const totalDuration = format(duration);
 
   function format(seconds) {
     if (isNaN(seconds)) {
