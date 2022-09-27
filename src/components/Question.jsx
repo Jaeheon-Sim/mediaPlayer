@@ -13,15 +13,16 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  height: 100%;
 `;
 
 const Overlay = styled(motion.div)`
-  width: 100%;
-  height: 100%;
+  width: 95%;
+  height: 90%;
   position: absolute;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   background-color: rgba(0, 0, 0, 0.5);
 `;
 
@@ -54,38 +55,81 @@ const TitleBox = styled.div`
   width: 100%;
 `;
 
+const QuestionInfoBox = styled(TitleBox)`
+  justify-content: flex-end;
+  width: 90%;
+  margin-bottom: 20px;
+`;
+
 const QuestionBox = styled(motion.div)`
   width: 100%;
-  height: 100%;
+  height: 70vh;
+
+  /* display: flex;
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: nowrap; */
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   place-items: center center;
-  visibility: none;
+
+  overflow: auto;
+  /* @media screen and (max-height: 90vh) and (min-height: 617px) {
+    height: 30vh;
+  } */
 `;
 
 const QuestionTab = styled(motion.div)`
   width: 90%;
   text-align: center;
-  height: 150px;
+  height: 50px;
   border: 1px solid;
   margin-bottom: 10px;
   cursor: pointer;
 `;
 
 const Box = styled(motion.div)`
-  height: 30vh;
+  margin-top: 20px;
+  min-height: 70%;
   width: 90%;
   background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border: 1px solid;
+`;
+
+const Tab = styled.div`
+  margin: 0 10px;
 `;
 
 export default function Question() {
   // 질문 보내는 시간을 getCurrentTime를 이용해 저장해서 백으로 쏴
   const videoVal = useRecoilValue(VideoAtom);
+  const setVideoVal = useSetRecoilState(VideoAtom);
   const [type, setType] = useState(false);
+  const [qTitle, setQTitle] = useState("");
+  const [q, setQ] = useState("");
   const [clicked, setClicked] = useState(null);
   const toggle = (n) => {
     setClicked(n);
   };
+
+  const questionUpload = () => {
+    if (videoVal.playing === true) {
+      console.log("stop");
+      setVideoVal({ ...videoVal, playing: false });
+    } else {
+    }
+    const lecTime = videoVal.played;
+    console.log(lecTime);
+    console.log(qTitle);
+    console.log(q);
+    setVideoVal({ ...videoVal, playing: true });
+    console.log("play");
+  };
+
   return (
     <Wrapper>
       <CateBox>
@@ -109,63 +153,66 @@ export default function Question() {
       {type ? (
         <>
           <TitleBox>
-            <label for="title">제목</label>
-            <input id="title" placeholder="제목을 입력해주세요" />
+            <label htmlFor="title">제목</label>
+            <input
+              value={qTitle}
+              onChange={(e) => {
+                setQTitle(e.target.value);
+              }}
+              id="title"
+              placeholder="제목을 입력해주세요"
+            />
           </TitleBox>
-          <Input placeholder="강좌를 잠시 멈추고 질문을 등록해주세요" />
-          <button>질문하기</button>
+          <Input
+            value={q}
+            onChange={(e) => {
+              setQ(e.target.value);
+            }}
+            placeholder="질문을 등록해주세요"
+          />
+          <button onClick={questionUpload}>질문하기</button>
         </>
       ) : (
-        <QuestionBox>
-          {[1, 2, 3, 4, 5].map((e) => {
-            return (
-              <QuestionTab
-                onClick={() => {
-                  toggle(e);
-                }}
-                key={e}
-                layoutId={e}
-              >
-                <div>질문 {e}</div>
-                <div>답변상태:</div>
-              </QuestionTab>
-            );
-          })}
-          <AnimatePresence>
-            {clicked ? (
-              <Overlay
-                onClick={() => {
-                  setClicked(null);
-                }}
-                initial={{ backgroundColor: "rgba(0,0,0,0)" }}
-                animate={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-                exit={{ backgroundColor: "rgba(0,0,0,0)" }}
-              >
-                <Box layoutId={clicked} />
-              </Overlay>
-            ) : null}
-          </AnimatePresence>
-        </QuestionBox>
+        <>
+          <QuestionInfoBox>
+            <Tab>질문 수: 10</Tab>
+            <Tab>답변: 5</Tab>
+          </QuestionInfoBox>
+          <QuestionBox>
+            {[1, 2, 3, 4, 5, 6, 7].map((e) => {
+              return (
+                <QuestionTab
+                  onClick={() => {
+                    toggle(e);
+                  }}
+                  key={e}
+                  layoutId={e}
+                >
+                  <Tab>질문 {e}</Tab>
+                  <Tab>답변상태:</Tab>
+                </QuestionTab>
+              );
+            })}
+            <AnimatePresence>
+              {clicked ? (
+                <Overlay
+                  onClick={() => {
+                    setClicked(null);
+                  }}
+                  initial={{ backgroundColor: "rgba(0,0,0,0)" }}
+                  animate={{ backgroundColor: "rgba(0,0,0,0.8)" }}
+                  exit={{ backgroundColor: "rgba(0,0,0,0)" }}
+                >
+                  <Box layoutId={clicked}>
+                    <Tab>질문 {clicked}</Tab>
+                    <Tab>답변:</Tab>
+                  </Box>
+                </Overlay>
+              ) : null}
+            </AnimatePresence>
+          </QuestionBox>
+        </>
       )}
     </Wrapper>
   );
 }
-
-// const [selectedId, setSelectedId] = useState(null)
-
-// {items.map(item => (
-//   <motion.div layoutId={item.id} onClick={() => setSelectedId(item.id)}>
-//     <motion.h5>{item.subtitle}</motion.h5>
-//     <motion.h2>{item.title}</motion.h2>
-//   </motion.div>
-// ))}
-
-// <AnimatePresence>
-//   {selectedId && (
-//     <motion.div layoutId={selectedId}>
-//       <motion.h5>{item.subtitle}</motion.h5>
-//       <motion.h2>{item.title}</motion.h2>
-//       <motion.button onClick={() => setSelectedId(null)} />
-//     </motion.div>
-//   )}
-// </AnimatePresence>

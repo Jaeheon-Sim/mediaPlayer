@@ -16,11 +16,12 @@ const Hm = styled.div`
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 75% 25%;
+  /* height: 95vh; */
+  grid-template-columns: 78% 22%;
   justify-content: center;
   background-color: white;
-  width: 95%;
-  @media screen and (max-width: 1000px) {
+  width: 98%;
+  @media screen and (max-width: 1500px) {
     grid-template-columns: 100%;
   }
 `;
@@ -31,7 +32,8 @@ const VideoTab = styled.div`
   position: relative;
 `;
 const BarTab = styled.div`
-  @media screen and (max-width: 1000px) {
+  height: 100%;
+  @media screen and (max-width: 1500px) {
     display: none;
   }
 `;
