@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const Catalog = styled(motion.li)`
   width: 100%;
-  height: 100%;
+  height: 25px;
   border: 1px solid;
 `;
 

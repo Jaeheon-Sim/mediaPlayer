@@ -12,6 +12,17 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
+`;
+
+const Overlay = styled(motion.div)`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
 `;
 
 const CateBox = styled.div`
@@ -45,24 +56,36 @@ const TitleBox = styled.div`
 
 const QuestionBox = styled(motion.div)`
   width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   place-items: center center;
+  visibility: none;
 `;
 
 const QuestionTab = styled(motion.div)`
   width: 90%;
   text-align: center;
-  height: 50px;
+  height: 150px;
   border: 1px solid;
   margin-bottom: 10px;
   cursor: pointer;
 `;
+
+const Box = styled(motion.div)`
+  height: 30vh;
+  width: 90%;
+  background-color: white;
+`;
+
 export default function Question() {
   // 질문 보내는 시간을 getCurrentTime를 이용해 저장해서 백으로 쏴
   const videoVal = useRecoilValue(VideoAtom);
   const [type, setType] = useState(false);
-
+  const [clicked, setClicked] = useState(null);
+  const toggle = (n) => {
+    setClicked(n);
+  };
   return (
     <Wrapper>
       <CateBox>
@@ -93,19 +116,36 @@ export default function Question() {
           <button>질문하기</button>
         </>
       ) : (
-        <AnimatePresence>
-          <QuestionBox>
-            {[1, 2, 3, 4, 5].map((e) => {
-              return (
-                <QuestionTab className={e}>
-                  <div>질문 {e}</div>
-                  <div>답변상태:</div>
-                </QuestionTab>
-              );
-              // 클릭하면 커지게 하자 그래서 다 가리게 ㅇㅇ zindex 맨 위로 올려~
-            })}
-          </QuestionBox>
-        </AnimatePresence>
+        <QuestionBox>
+          {[1, 2, 3, 4, 5].map((e) => {
+            return (
+              <QuestionTab
+                onClick={() => {
+                  toggle(e);
+                }}
+                key={e}
+                layoutId={e}
+              >
+                <div>질문 {e}</div>
+                <div>답변상태:</div>
+              </QuestionTab>
+            );
+          })}
+          <AnimatePresence>
+            {clicked ? (
+              <Overlay
+                onClick={() => {
+                  setClicked(null);
+                }}
+                initial={{ backgroundColor: "rgba(0,0,0,0)" }}
+                animate={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+                exit={{ backgroundColor: "rgba(0,0,0,0)" }}
+              >
+                <Box layoutId={clicked} />
+              </Overlay>
+            ) : null}
+          </AnimatePresence>
+        </QuestionBox>
       )}
     </Wrapper>
   );
