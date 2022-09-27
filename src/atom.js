@@ -18,4 +18,13 @@ export const VideoAtom = atom({
   storage: sessionStorage,
 });
 
+export const RateAtom = atom({
+  key: "isRate",
+  default: false,
+});
+export const CCAtom = atom({
+  key: "isCC",
+  default: false,
+});
+
 // cc 배속 on 아톰 만들어서 컨트롤바 내려가면 없어지게 해야함

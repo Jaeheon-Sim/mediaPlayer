@@ -2,7 +2,7 @@ import ReactPlayer from "react-player/lazy";
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { VideoAtom } from "../atom";
+import { CCAtom, RateAtom, VideoAtom } from "../atom";
 import Controller from "./Controller";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -43,12 +43,16 @@ export default function Player() {
   const videoRef = useRef(null); //props로 컨트롤러로 슉 넘겨
   const videoVal = useRecoilValue(VideoAtom);
   const setVideoVal = useSetRecoilState(VideoAtom);
+  const setRateVal = useSetRecoilState(RateAtom);
+  const setCCVal = useSetRecoilState(CCAtom);
   const [controlOn, setControl] = useState(false);
   const cOnHandler = () => {
     setControl(true);
   };
   const cOffHandler = () => {
     setControl(false);
+    setRateVal(false);
+    setCCVal(false);
   };
 
   const progressHandler = (changeState) => {
@@ -115,7 +119,6 @@ export default function Player() {
           playing={videoVal.playing}
           muted={videoVal.muted}
           controls={false} // 플레이어 컨트롤 노출 여부
-          // light={false} // 플레이어 모드
           pip={videoVal.pip} // pip 모드 설정 여부
           poster={
             "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"

@@ -12,7 +12,7 @@ import { faPause } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning as regular } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { VideoAtom } from "../atom";
+import { CCAtom, RateAtom, VideoAtom } from "../atom";
 import screenfull from "screenfull";
 import pip from "../images/pip.png";
 import Slider from "@mui/material/Slider";
@@ -135,7 +135,10 @@ export default function Controller(vRef) {
   const videoRef = vRef;
   const videoVal = useRecoilValue(VideoAtom);
   const setVideoVal = useSetRecoilState(VideoAtom);
-  const [rateOn, setRate] = useState(false);
+  const rateVal = useRecoilValue(RateAtom);
+  const setRateVal = useSetRecoilState(RateAtom);
+  const CCVal = useRecoilValue(CCAtom);
+  const setCCVal = useSetRecoilState(CCAtom);
   const [ccOn, setCC] = useState(false);
   const [barOn, setBar] = useState(false);
 
@@ -330,13 +333,14 @@ export default function Controller(vRef) {
         <IconTab>
           <RateTab
             onClick={() => {
-              setRate((prev) => !prev);
+              setRateVal((prev) => !prev);
+              // setRate((prev) => !prev);
             }}
           >
             <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
               {videoVal.playbackRate}X
             </motion.div>
-            {rateOn ? (
+            {rateVal ? (
               <RateBar>
                 {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => {
                   return (
@@ -358,7 +362,7 @@ export default function Controller(vRef) {
           </motion.div>
           <RateTab
             onClick={() => {
-              setCC((prev) => !prev);
+              setCCVal((prev) => !prev);
             }}
           >
             <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
@@ -368,7 +372,7 @@ export default function Controller(vRef) {
                 <CIcon icon={regular}></CIcon>
               )}
             </motion.div>
-            {ccOn ? (
+            {CCVal ? (
               <RateBar style={{ bottom: "30px" }}>
                 <Cc onClick={ccHandler}>켜기</Cc>
                 <Cc onClick={ccHandler}>끄기</Cc>

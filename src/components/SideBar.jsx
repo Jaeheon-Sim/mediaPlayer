@@ -10,7 +10,7 @@ const BarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
 `;
 
 const NoticeTab = styled(motion.div)`
