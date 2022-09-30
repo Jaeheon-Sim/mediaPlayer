@@ -27,4 +27,18 @@ export const CCAtom = atom({
   default: false,
 });
 
+export const QuestionAtom = atom({
+  key: "isQuestion",
+  default: [],
+});
+
 // cc 배속 on 아톰 만들어서 컨트롤바 내려가면 없어지게 해야함
+export const NowQuestionAtom = atom({
+  key: "isNQuestion",
+  default: 0,
+});
+
+export const VideoTimeCheckAtom = atom({
+  key: "isVideoTimeCheckAtom",
+  default: 1,
+});

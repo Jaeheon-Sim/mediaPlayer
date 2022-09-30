@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import styled from "styled-components";
-import Coding from "./Coding";
+import Review from "./Review";
 import Data from "./Data";
 import List from "./List";
 import Question from "./Question";
@@ -10,7 +10,6 @@ const BarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgb(255, 255, 255);
 `;
 
 const NoticeTab = styled(motion.div)`
@@ -44,7 +43,7 @@ export default function SideBar() {
     0: <List />,
     1: <Data />,
     2: <Question />,
-    3: <Coding />,
+    3: <Review />,
   };
 
   const [menu, setMenu] = useState(0);
@@ -78,7 +77,7 @@ export default function SideBar() {
             setMenu(3);
           }}
         >
-          과제
+          강의 평가
         </Notice>
       </NoticeTab>
       <ListTab>{menuList[menu]}</ListTab>
