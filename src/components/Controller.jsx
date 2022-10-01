@@ -12,13 +12,7 @@ import { faPause } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning as regular } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  CCAtom,
-  NowQuestionAtom,
-  RateAtom,
-  VideoAtom,
-  VideoTimeCheckAtom,
-} from "../atom";
+import { CCAtom, RateAtom, VideoAtom, VideoTimeCheckAtom } from "../atom";
 import screenfull from "screenfull";
 import pip from "../images/pip.png";
 import Slider from "@mui/material/Slider";
@@ -143,14 +137,13 @@ export default function Controller(vRef) {
   const setVideoVal = useSetRecoilState(VideoAtom);
   const videoTimeVal = useRecoilValue(VideoTimeCheckAtom);
   const setVideoTimeVal = useSetRecoilState(VideoTimeCheckAtom);
-  const setNowQuestion = useSetRecoilState(NowQuestionAtom);
+
   const rateVal = useRecoilValue(RateAtom);
   const setRateVal = useSetRecoilState(RateAtom);
   const CCVal = useRecoilValue(CCAtom);
   const setCCVal = useSetRecoilState(CCAtom);
-  const [ccOn, setCC] = useState(false);
-  const [barOn, setBar] = useState(false);
 
+  const [barOn, setBar] = useState(false);
   const currentTime =
     videoRef && videoRef.video.current
       ? videoRef.video.current.getCurrentTime()
@@ -280,15 +273,14 @@ export default function Controller(vRef) {
     },
   };
 
-  console.log(videoVal.played * 1000, videoTimeVal * 100);
-  if (videoVal.played * 1000 > videoTimeVal * 100) {
-    setVideoTimeVal(videoTimeVal + 1);
-
-    // 뒤로가는 상황을 생각안했네...
-    // 로직을 새로 짜야할듯
-    // 단위에 맞게 쪼개서 이제 알아내야할거같음
-    // 현재는 뒤로갈때는 못 알아챔
+  if (
+    Math.trunc(currentTime / 60) !== videoTimeVal &&
+    videoRef &&
+    videoRef.video.current
+  ) {
+    setVideoTimeVal(Math.trunc(currentTime / 60));
   }
+
   return (
     <BarWarpper>
       <ProgressTab>

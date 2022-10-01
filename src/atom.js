@@ -14,6 +14,7 @@ export const VideoAtom = atom({
     duration: 0, // 전체 시간
     full: false, // 전체모드
     cc: false,
+    playedSec: 0,
   },
   storage: sessionStorage,
 });
@@ -28,17 +29,13 @@ export const CCAtom = atom({
 });
 
 export const QuestionAtom = atom({
+  //강의에 해당되는 질문들을 넣어놓는
   key: "isQuestion",
   default: [],
 });
 
-// cc 배속 on 아톰 만들어서 컨트롤바 내려가면 없어지게 해야함
-export const NowQuestionAtom = atom({
-  key: "isNQuestion",
-  default: 0,
-});
-
+// 비디오 진행 단계 체크 아톰
 export const VideoTimeCheckAtom = atom({
   key: "isVideoTimeCheckAtom",
-  default: 1,
+  default: 0,
 });

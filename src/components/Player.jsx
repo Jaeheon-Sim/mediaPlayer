@@ -57,7 +57,11 @@ export default function Player() {
 
   const progressHandler = (changeState) => {
     if (!videoVal.seeking) {
-      setVideoVal({ ...videoVal, played: changeState.played });
+      setVideoVal({
+        ...videoVal,
+        played: changeState.played,
+        playedSec: changeState.playedSeconds.toFixed(),
+      });
     }
   };
 

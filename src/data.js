@@ -14,14 +14,14 @@ export function Quest() {
       content: "이 내용 몰라요",
       reply: true,
       replyContent: "어쩌구저쩌구",
-      time: 1.3,
+      time: 0,
     },
     {
       title: "2",
       content: "이 내용 몰라요",
       reply: true,
       replyContent: "어쩌구저쩌구",
-      time: 12,
+      time: 0,
     },
 
     {
@@ -29,28 +29,28 @@ export function Quest() {
       content: "이 내용 몰라요",
       reply: false,
       replyContent: "",
-      time: 123,
+      time: 1,
     },
     {
       title: "4",
       content: "이 내용 몰라요",
       reply: false,
       replyContent: "",
-      time: 140,
+      time: 1,
     },
     {
       title: "5",
       content: "이 내용 몰라요",
       reply: false,
       replyContent: "",
-      time: 230,
+      time: 2,
     },
     {
       title: "6",
       content: "이 내용 몰라요",
       reply: false,
       replyContent: "",
-      time: 340,
+      time: 3,
     },
   ];
   return ques;

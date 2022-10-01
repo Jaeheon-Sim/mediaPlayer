@@ -73,6 +73,7 @@ const QuestionBox = styled(motion.div)`
   flex-direction: column;
   flex-wrap: nowrap; */
   display: grid;
+  // width 넓으면 4개로 늘리지 뭐
   grid-template-columns: repeat(2, 1fr);
 
   place-items: center center;
@@ -135,13 +136,17 @@ const Form = styled.form`
   flex-direction: column;
 `;
 
+const Div = styled.div`
+  cursor: pointer;
+`;
+
 export default function Question() {
   const videoVal = useRecoilValue(VideoAtom);
   const setVideoVal = useSetRecoilState(VideoAtom);
   const questionVal = useRecoilValue(QuestionAtom);
   const videoTimeVal = useRecoilValue(VideoTimeCheckAtom);
   const [type, setType] = useState(false);
-  const [nowQ, setNowQ] = useState([]);
+  const [nowQ, setNowQ] = useState(null);
   const [qTitle, setQTitle] = useState("");
   const [q, setQ] = useState("");
   const [clicked, setClicked] = useState(null);
@@ -151,24 +156,24 @@ export default function Question() {
     setNowQ(null);
 
     questionVal.map((e) => {
-      if (e.time < videoTimeVal * 100 && e.time > (videoTimeVal - 1) * 100) {
+      if (e.time === videoTimeVal) {
+        console.log("Sfdsdf");
         list.push(e);
       }
     });
-    console.log(list);
     setNowQ(list);
   };
   const toggle = (n) => {
+    console.log(n);
     setClicked(n);
   };
 
   const questionUpload = (e) => {
     e.preventDefault();
     if (videoVal.playing === true) {
-      console.log("stop");
       setVideoVal({ ...videoVal, playing: false });
     }
-    const lecTime = videoVal.played * 1000;
+    const lecTime = Math.trunc(videoVal.playedSec / 60); // 시간을 단계로 나눠
 
     const dummy = {
       title: qTitle,
@@ -178,14 +183,8 @@ export default function Question() {
       time: lecTime,
     };
 
-    setNowQ([...qTitle, dummy]);
-    //리액트플레이어에서의 시간 == 시간을 1분을 100으로 본다 그러니 이걸로 뭘 해야할듯
-    // 이 질문 내용 업그레이드 슉
-
-    //질문을 쏘고 여기서 내 질문을 업뎃하고 새로 질문을 보내버려 그래서 동기화 되는것처럼 보여줄까?
-
+    setNowQ([...nowQ, dummy]);
     setVideoVal({ ...videoVal, playing: true });
-    console.log("play");
   };
 
   // 100 단위로 바뀌는 atom을 만들어야겠어
@@ -238,11 +237,11 @@ export default function Question() {
       ) : (
         <>
           <QuestionInfoBox>
-            <Tab>질문 수: {questionVal.length}</Tab>
-            <Tab>답변: 5</Tab>
+            <Tab>질문 수: {nowQ?.length}</Tab>
+            <Tab>답변: ??</Tab>
           </QuestionInfoBox>
           <QuestionBox click={clicked}>
-            {nowQ.map((e, idx) => {
+            {nowQ?.map((e, idx) => {
               return (
                 <QuestionTab
                   onClick={() => {
@@ -256,6 +255,7 @@ export default function Question() {
                 </QuestionTab>
               );
             })}
+
             <AnimatePresence>
               {clicked ? (
                 <Overlay
@@ -266,17 +266,17 @@ export default function Question() {
                   animate={{
                     y: "25%",
                     height: "60vh",
-                    backgroundColor: "rgba(0,0,0,0.1)",
+                    backgroundColor: "rgba(0,0,0,0)",
                   }}
                   exit={{ height: "auto", backgroundColor: "rgba(0,0,0,0)" }}
                 >
                   <Box layoutId={clicked}>
                     <QBox>
                       <div>{nowQ[clicked - 1].title}</div>
-                      <div>나가기</div>
+                      <Div>나가기</Div>
                     </QBox>
                     답변
-                    <ReplyBox>{questionVal[clicked - 1].replyContent}</ReplyBox>
+                    <ReplyBox>{nowQ[clicked - 1].replyContent}</ReplyBox>
                   </Box>
                 </Overlay>
               ) : null}
