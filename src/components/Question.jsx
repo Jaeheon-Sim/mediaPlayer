@@ -7,19 +7,18 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { QuestionAtom, VideoAtom, VideoTimeCheckAtom } from "../atom";
 import { useEffect, useRef, useState } from "react";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-import { Quest } from "../data.js";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  justify-content: flex-start;
+
   height: 100%;
 `;
 
 const Overlay = styled(motion.div)`
-  width: 95%;
+  width: 90%;
   height: 90%;
   position: absolute;
   display: flex;
@@ -66,17 +65,18 @@ const QuestionInfoBox = styled(TitleBox)`
 
 const QuestionBox = styled(motion.div)`
   width: 100%;
-  max-height: 70vh;
+  height: 70vh;
   /* height: ${(props) => (props.click ? "70vh" : "auto")}; //props 활용 */
   /* display: flex;
   align-items: center;
   flex-direction: column;
   flex-wrap: nowrap; */
   display: grid;
+  position: relative;
   // width 넓으면 4개로 늘리지 뭐
   grid-template-columns: repeat(2, 1fr);
 
-  place-items: center center;
+  place-items: start center;
 
   overflow: auto;
   /* @media screen and (max-height: 90vh) and (min-height: 617px) {
@@ -86,7 +86,7 @@ const QuestionBox = styled(motion.div)`
 
 const QuestionTab = styled(motion.div)`
   padding: 1px;
-  width: 90%;
+  width: 80%;
   text-align: center;
   height: 49px;
   border: 1px solid;
@@ -241,21 +241,6 @@ export default function Question() {
             <Tab>답변: ??</Tab>
           </QuestionInfoBox>
           <QuestionBox click={clicked}>
-            {nowQ?.map((e, idx) => {
-              return (
-                <QuestionTab
-                  onClick={() => {
-                    toggle(idx + 1);
-                  }}
-                  key={idx + 1}
-                  layoutId={idx + 1}
-                >
-                  <Tab>{e.title}</Tab>
-                  <Tab>답변상태: {e.reply ? "YES" : "NO"}</Tab>
-                </QuestionTab>
-              );
-            })}
-
             <AnimatePresence>
               {clicked ? (
                 <Overlay
@@ -264,8 +249,9 @@ export default function Question() {
                   }}
                   initial={{ backgroundColor: "rgba(0,0,0,0)" }}
                   animate={{
-                    y: "25%",
-                    height: "60vh",
+                    y: "1px`",
+                    zIndex: "1",
+                    height: "80vh",
                     backgroundColor: "rgba(0,0,0,0)",
                   }}
                   exit={{ height: "auto", backgroundColor: "rgba(0,0,0,0)" }}
@@ -281,6 +267,20 @@ export default function Question() {
                 </Overlay>
               ) : null}
             </AnimatePresence>
+            {nowQ?.map((e, idx) => {
+              return (
+                <QuestionTab
+                  onClick={() => {
+                    toggle(idx + 1);
+                  }}
+                  key={idx + 1}
+                  layoutId={idx + 1}
+                >
+                  <Tab>{e.title}</Tab>
+                  <Tab>답변상태: {e.reply ? "YES" : "NO"}</Tab>
+                </QuestionTab>
+              );
+            })}
           </QuestionBox>
         </>
       )}

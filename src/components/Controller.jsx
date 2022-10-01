@@ -281,6 +281,9 @@ export default function Controller(vRef) {
     setVideoTimeVal(Math.trunc(currentTime / 60));
   }
 
+  useEffect(() => {
+    setVideoVal({ ...videoVal, duration: Math.trunc(duration) });
+  }, [duration]);
   return (
     <BarWarpper>
       <ProgressTab>

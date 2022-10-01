@@ -32,10 +32,12 @@ export const QuestionAtom = atom({
   //강의에 해당되는 질문들을 넣어놓는
   key: "isQuestion",
   default: [],
+  storage: sessionStorage,
 });
 
 // 비디오 진행 단계 체크 아톰
 export const VideoTimeCheckAtom = atom({
   key: "isVideoTimeCheckAtom",
   default: 0,
+  storage: sessionStorage,
 });
