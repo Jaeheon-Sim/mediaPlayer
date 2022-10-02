@@ -24,7 +24,6 @@ const Overlay = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  background-color: rgba(0, 0, 0, 0.5);
 `;
 
 const CateBox = styled.div`
@@ -92,6 +91,7 @@ const QuestionTab = styled(motion.div)`
   border: 1px solid;
   margin-bottom: 10px;
   cursor: pointer;
+  background-color: white;
 `;
 
 const Box = styled(motion.div)`

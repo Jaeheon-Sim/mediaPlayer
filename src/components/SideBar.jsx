@@ -32,6 +32,9 @@ const Notice = styled(motion.div)`
   align-items: center;
   flex-wrap: nowrap;
   cursor: pointer;
+  color: ${(props) =>
+    props.men === props.now ? "teal" : "black"}; //props 활용
+  border: 1px solid black;
 `;
 
 const ListTab = styled(motion.div)`
@@ -53,6 +56,8 @@ export default function SideBar() {
     <BarWrapper>
       <NoticeTab>
         <Notice
+          now={0}
+          men={menu}
           onClick={() => {
             setMenu(0);
           }}
@@ -60,6 +65,8 @@ export default function SideBar() {
           강의 목록
         </Notice>
         <Notice
+          now={1}
+          men={menu}
           onClick={() => {
             setMenu(1);
           }}
@@ -67,6 +74,8 @@ export default function SideBar() {
           수업 자료
         </Notice>
         <Notice
+          now={2}
+          men={menu}
           onClick={() => {
             setMenu(2);
           }}
@@ -74,6 +83,8 @@ export default function SideBar() {
           수업 질문
         </Notice>
         <Notice
+          now={3}
+          men={menu}
           onClick={() => {
             setMenu(3);
           }}

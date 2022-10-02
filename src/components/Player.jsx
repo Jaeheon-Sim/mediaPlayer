@@ -117,9 +117,13 @@ export default function Player() {
       >
         <Splayer
           ref={videoRef}
+          // url={
+          //   "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+          // }
           url={
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
           }
+          // url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
           playing={videoVal.playing}
           muted={videoVal.muted}
           controls={false} // 플레이어 컨트롤 노출 여부
