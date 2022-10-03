@@ -1,13 +1,14 @@
 import ReactPlayer from "react-player/lazy";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, forwardRef } from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { CCAtom, RateAtom, VideoAtom } from "../atom";
+import { CCAtom, FullAtom, RateAtom, VideoAtom } from "../atom";
 import Controller from "./Controller";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { faCirclePause } from "@fortawesome/free-solid-svg-icons";
+import screenfull from "screenfull";
 
 const Splayer = styled(ReactPlayer)`
   background-color: black;
@@ -23,11 +24,12 @@ const Clicker = styled.span`
   height: 100%;
   background-color: transparent;
 `;
-const CControl = styled.span`
+const CControl = styled(motion.span)`
   width: 100%;
   height: 100%;
   background-color: transparent;
   position: relative;
+  cursor: ${(props) => (props.mouse ? "default" : "none")}; //props 활용
 `;
 const PlayAni = styled(motion.div)`
   position: absolute;
@@ -39,16 +41,42 @@ const Icon = styled(FontAwesomeIcon)`
   height: 150px;
   color: rgba(0, 0, 0, 0.5);
 `;
+const ControlTab = styled(motion.div)`
+  z-index: 1;
+`;
 export default function Player() {
   const videoRef = useRef(null); //props로 컨트롤러로 슉 넘겨
+  const fullRef = useRef(null);
   const videoVal = useRecoilValue(VideoAtom);
+  const fullVal = useRecoilValue(FullAtom);
   const setVideoVal = useSetRecoilState(VideoAtom);
   const setRateVal = useSetRecoilState(RateAtom);
   const setCCVal = useSetRecoilState(CCAtom);
   const [controlOn, setControl] = useState(false);
+  let mouseX = 0;
+  const cMoveHandeler = (e) => {
+    setControl(true);
+    let timeout;
+    (() => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        if (mouseX === e.clientX) {
+          setControl(false);
+        } else {
+          mouseX = e.clientX;
+        }
+      }, 3000);
+    })();
+  };
   const cOnHandler = () => {
     setControl(true);
+    let timeout;
+    (() => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => setControl(false), 3000);
+    })();
   };
+
   const cOffHandler = () => {
     setControl(false);
     setRateVal(false);
@@ -65,8 +93,17 @@ export default function Player() {
     }
   };
 
+  useEffect(() => {
+    screenfull.toggle(fullRef.current);
+  }, [fullVal]);
+
   return (
-    <CControl onMouseEnter={cOnHandler} onMouseLeave={cOffHandler}>
+    <CControl
+      mouse={controlOn}
+      onMouseEnter={cOnHandler}
+      onMouseMove={cMoveHandeler}
+      onMouseLeave={cOffHandler}
+    >
       <AnimatePresence>
         <PlayAni
           initial={{ opacity: 0 }}
@@ -82,69 +119,52 @@ export default function Player() {
           )}
         </PlayAni>
       </AnimatePresence>
-      {/* {controlOn ? (
-        videoVal.playing ? (
-          <PlayAni
-            initial={{ scale: 0 }}
-            animate={{}}
-            transition={{
-              duration: 0.5,
-            }}
-          >
-            <Icon icon={faCirclePlay} />
-          </PlayAni>
-        ) : (
-          <PlayAni
-            initial={{ scale: 0 }}
-            whileTap={{
-              scale: 1,
-              transitionEnd: {
-                scale: 0,
-              },
-            }}
-            transition={{
-              duration: 0.5,
-            }}
-          >
-            <Icon icon={faCirclePause} />
-          </PlayAni>
-        )
-      ) : null} */}
-      <Clicker
-        onClick={() => {
-          setVideoVal({ ...videoVal, playing: !videoVal.playing });
-        }}
-      >
-        <Splayer
-          ref={videoRef}
-          // url={
-          //   "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-          // }
-          url={
-            "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-          }
-          // url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
-          playing={videoVal.playing}
-          muted={videoVal.muted}
-          controls={false} // 플레이어 컨트롤 노출 여부
-          pip={videoVal.pip} // pip 모드 설정 여부
-          poster={
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"
-          } // 플레이어 초기 포스터 사진
-          // playing={playing} // true = 재생중 / false = 멈춤
-          // controls={false} // 기본 컨트롤러 사용 x
-          loop={false} // 반복안함
-          volume={videoVal.volume} // 소리조절 기능
-          playbackRate={videoVal.playbackRate} // 배속기능
-          onProgress={progressHandler} // 재생 및 로드된 시점을 반환
-          onEnded={() => {}}
-          width="100%"
-          height="100%"
-        />
-      </Clicker>
-      <motion.div animate={{ opacity: controlOn ? 1 : 0 }}>
-        <Controller video={videoRef} />
-      </motion.div>
+
+      <div ref={fullRef}>
+        <Clicker
+          onClick={() => {
+            setVideoVal({ ...videoVal, playing: !videoVal.playing });
+          }}
+        >
+          <Splayer
+            ref={videoRef}
+            // url={
+            //   "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            // }
+            url={
+              "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+            }
+            // url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
+            playing={videoVal.playing}
+            muted={videoVal.muted}
+            controls={false} // 플레이어 컨트롤 노출 여부
+            pip={videoVal.pip} // pip 모드 설정 여부
+            poster={
+              "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"
+            } // 플레이어 초기 포스터 사진
+            // playing={playing} // true = 재생중 / false = 멈춤
+            // controls={false} // 기본 컨트롤러 사용 x
+            loop={false} // 반복안함
+            volume={videoVal.volume} // 소리조절 기능
+            playbackRate={videoVal.playbackRate} // 배속기능
+            onProgress={progressHandler} // 재생 및 로드된 시점을 반환
+            onEnded={() => {}}
+            width="100%"
+            height="100%"
+          />
+        </Clicker>
+        <ControlTab
+          onMouseOver={() => {
+            setControl(true);
+          }}
+          onMouseLeave={() => {
+            setControl(false);
+          }}
+          animate={{ opacity: controlOn ? 1 : 0 }}
+        >
+          <Controller video={videoRef} fullR={fullRef} />
+        </ControlTab>
+      </div>
     </CControl>
   );
 }

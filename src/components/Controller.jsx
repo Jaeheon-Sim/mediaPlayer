@@ -12,7 +12,13 @@ import { faPause } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning as regular } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { CCAtom, RateAtom, VideoAtom, VideoTimeCheckAtom } from "../atom";
+import {
+  CCAtom,
+  FullAtom,
+  RateAtom,
+  VideoAtom,
+  VideoTimeCheckAtom,
+} from "../atom";
 import screenfull from "screenfull";
 import pip from "../images/pip.png";
 import Slider from "@mui/material/Slider";
@@ -131,10 +137,12 @@ const TimeTab = styled.div`
   margin-right: 5px;
 `;
 
-export default function Controller(vRef) {
+export default function Controller(vRef, fRef) {
   const videoRef = vRef;
+  const fullRef = fRef;
   const videoVal = useRecoilValue(VideoAtom);
   const setVideoVal = useSetRecoilState(VideoAtom);
+  const setFullVal = useSetRecoilState(FullAtom);
   const videoTimeVal = useRecoilValue(VideoTimeCheckAtom);
   const setVideoTimeVal = useSetRecoilState(VideoTimeCheckAtom);
 
@@ -167,7 +175,8 @@ export default function Controller(vRef) {
 
   const fullHandler = () => {
     //커지면 다른것도 다커짐 그러니 state 이용해 css 변경하자
-    screenfull.toggle(videoRef.video.context);
+    // console.log(videoRef.video.current.wrapper);
+    setFullVal((prev) => !prev);
   };
 
   const muteHandler = () => {
@@ -208,11 +217,16 @@ export default function Controller(vRef) {
       playbackRate: rate,
     });
   };
-
-  const ccHandler = () => {
+  const ccFalse = () => {
     setVideoVal({
       ...videoVal,
-      cc: !videoVal.cc,
+      cc: false,
+    });
+  };
+  const ccTrue = () => {
+    setVideoVal({
+      ...videoVal,
+      cc: true,
     });
   };
 
@@ -304,7 +318,7 @@ export default function Controller(vRef) {
           onChange={onSeekChangeHandler}
           onMouseDown={seekMouseDownHandler}
           onChangeCommitted={seekMouseUpHandler}
-          valueLabelFormat={test}
+          // valueLabelFormat={test}
         />
 
         <TimeTab>
@@ -396,8 +410,8 @@ export default function Controller(vRef) {
             </motion.div>
             {CCVal ? (
               <RateBar style={{ bottom: "30px" }}>
-                <Cc onClick={ccHandler}>켜기</Cc>
-                <Cc onClick={ccHandler}>끄기</Cc>
+                <Cc onClick={ccTrue}>켜기</Cc>
+                <Cc onClick={ccFalse}>끄기</Cc>
               </RateBar>
             ) : null}
           </RateTab>

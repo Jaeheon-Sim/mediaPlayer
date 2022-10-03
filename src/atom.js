@@ -41,3 +41,9 @@ export const VideoTimeCheckAtom = atom({
   default: 0,
   storage: sessionStorage,
 });
+
+export const FullAtom = atom({
+  key: "isFullAtom",
+  default: false,
+  storage: sessionStorage,
+});

@@ -6,6 +6,13 @@ const Catalog = styled(motion.li)`
   height: 25px;
   border: 1px solid;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
+const Tab = styled.div`
+  margin-left: 15px;
 `;
 
 export default function List() {
@@ -15,7 +22,11 @@ export default function List() {
   return (
     <>
       {list.map((e) => {
-        return <Catalog key={e}>{e}</Catalog>;
+        return (
+          <Catalog key={e}>
+            <Tab>{e}</Tab>
+          </Catalog>
+        );
       })}
     </>
   );
