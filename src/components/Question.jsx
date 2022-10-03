@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 
 const Overlay = styled(motion.div)`
   width: 90%;
-  height: 90%;
+  height: 80vh;
   position: absolute;
   display: flex;
   justify-content: center;
@@ -249,10 +249,7 @@ export default function Question() {
                   }}
                   initial={{ backgroundColor: "rgba(0,0,0,0)" }}
                   animate={{
-                    y: "1px`",
                     zIndex: "1",
-                    height: "80vh",
-                    backgroundColor: "rgba(0,0,0,0)",
                   }}
                   exit={{ height: "auto", backgroundColor: "rgba(0,0,0,0)" }}
                 >

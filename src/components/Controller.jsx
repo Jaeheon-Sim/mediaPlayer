@@ -264,6 +264,15 @@ export default function Controller(vRef) {
     return _elapsedTime;
   };
 
+  const test = () => {
+    // 슬라이더 호버일때 그때의 이미지를 가져오면 되는데.. 어캐함?
+    return (
+      <div>
+        <img src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg" />
+      </div>
+    );
+  };
+
   const TabVari = {
     hover: {
       scale: "1.1",
@@ -295,7 +304,7 @@ export default function Controller(vRef) {
           onChange={onSeekChangeHandler}
           onMouseDown={seekMouseDownHandler}
           onChangeCommitted={seekMouseUpHandler}
-          valueLabelFormat={"~개의 질문이 있어요"}
+          valueLabelFormat={test}
         />
 
         <TimeTab>
