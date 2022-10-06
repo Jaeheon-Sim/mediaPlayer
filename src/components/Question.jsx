@@ -32,8 +32,7 @@ const CateBox = styled.div`
   justify-content: space-around;
   width: 100%;
   padding-top: 15px;
-  margin-bottom: 15px;
-  border-bottom: 1px solid;
+  margin-bottom: 13px;
 `;
 
 const CateTab = styled.div`
@@ -47,9 +46,28 @@ const CateTab = styled.div`
 const Input = styled.input`
   height: 250px;
   width: 80%;
+  background-color: #efefef;
+  &:focus {
+    background-color: white;
+    border: 0.5px soild black;
+  }
+  border: none;
+`;
+
+const TitleInput = styled.input`
+  width: 80%;
+  border: none;
+  border-bottom: 1px solid white;
+  background-color: #efefef;
+  &:focus {
+    background-color: white;
+    border: 0.5px soild black;
+  }
+  border-radius: 15px;
 `;
 
 const TitleBox = styled.div`
+  border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,6 +78,7 @@ const QuestionInfoBox = styled(TitleBox)`
   justify-content: flex-end;
   width: 90%;
   margin-bottom: 20px;
+  color: rgba(0, 0, 0, 0.7);
 `;
 
 const QuestionBox = styled(motion.div)`
@@ -74,10 +93,12 @@ const QuestionBox = styled(motion.div)`
   position: relative;
   // width 넓으면 4개로 늘리지 뭐
   grid-template-columns: repeat(2, 1fr);
+  background-color: #efefef;
 
   place-items: start center;
-
+  border-radius: 25px;
   overflow: auto;
+  padding-top: 10px;
   /* @media screen and (max-height: 90vh) and (min-height: 617px) {
     height: 30vh;
   } */
@@ -88,7 +109,7 @@ const QuestionTab = styled(motion.div)`
   width: 80%;
   text-align: center;
   height: 49px;
-  border: 1px solid;
+
   margin-bottom: 10px;
   cursor: pointer;
   background-color: white;
@@ -122,11 +143,9 @@ const QBox = styled.div`
 `;
 
 const ReplyBox = styled.div`
-  margin-top: 10px;
   height: 100%;
   width: 90%;
-  border: 1px solid;
-  padding: 20px 0px;
+  padding: 10px 0px;
 `;
 
 const Form = styled.form`
@@ -134,6 +153,9 @@ const Form = styled.form`
   display: flex;
   align-items: center;
   flex-direction: column;
+
+  height: 50vh;
+  justify-content: center;
 `;
 
 const Div = styled.div`
@@ -150,19 +172,19 @@ export default function Question() {
   const [qTitle, setQTitle] = useState("");
   const [q, setQ] = useState("");
   const [clicked, setClicked] = useState(null);
+  const [qData, setQData] = useState(false);
 
   const questionChecker = () => {
     var list = [];
     setNowQ(null);
-
     questionVal.map((e) => {
       if (e.time === videoTimeVal) {
-        console.log("Sfdsdf");
         list.push(e);
       }
     });
     setNowQ(list);
   };
+
   const toggle = (n) => {
     console.log(n);
     setClicked(n);
@@ -213,8 +235,8 @@ export default function Question() {
       {type ? (
         <Form>
           <TitleBox>
-            <label htmlFor="title">제목</label>
-            <input
+            <TitleInput
+              type="text"
               required
               value={qTitle}
               onChange={(e) => {
@@ -225,6 +247,7 @@ export default function Question() {
             />
           </TitleBox>
           <Input
+            type="text"
             required
             value={q}
             onChange={(e) => {
@@ -244,9 +267,6 @@ export default function Question() {
             <AnimatePresence>
               {clicked ? (
                 <Overlay
-                  onClick={() => {
-                    setClicked(null);
-                  }}
                   initial={{ backgroundColor: "rgba(0,0,0,0)" }}
                   animate={{
                     zIndex: "1",
@@ -256,10 +276,37 @@ export default function Question() {
                   <Box layoutId={clicked}>
                     <QBox>
                       <div>{nowQ[clicked - 1].title}</div>
-                      <Div>나가기</Div>
+                      <Div
+                        onClick={() => {
+                          setClicked(null);
+                        }}
+                      >
+                        나가기
+                      </Div>
                     </QBox>
-                    답변
-                    <ReplyBox>{nowQ[clicked - 1].replyContent}</ReplyBox>
+                    <CateBox>
+                      <CateTab
+                        type={qData}
+                        onClick={() => {
+                          setQData(true);
+                        }}
+                      >
+                        질문
+                      </CateTab>
+                      <CateTab
+                        type={!qData}
+                        onClick={() => {
+                          setQData(false);
+                        }}
+                      >
+                        답변
+                      </CateTab>
+                    </CateBox>
+                    {!qData ? (
+                      <ReplyBox>{nowQ[clicked - 1].replyContent}</ReplyBox>
+                    ) : (
+                      <ReplyBox>질문내용</ReplyBox>
+                    )}
                   </Box>
                 </Overlay>
               ) : null}

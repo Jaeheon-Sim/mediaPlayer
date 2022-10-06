@@ -34,7 +34,7 @@ const VideoTab = styled.div`
   position: relative;
 `;
 const BarTab = styled.div`
-  background-color: rgb(220, 217, 217);
+  margin-left: 10px;
   height: 100%;
   @media screen and (max-width: 1500px) {
     display: none;

@@ -27,7 +27,7 @@ import { useEffect, useRef, useState } from "react";
 const BarWarpper = styled.div`
   height: 10%;
   width: 100%;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -14,19 +14,20 @@ const BarWrapper = styled.div`
 `;
 
 const NoticeTab = styled(motion.div)`
-  border-bottom: 1px solid;
   width: 100%;
   height: 4vh;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+  font-weight: bolder;
 `;
 
 const Notice = styled(motion.div)`
   width: 25%;
   height: 100%;
-  border: 1px solid;
-
+  border-bottom: 1px solid;
+  margin-left: 3px;
+  margin-right: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -34,7 +35,6 @@ const Notice = styled(motion.div)`
   cursor: pointer;
   color: ${(props) =>
     props.men === props.now ? "teal" : "black"}; //props 활용
-  border: 1px solid black;
 `;
 
 const ListTab = styled(motion.div)`

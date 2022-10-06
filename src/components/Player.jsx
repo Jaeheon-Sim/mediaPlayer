@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { faCirclePause } from "@fortawesome/free-solid-svg-icons";
 import screenfull from "screenfull";
+import { STATICURL } from "../api.js";
 
 const Splayer = styled(ReactPlayer)`
   background-color: black;
@@ -65,7 +66,7 @@ export default function Player() {
         } else {
           mouseX = e.clientX;
         }
-      }, 3000);
+      }, 4000);
     })();
   };
   const cOnHandler = () => {
@@ -92,6 +93,21 @@ export default function Player() {
       });
     }
   };
+
+  // useEffect(() => {
+  //   console.log(STATICURL);
+  //   fetch(`${STATICURL}/hls`, {
+  //     method: "GET",
+  //     body: { fileName: "sample.mp4" },
+  //   })
+  //     .then((e) => e.json())
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
 
   useEffect(() => {
     screenfull.toggle(fullRef.current);

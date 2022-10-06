@@ -48,7 +48,7 @@ border-collapse: collapse;
 border-spacing: 0;
 }
 body{
-    background-color: black;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 
 `;
