@@ -120,7 +120,7 @@ export default function Player() {
   useEffect(() => {
     screenfull.toggle(fullRef.current);
   }, [fullVal]);
-  console.log(isBar);
+
   return (
     <CControl
       mouse={controlOn}

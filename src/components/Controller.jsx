@@ -28,7 +28,7 @@ import { useEffect, useRef, useState } from "react";
 const BarWarpper = styled.div`
   height: 10%;
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -136,6 +136,13 @@ const Cc = styled.div`
 const TimeTab = styled.div`
   margin-left: 15px;
   margin-right: 5px;
+`;
+
+const Div = styled(motion.div)`
+  cursor: pointer;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 25px;
 `;
 
 export default function Controller(vRef, fRef, props) {
@@ -373,7 +380,7 @@ export default function Controller(vRef, fRef, props) {
       <ControlTab>
         <IconTab>
           <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
-            <Icon icon={faBackwardStep} onClick={rewindHandler}></Icon>
+            <Div onClick={rewindHandler}>-3</Div>
           </motion.div>
           <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
             {!videoVal.playing ? (
@@ -383,7 +390,7 @@ export default function Controller(vRef, fRef, props) {
             )}
           </motion.div>
           <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
-            <Icon icon={faForwardStep} onClick={forwardHandler}></Icon>
+            <Div onClick={forwardHandler}>+3</Div>
           </motion.div>
           <VolumnTab onMouseEnter={BarOn} onMouseLeave={BarOff}>
             {videoVal.muted ? (

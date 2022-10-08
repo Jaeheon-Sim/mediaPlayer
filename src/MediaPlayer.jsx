@@ -44,20 +44,12 @@ const BarTab = styled.div`
 // 이 와이드 벨류를 풀스크린으로 하면 안될까?
 
 export default function MediaPlayer() {
-  // const QuestionVal = useRecoilValue(QuestionAtom);
   const setQuestionVal = useSetRecoilState(QuestionAtom);
-
-  const agent_str = navigator.userAgent;
 
   const questionDown = () => {
     const question = Quest();
     setQuestionVal(question);
   };
-
-  // 시간대를 1분마다 끊어 그럼
-  // 1분에 얼마나 배열이 있는지 찾아서 해당 시간내에 어떤 질문이있는지 파악
-  // 이 리스트 개수를 바에 올려
-  // 이 리스트를 섹셔넹 보여줘
 
   useEffect(questionDown, []);
 

@@ -11,6 +11,7 @@ const BarWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   height: 100%;
+  border-left: 1px solid #a8a7a7;
 `;
 
 const NoticeTab = styled(motion.div)`
@@ -35,6 +36,9 @@ const Notice = styled(motion.div)`
   cursor: pointer;
   color: ${(props) =>
     props.men === props.now ? "#a8a7a7" : "black"}; //props 활용
+  &:hover {
+    color: ${(props) => (props.men === props.now ? "white" : "black")};
+  }
 `;
 
 const ListTab = styled(motion.div)`

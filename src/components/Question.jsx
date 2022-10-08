@@ -42,7 +42,7 @@ const CateTab = styled(motion.div)`
   color: ${(props) => (props.type ? "teal" : "black")}; //props 활용
 `;
 
-const Input = styled.input`
+const Input = styled.textarea`
   height: 350px;
   width: 80%;
   background-color: #efefef;
@@ -51,10 +51,11 @@ const Input = styled.input`
     border: 0.5px soild black;
   }
   border: none;
+  margin-bottom: 10px;
 `;
 
 const TitleInput = styled.input`
-  width: 80%;
+  width: 70%;
   padding: 10px;
   border: none;
   border-bottom: 1px solid white;
@@ -161,6 +162,10 @@ const Div = styled.div`
   cursor: pointer;
 `;
 
+const Btn = styled(motion.button)`
+  cursor: pointer;
+`;
+
 export default function Question() {
   const videoVal = useRecoilValue(VideoAtom);
   const setVideoVal = useSetRecoilState(VideoAtom);
@@ -191,21 +196,26 @@ export default function Question() {
 
   const questionUpload = (e) => {
     e.preventDefault();
-    if (videoVal.playing === true) {
-      setVideoVal({ ...videoVal, playing: false });
+    if (qTitle === "" || q === "") {
+      alert("입력해");
+    } else {
+      if (videoVal.playing === true) {
+        setVideoVal({ ...videoVal, playing: false });
+      }
+      const lecTime = Math.trunc(videoVal.playedSec / 60); // 시간을 단계로 나눠
+
+      const dummy = {
+        title: qTitle,
+        content: q,
+        reply: false,
+        replyContent: "",
+        time: lecTime,
+      };
+
+      setNowQ([...nowQ, dummy]);
+      setVideoVal({ ...videoVal, playing: true });
+      alert("질문이 등록됨");
     }
-    const lecTime = Math.trunc(videoVal.playedSec / 60); // 시간을 단계로 나눠
-
-    const dummy = {
-      title: qTitle,
-      content: q,
-      reply: false,
-      replyContent: "",
-      time: lecTime,
-    };
-
-    setNowQ([...nowQ, dummy]);
-    setVideoVal({ ...videoVal, playing: true });
   };
 
   useEffect(questionChecker, [videoTimeVal]);
@@ -248,7 +258,6 @@ export default function Question() {
             />
           </TitleBox>
           <Input
-            type="textarea"
             required
             value={q}
             onChange={(e) => {
@@ -256,7 +265,13 @@ export default function Question() {
             }}
             placeholder="질문을 등록해주세요"
           />
-          <button onClick={questionUpload}>질문하기</button>
+          <Btn
+            onClick={questionUpload}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 1 }}
+          >
+            질문하기
+          </Btn>
         </Form>
       ) : (
         <>
