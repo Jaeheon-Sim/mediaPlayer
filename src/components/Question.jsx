@@ -83,7 +83,7 @@ const QuestionInfoBox = styled(TitleBox)`
 
 const QuestionBox = styled(motion.div)`
   width: 100%;
-  height: 70vh;
+  height: 61vh;
   /* height: ${(props) => (props.click ? "70vh" : "auto")}; //props 활용 */
   /* display: flex;
   align-items: center;
@@ -93,7 +93,6 @@ const QuestionBox = styled(motion.div)`
   position: relative;
   // width 넓으면 4개로 늘리지 뭐
   grid-template-columns: repeat(2, 1fr);
-  background-color: #efefef;
 
   place-items: start center;
   border-radius: 25px;
@@ -172,7 +171,7 @@ export default function Question() {
   const [qTitle, setQTitle] = useState("");
   const [q, setQ] = useState("");
   const [clicked, setClicked] = useState(null);
-  const [qData, setQData] = useState(false);
+  const [qData, setQData] = useState(true);
 
   const questionChecker = () => {
     var list = [];

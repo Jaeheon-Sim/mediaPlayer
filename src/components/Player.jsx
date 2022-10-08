@@ -2,7 +2,7 @@ import ReactPlayer from "react-player/lazy";
 import { useState, useEffect, useRef, forwardRef } from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { CCAtom, FullAtom, RateAtom, VideoAtom } from "../atom";
+import { CCAtom, FullAtom, RateAtom, SeekAtom, VideoAtom } from "../atom";
 import Controller from "./Controller";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -54,28 +54,34 @@ export default function Player() {
   const setRateVal = useSetRecoilState(RateAtom);
   const setCCVal = useSetRecoilState(CCAtom);
   const [controlOn, setControl] = useState(false);
+  const [isBar, setIsBar] = useState(false);
+  const seekVal = useRecoilValue(SeekAtom);
   let mouseX = 0;
   const cMoveHandeler = (e) => {
     setControl(true);
-    let timeout;
-    (() => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        if (mouseX === e.clientX) {
-          setControl(false);
-        } else {
-          mouseX = e.clientX;
-        }
-      }, 4000);
-    })();
+    if (!isBar) {
+      let timeout;
+      (() => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          if (mouseX === e.clientX && !isBar) {
+            setControl(false);
+          } else {
+            mouseX = e.clientX;
+          }
+        }, 4000);
+      })();
+    }
   };
   const cOnHandler = () => {
     setControl(true);
-    let timeout;
-    (() => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => setControl(false), 3000);
-    })();
+    if (!isBar) {
+      let timeout;
+      (() => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => setControl(false), 3000);
+      })();
+    }
   };
 
   const cOffHandler = () => {
@@ -85,12 +91,14 @@ export default function Player() {
   };
 
   const progressHandler = (changeState) => {
-    if (!videoVal.seeking) {
+    if (!seekVal) {
       setVideoVal({
         ...videoVal,
         played: changeState.played,
         playedSec: changeState.playedSeconds.toFixed(),
       });
+    } else {
+      console.log("hello");
     }
   };
 
@@ -112,7 +120,7 @@ export default function Player() {
   useEffect(() => {
     screenfull.toggle(fullRef.current);
   }, [fullVal]);
-
+  console.log(isBar);
   return (
     <CControl
       mouse={controlOn}
@@ -170,11 +178,11 @@ export default function Player() {
           />
         </Clicker>
         <ControlTab
-          onMouseOver={() => {
-            setControl(true);
+          onMouseEnter={() => {
+            setIsBar(true);
           }}
           onMouseLeave={() => {
-            setControl(false);
+            setIsBar(false);
           }}
           animate={{ opacity: controlOn ? 1 : 0 }}
         >

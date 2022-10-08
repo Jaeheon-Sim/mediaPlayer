@@ -47,3 +47,9 @@ export const FullAtom = atom({
   default: false,
   storage: sessionStorage,
 });
+
+export const SeekAtom = atom({
+  key: "isSeekAtom",
+  default: false,
+  storage: sessionStorage,
+});

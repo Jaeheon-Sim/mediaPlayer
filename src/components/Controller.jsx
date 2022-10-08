@@ -16,6 +16,7 @@ import {
   CCAtom,
   FullAtom,
   RateAtom,
+  SeekAtom,
   VideoAtom,
   VideoTimeCheckAtom,
 } from "../atom";
@@ -137,15 +138,17 @@ const TimeTab = styled.div`
   margin-right: 5px;
 `;
 
-export default function Controller(vRef, fRef) {
+export default function Controller(vRef, fRef, props) {
   const videoRef = vRef;
   const fullRef = fRef;
   const videoVal = useRecoilValue(VideoAtom);
+  const seekVal = useRecoilValue(SeekAtom);
+  const setSeekVal = useSetRecoilState(SeekAtom);
   const setVideoVal = useSetRecoilState(VideoAtom);
   const setFullVal = useSetRecoilState(FullAtom);
   const videoTimeVal = useRecoilValue(VideoTimeCheckAtom);
   const setVideoTimeVal = useSetRecoilState(VideoTimeCheckAtom);
-
+  const [sliderChange, setSliderChange] = useState(false);
   const rateVal = useRecoilValue(RateAtom);
   const setRateVal = useSetRecoilState(RateAtom);
   const CCVal = useRecoilValue(CCAtom);
@@ -245,12 +248,12 @@ export default function Controller(vRef, fRef) {
 
   // 재생 컨트롤러를 움직이고 있을 때 발생하는 함수
   const seekMouseDownHandler = (e) => {
-    setVideoVal({ ...videoVal, seeking: true });
+    setSeekVal(true);
   };
 
   // 재생 컨트롤러에서 조정을 완료했을 때 (slider onChangeCommitted시 발생하는 함수)
   const seekMouseUpHandler = (e, newValue) => {
-    setVideoVal({ ...videoVal, seeking: false });
+    setSeekVal(false);
     videoRef.video.current.seekTo(newValue / 100, "fraction");
   };
 
@@ -307,6 +310,7 @@ export default function Controller(vRef, fRef) {
   useEffect(() => {
     setVideoVal({ ...videoVal, duration: Math.trunc(duration) });
   }, [duration]);
+
   return (
     <BarWarpper>
       <ProgressTab>
@@ -318,7 +322,48 @@ export default function Controller(vRef, fRef) {
           onChange={onSeekChangeHandler}
           onMouseDown={seekMouseDownHandler}
           onChangeCommitted={seekMouseUpHandler}
-          // valueLabelFormat={test}
+          valueLabelFormat={valueLabelFormat}
+          sx={{
+            color: "#567FE8",
+            height: 4,
+            "& .MuiSlider-thumb": {
+              width: 8,
+              height: 8,
+
+              "&:before": {
+                boxShadow: "0 2px 12px 0 rgba(0,0,0,0.4)",
+              },
+              "&:hover, &.Mui-focusVisible": {
+                boxShadow: `0px 0px 0px 8px rgb(0 0 0 / 16%)`,
+              },
+              "&.Mui-active": {
+                width: 20,
+                height: 20,
+              },
+            },
+            "& .MuiSlider-rail": {
+              opacity: 0.28,
+            },
+            "& .MuiSlider-valueLabel": {
+              lineHeight: 1.2,
+              fontSize: 12,
+              background: "unset",
+              padding: 0,
+              width: 32,
+              height: 32,
+              borderRadius: "50% 50% 50% 0",
+              backgroundColor: "#567FE8",
+              transformOrigin: "bottom left",
+              transform: "translate(50%, -100%) rotate(-45deg) scale(0)",
+              "&:before": { display: "none" },
+              "&.MuiSlider-valueLabelOpen": {
+                transform: "translate(50%, -100%) rotate(-45deg) scale(1)",
+              },
+              "& > *": {
+                transform: "rotate(45deg)",
+              },
+            },
+          }}
         />
 
         <TimeTab>
@@ -361,6 +406,27 @@ export default function Controller(vRef, fRef) {
                 aria-label="Default"
                 onChangeCommitted={volumeSeekUpHandler}
                 valueLabelDisplay="off"
+                sx={{
+                  color: "#567FE8",
+                  height: 4,
+                  "& .MuiSlider-thumb": {
+                    width: 8,
+                    height: 8,
+                    "&:before": {
+                      boxShadow: "0 2px 12px 0 rgba(0,0,0,0.4)",
+                    },
+                    "&:hover, &.Mui-focusVisible": {
+                      boxShadow: `0px 0px 0px 8px rgb(0 0 0 / 16%)`,
+                    },
+                    "&.Mui-active": {
+                      width: 20,
+                      height: 20,
+                    },
+                  },
+                  "& .MuiSlider-rail": {
+                    opacity: 0.28,
+                  },
+                }}
               />
             </VolumeBar>
           </VolumnTab>
