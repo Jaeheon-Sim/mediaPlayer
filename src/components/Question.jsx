@@ -35,16 +35,15 @@ const CateBox = styled.div`
   margin-bottom: 13px;
 `;
 
-const CateTab = styled.div`
+const CateTab = styled(motion.div)`
   padding: 10px;
   text-align: center;
   cursor: pointer;
   color: ${(props) => (props.type ? "teal" : "black")}; //props 활용
-  /* background-color: #9f9e9e; */
 `;
 
 const Input = styled.input`
-  height: 250px;
+  height: 350px;
   width: 80%;
   background-color: #efefef;
   &:focus {
@@ -56,6 +55,7 @@ const Input = styled.input`
 
 const TitleInput = styled.input`
   width: 80%;
+  padding: 10px;
   border: none;
   border-bottom: 1px solid white;
   background-color: #efefef;
@@ -108,7 +108,7 @@ const QuestionTab = styled(motion.div)`
   width: 80%;
   text-align: center;
   height: 49px;
-
+  border: 1px solid white;
   margin-bottom: 10px;
   cursor: pointer;
   background-color: white;
@@ -208,8 +208,6 @@ export default function Question() {
     setVideoVal({ ...videoVal, playing: true });
   };
 
-  // 100 단위로 바뀌는 atom을 만들어야겠어
-
   useEffect(questionChecker, [videoTimeVal]);
   return (
     <Wrapper>
@@ -219,6 +217,8 @@ export default function Question() {
           onClick={() => {
             setType(false);
           }}
+          whileHover={{ y: -5 }}
+          whileTap={{ y: 0 }}
         >
           등록된 질문들
         </CateTab>
@@ -227,6 +227,8 @@ export default function Question() {
           onClick={() => {
             setType(true);
           }}
+          whileHover={{ y: -5 }}
+          whileTap={{ y: 0 }}
         >
           질문 등록
         </CateTab>
@@ -246,7 +248,7 @@ export default function Question() {
             />
           </TitleBox>
           <Input
-            type="text"
+            type="textarea"
             required
             value={q}
             onChange={(e) => {
@@ -313,6 +315,7 @@ export default function Question() {
             {nowQ?.map((e, idx) => {
               return (
                 <QuestionTab
+                  whileHover={{ border: "1px inset #000000" }}
                   onClick={() => {
                     toggle(idx + 1);
                   }}

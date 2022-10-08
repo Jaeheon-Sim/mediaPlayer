@@ -34,7 +34,7 @@ const Notice = styled(motion.div)`
   flex-wrap: nowrap;
   cursor: pointer;
   color: ${(props) =>
-    props.men === props.now ? "teal" : "black"}; //props 활용
+    props.men === props.now ? "#a8a7a7" : "black"}; //props 활용
 `;
 
 const ListTab = styled(motion.div)`
@@ -61,6 +61,7 @@ export default function SideBar() {
           onClick={() => {
             setMenu(0);
           }}
+          whileHover={{ backgroundColor: "#a8a7a7" }}
         >
           강의 목록
         </Notice>
@@ -70,6 +71,7 @@ export default function SideBar() {
           onClick={() => {
             setMenu(1);
           }}
+          whileHover={{ backgroundColor: "#a8a7a7" }}
         >
           수업 자료
         </Notice>
@@ -79,6 +81,7 @@ export default function SideBar() {
           onClick={() => {
             setMenu(2);
           }}
+          whileHover={{ backgroundColor: "#a8a7a7" }}
         >
           수업 질문
         </Notice>
@@ -88,6 +91,7 @@ export default function SideBar() {
           onClick={() => {
             setMenu(3);
           }}
+          whileHover={{ backgroundColor: "#a8a7a7" }}
         >
           강의 평가
         </Notice>

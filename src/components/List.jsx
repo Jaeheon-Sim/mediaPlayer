@@ -24,7 +24,7 @@ export default function List() {
     <>
       {list.map((e, idx) => {
         return (
-          <Catalog key={idx}>
+          <Catalog key={idx} whileHover={{ backgroundColor: "#dfdede" }}>
             <Tab>{e}</Tab>
           </Catalog>
         );
