@@ -39,7 +39,8 @@ const CateTab = styled(motion.div)`
   padding: 10px;
   text-align: center;
   cursor: pointer;
-  color: ${(props) => (props.type ? "teal" : "black")}; //props 활용
+  color: ${(props) => (props.type ? " #a8a7a7" : "black")}; //props 활용
+  border-bottom: 1px solid ${(props) => (props.type ? " #a8a7a7" : "none")}; ;
 `;
 
 const Input = styled.textarea`

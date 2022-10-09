@@ -17,6 +17,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
     "framer-motion": "^7.3.5",
+    "gh-pages": "^4.0.0",
     "macaddress": "^0.5.3",
     "mui": "^0.0.1",
     "react": "^18.2.0",
@@ -35,7 +36,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build",
+    "predeploy": "npm run build"
   },
   "eslintConfig": {
     "extends": [
@@ -54,5 +57,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "homepage": "https://jaeheon-sim.github.io/mediaPlayer/"
 }

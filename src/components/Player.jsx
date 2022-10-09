@@ -45,6 +45,11 @@ const Icon = styled(FontAwesomeIcon)`
 const ControlTab = styled(motion.div)`
   z-index: 1;
 `;
+
+const LoadingPlayer = styled(motion.div)`
+  height: 90vh;
+`;
+
 export default function Player() {
   const videoRef = useRef(null); //props로 컨트롤러로 슉 넘겨
   const fullRef = useRef(null);
@@ -55,7 +60,9 @@ export default function Player() {
   const setCCVal = useSetRecoilState(CCAtom);
   const [controlOn, setControl] = useState(false);
   const [isBar, setIsBar] = useState(false);
+  const [url, setURL] = useState("");
   const seekVal = useRecoilValue(SeekAtom);
+  const courseName = "sample";
   let mouseX = 0;
   const cMoveHandeler = (e) => {
     setControl(true);
@@ -102,20 +109,19 @@ export default function Player() {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(STATICURL);
-  //   fetch(`${STATICURL}/hls`, {
-  //     method: "GET",
-  //     body: { fileName: "sample.mp4" },
-  //   })
-  //     .then((e) => e.json())
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
+  useEffect(() => {
+    fetch(`${STATICURL}/hls/${courseName}`, {
+      method: "GET",
+    })
+      .then((e) => e.json())
+      .then((res) => {
+        console.log(res);
+        setURL(`http://34.64.197.110${res.data}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   useEffect(() => {
     screenfull.toggle(fullRef.current);
@@ -143,52 +149,63 @@ export default function Player() {
           )}
         </PlayAni>
       </AnimatePresence>
-
-      <div ref={fullRef}>
-        <Clicker
-          onClick={() => {
-            setVideoVal({ ...videoVal, playing: !videoVal.playing });
+      {url === "" ? (
+        <LoadingPlayer
+          initial={{ backgroundColor: "#d4d4d4" }}
+          animate={{ backgroundColor: "#aaa9a9" }}
+          transition={{
+            ease: "easeInOut",
+            repeat: Infinity,
+            repeatType: "reverse",
+            repeatDelay: 0.5,
           }}
-        >
-          <Splayer
-            ref={videoRef}
-            // url={
-            //   "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            // }
-            url={
-              "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-            }
-            // url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
-            playing={videoVal.playing}
-            muted={videoVal.muted}
-            controls={false} // 플레이어 컨트롤 노출 여부
-            pip={videoVal.pip} // pip 모드 설정 여부
-            poster={
-              "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"
-            } // 플레이어 초기 포스터 사진
-            // playing={playing} // true = 재생중 / false = 멈춤
-            // controls={false} // 기본 컨트롤러 사용 x
-            loop={false} // 반복안함
-            volume={videoVal.volume} // 소리조절 기능
-            playbackRate={videoVal.playbackRate} // 배속기능
-            onProgress={progressHandler} // 재생 및 로드된 시점을 반환
-            onEnded={() => {}}
-            width="100%"
-            height="100%"
-          />
-        </Clicker>
-        <ControlTab
-          onMouseEnter={() => {
-            setIsBar(true);
-          }}
-          onMouseLeave={() => {
-            setIsBar(false);
-          }}
-          animate={{ opacity: controlOn ? 1 : 0 }}
-        >
-          <Controller video={videoRef} fullR={fullRef} />
-        </ControlTab>
-      </div>
+        ></LoadingPlayer>
+      ) : (
+        <div ref={fullRef}>
+          <Clicker
+            onClick={() => {
+              setVideoVal({ ...videoVal, playing: !videoVal.playing });
+            }}
+          >
+            <Splayer
+              ref={videoRef}
+              // url={
+              //   "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+              // }
+              // url={
+              //   "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+              // }
+              // url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
+              url={url}
+              playing={videoVal.playing}
+              muted={videoVal.muted}
+              controls={false} // 플레이어 컨트롤 노출 여부
+              pip={videoVal.pip} // pip 모드 설정 여부
+              poster={
+                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"
+              } // 플레이어 초기 포스터 사진
+              loop={false} // 반복안함
+              volume={videoVal.volume} // 소리조절 기능
+              playbackRate={videoVal.playbackRate} // 배속기능
+              onProgress={progressHandler} // 재생 및 로드된 시점을 반환
+              onEnded={() => {}}
+              width="100%"
+              height="100%"
+            />
+          </Clicker>
+          <ControlTab
+            onMouseEnter={() => {
+              setIsBar(true);
+            }}
+            onMouseLeave={() => {
+              setIsBar(false);
+            }}
+            animate={{ opacity: controlOn ? 1 : 0 }}
+          >
+            <Controller video={videoRef} fullR={fullRef} />
+          </ControlTab>
+        </div>
+      )}
     </CControl>
   );
 }
