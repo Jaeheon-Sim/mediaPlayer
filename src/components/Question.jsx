@@ -183,7 +183,7 @@ export default function Question() {
     var list = [];
     setNowQ(null);
     questionVal.map((e) => {
-      if (e.time === videoTimeVal) {
+      if (e.time <= videoTimeVal + 5 && e.time >= videoTimeVal - 5) {
         list.push(e);
       }
     });

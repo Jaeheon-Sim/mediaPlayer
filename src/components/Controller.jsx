@@ -22,6 +22,8 @@ import {
 } from "../atom";
 import screenfull from "screenfull";
 import pip from "../images/pip.png";
+import forward from "../images/plus.png";
+import rewind from "../images/minus.png";
 import Slider from "@mui/material/Slider";
 import { useEffect, useRef, useState } from "react";
 
@@ -76,6 +78,12 @@ const Img = styled.img`
   margin-right: 10px;
   width: 2.5vh;
   height: 2.5vh;
+`;
+
+const PRImg = styled(Img)`
+  width: 3.5vh;
+  height: 3.5vh;
+  margin-top: 3px;
 `;
 
 const IconTab = styled.div`
@@ -380,7 +388,7 @@ export default function Controller(vRef, fRef, props) {
       <ControlTab>
         <IconTab>
           <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
-            <Div onClick={rewindHandler}>-3</Div>
+            <PRImg src={rewind} alt="no" onClick={rewindHandler} />
           </motion.div>
           <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
             {!videoVal.playing ? (
@@ -389,8 +397,13 @@ export default function Controller(vRef, fRef, props) {
               <Icon icon={faPause} onClick={playHandler}></Icon>
             )}
           </motion.div>
-          <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
-            <Div onClick={forwardHandler}>+3</Div>
+          <motion.div
+            style={{ marginLeft: "-2.7px" }}
+            variants={TabVari}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            <PRImg src={forward} alt="no" onClick={forwardHandler} />
           </motion.div>
           <VolumnTab onMouseEnter={BarOn} onMouseLeave={BarOff}>
             {videoVal.muted ? (
