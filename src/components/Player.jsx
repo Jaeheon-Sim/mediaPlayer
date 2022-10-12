@@ -109,19 +109,20 @@ export default function Player() {
     }
   };
 
-  // useEffect(() => {
-  //   fetch(`${STATICURL}/hls/${courseName}`, {
-  //     method: "GET",
-  //   })
-  //     .then((e) => e.json())
-  //     .then((res) => {
-  //       console.log(res);
-  //       setURL(`http://34.64.197.110${res.data}`);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
+  useEffect(() => {
+    fetch(`${STATICURL}/hls/${courseName}`, {
+      method: "GET",
+    })
+      .then((e) => e.json())
+      .then((res) => {
+        console.log(res);
+        setURL(`http://34.64.197.110${res.data}`);
+        setURL("https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   useEffect(() => {
     screenfull.toggle(fullRef.current);
@@ -149,7 +150,7 @@ export default function Player() {
           )}
         </PlayAni>
       </AnimatePresence>
-      {url === "s" ? (
+      {url === "" ? (
         <LoadingPlayer
           initial={{ backgroundColor: "#d4d4d4" }}
           animate={{ backgroundColor: "#aaa9a9" }}
@@ -175,8 +176,8 @@ export default function Player() {
               // url={
               //   "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
               // }
-              url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
-              // url={url}
+              // url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
+              url={url}
               playing={videoVal.playing}
               muted={videoVal.muted}
               controls={false} // 플레이어 컨트롤 노출 여부

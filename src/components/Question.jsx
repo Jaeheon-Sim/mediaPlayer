@@ -51,13 +51,14 @@ const Input = styled.textarea`
     background-color: white;
     border: 0.5px soild black;
   }
-  border: none;
+  /* border: none; */
   margin-bottom: 10px;
 `;
 
 const TitleInput = styled.input`
   width: 70%;
   padding: 10px;
+  margin-bottom: 2px;
   border: none;
   border-bottom: 1px solid white;
   background-color: #efefef;
@@ -333,6 +334,7 @@ export default function Question() {
                 <QuestionTab
                   whileHover={{ border: "1px inset #000000" }}
                   onClick={() => {
+                    setQData(true);
                     toggle(idx + 1);
                   }}
                   key={idx + 1}

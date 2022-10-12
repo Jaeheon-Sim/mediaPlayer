@@ -82,3 +82,5 @@ export default function List() {
     </Wrapper>
   );
 }
+
+// 리스트클릭 -> 해당 강의 유닛 받아와서 -> url을 바꾸자(reload())

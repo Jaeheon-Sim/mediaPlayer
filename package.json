@@ -26,6 +26,7 @@
     "react-player": "^2.11.0",
     "react-query": "^3.39.2",
     "react-scripts": "5.0.1",
+    "react-sweetalert2": "^0.5.2",
     "recoil": "^0.7.5",
     "screenfull": "^6.0.2",
     "styled-component": "^2.8.0",
