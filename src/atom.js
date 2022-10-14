@@ -28,6 +28,11 @@ export const CCAtom = atom({
   default: false,
 });
 
+export const GearAtom = atom({
+  key: "isGear",
+  default: false,
+});
+
 export const QuestionAtom = atom({
   //강의에 해당되는 질문들을 넣어놓는
   key: "isQuestion",

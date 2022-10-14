@@ -2,7 +2,14 @@ import ReactPlayer from "react-player/lazy";
 import { useState, useEffect, useRef, forwardRef } from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { CCAtom, FullAtom, RateAtom, SeekAtom, VideoAtom } from "../atom";
+import {
+  CCAtom,
+  FullAtom,
+  GearAtom,
+  RateAtom,
+  SeekAtom,
+  VideoAtom,
+} from "../atom";
 import Controller from "./Controller";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -55,6 +62,7 @@ export default function Player() {
   const fullRef = useRef(null);
   const videoVal = useRecoilValue(VideoAtom);
   const fullVal = useRecoilValue(FullAtom);
+  const setGearVal = useSetRecoilState(GearAtom);
   const setVideoVal = useSetRecoilState(VideoAtom);
   const setRateVal = useSetRecoilState(RateAtom);
   const setCCVal = useSetRecoilState(CCAtom);
@@ -95,6 +103,7 @@ export default function Player() {
     setControl(false);
     setRateVal(false);
     setCCVal(false);
+    setGearVal(false);
   };
 
   const progressHandler = (changeState) => {
@@ -110,17 +119,21 @@ export default function Player() {
   };
 
   useEffect(() => {
-    fetch(`${STATICURL}/front/hls/${courseName}`, {
-      method: "GET",
-    })
-      .then((e) => e.json())
-      .then((res) => {
-        console.log(res);
-        setURL(`http://34.64.197.110${res.data}`);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // fetch(`${STATICURL}/front/hls/${courseName}`, {
+    //   method: "GET",
+    // })
+    //   .then((e) => e.json())
+    //   .then((res) => {
+    //     console.log(res);
+    //     setURL(`http://34.64.197.110${res.data}`);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    // 지금은 임시방편 하지만 나중에는 비동기로 설정하자
+    // setTimeout(() => {
+    //   videoRef?.current?.seekTo(0.3);
+    // }, 3500);
   }, []);
 
   useEffect(() => {
@@ -151,7 +164,7 @@ export default function Player() {
           )}
         </PlayAni>
       </AnimatePresence>
-      {url === "" ? (
+      {url === "s" ? (
         <LoadingPlayer
           initial={{ backgroundColor: "#d4d4d4" }}
           animate={{ backgroundColor: "#aaa9a9" }}
@@ -174,11 +187,11 @@ export default function Player() {
               // url={
               //   "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
               // }
-              // url={
-              //   "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-              // }
+              url={
+                "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+              }
               // url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
-              url={url}
+              // url={url}
               playing={videoVal.playing}
               muted={videoVal.muted}
               controls={false} // 플레이어 컨트롤 노출 여부
@@ -190,9 +203,16 @@ export default function Player() {
               volume={videoVal.volume} // 소리조절 기능
               playbackRate={videoVal.playbackRate} // 배속기능
               onProgress={progressHandler} // 재생 및 로드된 시점을 반환
+              light={false}
               onEnded={() => {}}
+              onError={() => {}}
               width="100%"
               height="100%"
+              // config={{
+              //   file: {
+              //     forceAudio: {},
+              //   },
+              // }}
             />
           </Clicker>
           <ControlTab

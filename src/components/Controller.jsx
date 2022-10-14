@@ -11,10 +11,16 @@ import { faExpand } from "@fortawesome/free-solid-svg-icons";
 import { faPause } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning as regular } from "@fortawesome/free-regular-svg-icons";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from "recoil";
 import {
   CCAtom,
   FullAtom,
+  GearAtom,
   RateAtom,
   SeekAtom,
   VideoAtom,
@@ -117,6 +123,11 @@ const RateTab = styled(motion.div)`
   cursor: pointer;
 `;
 
+const GearTab = styled(RateTab)`
+  margin-left: 0px;
+  margin-right: 0px;
+`;
+
 const RateBar = styled(motion.div)`
   position: absolute;
   display: flex;
@@ -128,14 +139,19 @@ const RateBar = styled(motion.div)`
   text-align: center;
 `;
 
-const Rate = styled.div`
+const GearBar = styled(RateBar)`
+  background-color: rgba(0, 0, 0, 0.7);
+  padding-top: 3px;
+`;
+
+const Rate = styled(motion.div)`
   border-bottom: 1px solid white;
   padding: 5px 15px;
   padding: 5px;
   width: 85%;
 `;
 
-const Cc = styled.div`
+const Cc = styled(motion.div)`
   white-space: nowrap;
   padding: 5px 10px;
   border-bottom: 1px solid white;
@@ -155,18 +171,19 @@ const Div = styled(motion.div)`
 
 export default function Controller(vRef, fRef, props) {
   const videoRef = vRef;
-  const fullRef = fRef;
   const videoVal = useRecoilValue(VideoAtom);
-  const seekVal = useRecoilValue(SeekAtom);
   const setSeekVal = useSetRecoilState(SeekAtom);
   const setVideoVal = useSetRecoilState(VideoAtom);
   const setFullVal = useSetRecoilState(FullAtom);
   const videoTimeVal = useRecoilValue(VideoTimeCheckAtom);
   const setVideoTimeVal = useSetRecoilState(VideoTimeCheckAtom);
+  const gearVal = useRecoilValue(GearAtom);
+  const setGearVal = useSetRecoilState(GearAtom);
+
   const [sliderChange, setSliderChange] = useState(false);
   const rateVal = useRecoilValue(RateAtom);
   const setRateVal = useSetRecoilState(RateAtom);
-  const CCVal = useRecoilValue(CCAtom);
+  const ccVal = useRecoilValue(CCAtom);
   const setCCVal = useSetRecoilState(CCAtom);
 
   const [barOn, setBar] = useState(false);
@@ -272,6 +289,15 @@ export default function Controller(vRef, fRef, props) {
     videoRef.video.current.seekTo(newValue / 100, "fraction");
   };
 
+  const onChangeBitrate = (level) => {
+    const internalPlayer = videoRef.video.current.getInternalPlayer("hls");
+
+    if (internalPlayer) {
+      // currentLevel expect to receive an index of the levels array
+      internalPlayer.currentLevel = level;
+    }
+  };
+
   function format(seconds) {
     if (isNaN(seconds)) {
       return `00:00`;
@@ -331,6 +357,7 @@ export default function Controller(vRef, fRef, props) {
       <ProgressTab>
         <Slider
           valueLabelDisplay="auto"
+          track="false"
           min={0}
           max={100}
           value={videoVal.played * 100}
@@ -359,6 +386,7 @@ export default function Controller(vRef, fRef, props) {
             "& .MuiSlider-rail": {
               opacity: 0.28,
             },
+
             "& .MuiSlider-valueLabel": {
               lineHeight: 1.2,
               fontSize: 12,
@@ -376,6 +404,11 @@ export default function Controller(vRef, fRef, props) {
               },
               "& > *": {
                 transform: "rotate(45deg)",
+              },
+              "&.MuiSlider-dragging": {
+                "& .MuiSlider-thumb, & .MuiSlider-track": {
+                  transition: "none",
+                },
               },
             },
           }}
@@ -467,6 +500,7 @@ export default function Controller(vRef, fRef, props) {
                 {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => {
                   return (
                     <Rate
+                      whileHover={{ backgroundColor: "#dfdede" }}
                       onClick={() => {
                         playBackChangeHandler(rate);
                       }}
@@ -494,16 +528,53 @@ export default function Controller(vRef, fRef, props) {
                 <CIcon icon={regular}></CIcon>
               )}
             </motion.div>
-            {CCVal ? (
+            {ccVal ? (
               <RateBar style={{ bottom: "30px" }}>
-                <Cc onClick={ccTrue}>켜기</Cc>
-                <Cc onClick={ccFalse}>끄기</Cc>
+                <Cc
+                  whileHover={{ backgroundColor: "#dfdede" }}
+                  onClick={ccTrue}
+                >
+                  켜기
+                </Cc>
+                <Cc
+                  whileHover={{ backgroundColor: "#dfdede" }}
+                  onClick={ccFalse}
+                >
+                  끄기
+                </Cc>
               </RateBar>
             ) : null}
           </RateTab>
-          <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
-            <Icon icon={faGear}></Icon>
-          </motion.div>
+          <GearTab
+            onClick={() => {
+              setGearVal((prev) => !prev);
+            }}
+          >
+            {gearVal ? (
+              <GearBar style={{ bottom: "30px" }}>
+                <div>화질</div>
+                {videoRef.video.current
+                  ?.getInternalPlayer("hls")
+                  ?.levels.map((level, id) => {
+                    return (
+                      <Cc
+                        whileHover={{ backgroundColor: "#dfdede" }}
+                        onClick={() => {
+                          onChangeBitrate(id);
+                        }}
+                        key={id}
+                        value={id}
+                      >
+                        {level.bitrate}px
+                      </Cc>
+                    );
+                  })}
+              </GearBar>
+            ) : null}
+            <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
+              <Icon icon={faGear}></Icon>
+            </motion.div>
+          </GearTab>
           <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
             <Icon icon={faExpand} onClick={fullHandler}></Icon>
           </motion.div>
