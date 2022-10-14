@@ -5,9 +5,11 @@ import { motion } from "framer-motion";
 import styled from "styled-components";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { OverlappingAtom, QuestionAtom, VideoAtom } from "./atom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Quest } from "./data.js";
 import Swal from "sweetalert2";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import Manager from "./components/Manager";
 // import withReactContent from "sweetalert2-react-content";
 
 const Hm = styled.div`
@@ -23,7 +25,7 @@ const Wrapper = styled.div`
   /* height: 95vh; */
   grid-template-columns: 78% 22%;
   justify-content: center;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   width: 98%;
   @media screen and (max-width: 1500px) {
     grid-template-columns: 100%;
@@ -43,14 +45,34 @@ const BarTab = styled.div`
   }
 `;
 
+const CheckTab = styled(motion.div)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
+const CheckBox = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const H1 = styled.h1`
+  font-weight: bold;
+  font-size: 30vh;
+`;
+
 export default function MediaPlayer() {
   const setQuestionVal = useSetRecoilState(QuestionAtom);
   const overlappingVal = useRecoilValue(OverlappingAtom);
   const setOverlappingVal = useSetRecoilState(OverlappingAtom);
+  const [isUser, setUser] = useState(null);
   // 중복로그인 에러가 일어나면 이 아톰을 바꾸고, 알림창을 띄우자
-
-  // const MySwal = withReactContent(Swal);
-
   const questionDown = () => {
     const question = Quest();
     setQuestionVal(question);
@@ -77,16 +99,61 @@ export default function MediaPlayer() {
     });
   }
 
+  // 어떤 강의랑 연결되었는지를 딱 판단해서 아톰값 수정해야함
+
   return (
     <Hm>
-      <Wrapper>
-        <VideoTab>
-          <Player />
-        </VideoTab>
-        <BarTab>
-          <SideBar />
-        </BarTab>
-      </Wrapper>
+      {isUser === null ? (
+        <CheckBox>
+          <CheckTab
+            initial={{ backgroundColor: "#000000", color: "#000000" }}
+            animate={{
+              backgroundColor: "#0000007f",
+              color: "#9c9c9c",
+              transition: { duraiton: 1 },
+            }}
+            whileHover={{
+              backgroundColor: "#d8d8d8",
+              transition: { duration: 0.3 },
+              color: "#000000",
+            }}
+            onClick={() => {
+              setUser(true);
+            }}
+          >
+            <H1>유저</H1>
+          </CheckTab>
+          <CheckTab
+            initial={{ backgroundColor: "#ffffff", color: "#000000" }}
+            animate={{
+              backgroundColor: "#0000007f",
+              color: "#626262",
+              transition: { duraiton: 1 },
+            }}
+            whileHover={{
+              backgroundColor: "#d8d8d8",
+              transition: { duration: 0.3 },
+              color: "#000000",
+            }}
+            onClick={() => {
+              setUser(false);
+            }}
+          >
+            <H1>관리자</H1>
+          </CheckTab>
+        </CheckBox>
+      ) : isUser ? (
+        <Wrapper>
+          <VideoTab>
+            <Player />
+          </VideoTab>
+          <BarTab>
+            <SideBar />
+          </BarTab>
+        </Wrapper>
+      ) : (
+        <Manager />
+      )}
     </Hm>
   );
 }

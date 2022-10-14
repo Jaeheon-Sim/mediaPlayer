@@ -20,7 +20,7 @@ import {
   VideoAtom,
   VideoTimeCheckAtom,
 } from "../atom";
-import screenfull from "screenfull";
+
 import pip from "../images/pip.png";
 import forward from "../images/plus.png";
 import rewind from "../images/minus.png";

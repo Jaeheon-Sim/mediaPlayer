@@ -110,14 +110,13 @@ export default function Player() {
   };
 
   useEffect(() => {
-    fetch(`${STATICURL}/hls/${courseName}`, {
+    fetch(`${STATICURL}/front/hls/${courseName}`, {
       method: "GET",
     })
       .then((e) => e.json())
       .then((res) => {
         console.log(res);
         setURL(`http://34.64.197.110${res.data}`);
-        setURL("https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8");
       })
       .catch((err) => {
         console.log(err);
@@ -125,7 +124,9 @@ export default function Player() {
   }, []);
 
   useEffect(() => {
-    screenfull.toggle(fullRef.current);
+    if (controlOn) {
+      screenfull.toggle(fullRef.current);
+    }
   }, [fullVal]);
 
   return (

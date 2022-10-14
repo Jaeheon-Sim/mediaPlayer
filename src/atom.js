@@ -56,6 +56,6 @@ export const SeekAtom = atom({
 
 export const OverlappingAtom = atom({
   key: "isOverlappingAtom",
-  default: true,
+  default: false,
   storage: sessionStorage,
 });
