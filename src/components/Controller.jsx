@@ -286,6 +286,7 @@ export default function Controller(vRef, fRef, props) {
   // 재생 컨트롤러에서 조정을 완료했을 때 (slider onChangeCommitted시 발생하는 함수)
   const seekMouseUpHandler = (e, newValue) => {
     setSeekVal(false);
+
     videoRef.video.current.seekTo(newValue / 100, "fraction");
   };
 
@@ -317,9 +318,10 @@ export default function Controller(vRef, fRef, props) {
   }
 
   const valueLabelFormat = (value) => {
-    let _elapsedTime = value;
-    _elapsedTime = elapsedTime;
-    return _elapsedTime;
+    // let _elapsedTime = value;
+    // console.log((duration / 60) * value);
+    // _elapsedTime = elapsedTime;
+    return format((duration / 100) * value);
   };
 
   const test = () => {
@@ -406,8 +408,9 @@ export default function Controller(vRef, fRef, props) {
                 transform: "rotate(45deg)",
               },
               "&.MuiSlider-dragging": {
-                transform: "rotate(45deg)",
-                // "& .MuiSlider-thumb, & .MuiSlider-track": {},
+                "& .MuiSlider-thumb, & .MuiSlider-track": {
+                  transition: "none",
+                },
               },
             },
           }}
