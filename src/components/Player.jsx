@@ -70,7 +70,7 @@ export default function Player() {
   const [isBar, setIsBar] = useState(false);
   const [url, setURL] = useState("");
   const seekVal = useRecoilValue(SeekAtom);
-  const courseName = "sample";
+  const unitId = 2;
   let mouseX = 0;
   const cMoveHandeler = (e) => {
     setControl(true);
@@ -119,18 +119,18 @@ export default function Player() {
   };
 
   useEffect(() => {
-    // fetch(`${STATICURL}/front/hls/${courseName}`, {
-    //   method: "GET",
-    // })
-    //   .then((e) => e.json())
-    //   .then((res) => {
-    //     console.log(res);
-    //     setURL(`http://34.64.197.110${res.data}`);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // 지금은 임시방편 하지만 나중에는 비동기로 설정하자
+    fetch(`${STATICURL}/front/course/unit/${unitId}`, {
+      method: "GET",
+    })
+      .then((e) => e.json())
+      .then((res) => {
+        console.log(res);
+        setURL(`http://34.64.197.110${res.fileUrl}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     // setTimeout(() => {
     //   videoRef?.current?.seekTo(0.3);
     // }, 3500);
@@ -187,10 +187,10 @@ export default function Player() {
               // url={
               //   "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
               // }
-              url={
-                "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-              }
-              // url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
+              // url={
+              //   "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+              // }
+              url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
               // url={url}
               playing={videoVal.playing}
               muted={videoVal.muted}
@@ -207,7 +207,7 @@ export default function Player() {
               onEnded={() => {}}
               onError={() => {}}
               width="100%"
-              height="100%"
+              height="98vh"
               // config={{
               //   file: {
               //     forceAudio: {},

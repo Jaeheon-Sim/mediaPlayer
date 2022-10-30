@@ -6,27 +6,92 @@ import { faClosedCaptioning as regular } from "@fortawesome/free-regular-svg-ico
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { QuestionAtom, VideoAtom, VideoTimeCheckAtom } from "../atom";
 import { useEffect, useRef, useState } from "react";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
+import { faStar } from "@fortawesome/free-regular-svg-icons";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   margin-top: 20px;
-  margin-left: 20px;
-  height: 100%;
+  margin-left: 15px;
+  height: 98%;
 `;
 
-const TitleBox = styled.div``;
-const PrepareBox = styled.div``;
-const DetailBox = styled.div``;
+const TitleBox = styled.div`
+  font-size: 30px;
+`;
+const PrepareBox = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+`;
+const Title = styled.div`
+  font-weight: bolder;
+`;
+const DetailBox = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 95%;
+  min-height: 3vh;
+  margin-bottom: 20px;
+
+  padding: 30px 0px 30px 0px;
+  flex-direction: column;
+`;
+
+const DetailTab = styled.div`
+  word-break: break-all;
+  margin-left: 0px;
+  font-weight: bold;
+`;
+
+const Detail = styled.div`
+  width: 80%;
+  margin-top: 10px;
+  margin-left: 10px;
+  background-color: #efefef;
+  padding: 10px 10px 10px 5px;
+  border-radius: 5px;
+  font-weight: lighter;
+  color: #3c3c3c;
+`;
+
+const Icon = styled(FontAwesomeIcon)`
+  font-weight: bolder;
+  margin-right: 2px;
+`;
+const PrepareTab = styled.div`
+  margin-top: 15px;
+  margin-left: 15px;
+  color: #494646;
+`;
+
 export default function Data() {
   return (
     <Wrapper>
-      <TitleBox>강의 제목</TitleBox>
-      <DetailBox>이거이거 배워요</DetailBox>
-      <PrepareBox>이거 이거 필요해요</PrepareBox>
+      <TitleBox>
+        <Title>1강 뭐시기 뭐시기</Title>
+      </TitleBox>
+      <DetailBox>
+        <DetailTab>강의 목표</DetailTab>
+        <Detail>blah blah blah</Detail>
+        <br />
+        <DetailTab> 세부 내용</DetailTab>
+        <Detail>blah blah blah</Detail>
+      </DetailBox>
+      <PrepareBox>
+        <Title>
+          <Icon icon={faCheck} />
+          무엇이 필요할까요?
+        </Title>
+
+        <PrepareTab>선수과목</PrepareTab>
+        <PrepareTab>선수지식??</PrepareTab>
+      </PrepareBox>
     </Wrapper>
   );
 }

@@ -406,9 +406,8 @@ export default function Controller(vRef, fRef, props) {
                 transform: "rotate(45deg)",
               },
               "&.MuiSlider-dragging": {
-                "& .MuiSlider-thumb, & .MuiSlider-track": {
-                  transition: "none",
-                },
+                transform: "rotate(45deg)",
+                // "& .MuiSlider-thumb, & .MuiSlider-track": {},
               },
             },
           }}

@@ -64,7 +64,7 @@ const CheckBox = styled.div`
 
 const H1 = styled.h1`
   font-weight: bold;
-  font-size: 30vh;
+  font-size: 20vh;
 `;
 
 export default function MediaPlayer() {
@@ -121,7 +121,7 @@ export default function MediaPlayer() {
               setUser(true);
             }}
           >
-            <H1>유저</H1>
+            <H1>플레이어</H1>
           </CheckTab>
           <CheckTab
             initial={{ backgroundColor: "#ffffff", color: "#000000" }}
@@ -139,7 +139,7 @@ export default function MediaPlayer() {
               setUser(false);
             }}
           >
-            <H1>관리자</H1>
+            <H1>임시 플랫폼</H1>
           </CheckTab>
         </CheckBox>
       ) : isUser ? (
