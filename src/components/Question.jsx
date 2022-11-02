@@ -7,7 +7,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { QuestionAtom, VideoAtom, VideoTimeCheckAtom } from "../atom";
 import { useEffect, useRef, useState } from "react";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-
+import Swal from "sweetalert2";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -36,6 +36,7 @@ const CateBox = styled.div`
 `;
 
 const CateTab = styled(motion.div)`
+  font-weight: bolder;
   padding: 10px;
   text-align: center;
   cursor: pointer;
@@ -216,7 +217,13 @@ export default function Question() {
 
       setNowQ([...nowQ, dummy]);
       setVideoVal({ ...videoVal, playing: true });
-      alert("질문이 등록됨");
+
+      Swal.fire({
+        icon: "success",
+        title: "등록 완료",
+        text: "곧 강사님이 답변을 주실거에요!",
+        confirmButtonText: "확인",
+      });
     }
   };
 
@@ -278,8 +285,8 @@ export default function Question() {
       ) : (
         <>
           <QuestionInfoBox>
-            <Tab>질문 수: {nowQ?.length}</Tab>
-            <Tab>답변: ??</Tab>
+            <Tab>{nowQ?.length}개의 질문이 있어요.</Tab>
+            <Tab></Tab>
           </QuestionInfoBox>
           <QuestionBox click={clicked}>
             <AnimatePresence>

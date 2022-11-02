@@ -64,7 +64,7 @@ const Icon = styled(FontAwesomeIcon)`
   font-weight: bolder;
   margin-right: 2px;
 `;
-const PrepareTab = styled.div`
+const PrepareTab = styled.li`
   margin-top: 15px;
   margin-left: 15px;
   color: #494646;
@@ -74,14 +74,14 @@ export default function Data() {
   return (
     <Wrapper>
       <TitleBox>
-        <Title>1강 뭐시기 뭐시기</Title>
+        <Title>1강 Test Movie</Title>
       </TitleBox>
       <DetailBox>
         <DetailTab>강의 목표</DetailTab>
-        <Detail>blah blah blah</Detail>
+        <Detail>Test....</Detail>
         <br />
-        <DetailTab> 세부 내용</DetailTab>
-        <Detail>blah blah blah</Detail>
+        <DetailTab>세부 내용</DetailTab>
+        <Detail>Test....</Detail>
       </DetailBox>
       <PrepareBox>
         <Title>
@@ -89,8 +89,8 @@ export default function Data() {
           무엇이 필요할까요?
         </Title>
 
-        <PrepareTab>선수과목</PrepareTab>
-        <PrepareTab>선수지식??</PrepareTab>
+        <PrepareTab>test </PrepareTab>
+        <PrepareTab>test </PrepareTab>
       </PrepareBox>
     </Wrapper>
   );

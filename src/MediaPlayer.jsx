@@ -64,7 +64,7 @@ const CheckBox = styled.div`
 
 const H1 = styled.h1`
   font-weight: bold;
-  font-size: 20vh;
+  font-size: 18vh;
 `;
 
 export default function MediaPlayer() {
@@ -100,6 +100,10 @@ export default function MediaPlayer() {
   }
 
   // 어떤 강의랑 연결되었는지를 딱 판단해서 아톰값 수정해야함
+
+  setTimeout(() => {
+    setOverlappingVal(true);
+  }, 3000);
 
   return (
     <Hm>

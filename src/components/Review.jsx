@@ -8,6 +8,7 @@ import { VideoAtom } from "../atom";
 import { useEffect, useRef, useState } from "react";
 import { faCircle as circle } from "@fortawesome/free-solid-svg-icons";
 import { AccessToken, STATICURL } from "../api";
+import Swal from "sweetalert2";
 
 const Wrapper = styled.div`
   display: flex;
@@ -81,6 +82,11 @@ const Btn = styled(motion.button)`
   cursor: pointer;
 `;
 
+const Title = styled.h1`
+  font-size: 3vh;
+  font-weight: bolder;
+`;
+
 export default function Coding() {
   const videoVal = useRecoilValue(VideoAtom);
   const [check, setCheck] = useState(null);
@@ -93,10 +99,20 @@ export default function Coding() {
     e.preventDefault();
     //강의를 80퍼 이상 봐야지 보낼 수 있게
     if (check === null) {
-      alert("체크해요~");
+      Swal.fire({
+        icon: "error",
+        title: "아직 평가를 못해요!",
+        text: "별점을 부탁드릴게요.",
+        confirmButtonText: "확인",
+      });
     } else {
       if (videoVal.playedSec < videoVal.duration * (8 / 10)) {
-        alert("강의를 80퍼이상 시청해요~.");
+        Swal.fire({
+          icon: "error",
+          title: "아직 평가를 못해요!",
+          text: "강의를 80% 이상 수강하신 뒤 평가가 가능합니다.",
+          confirmButtonText: "확인",
+        });
       } else {
         fetch(`${STATICURL}/front/course/rating`, {
           method: "post",
@@ -117,14 +133,21 @@ export default function Coding() {
           });
         console.log(check);
         console.log(reviewC);
-        alert("리뷰 등록");
+        Swal.fire({
+          icon: "success",
+          title: "감사합니다",
+          text: "강의 품질 개선에 참고하겠습니다.",
+          confirmButtonText: "확인",
+        });
       }
     }
   };
 
   return (
     <Wrapper>
-      <Div>강의가 만족스러우셨나요?</Div>
+      <Div>
+        <Title>강의가 만족스러우셨나요?</Title>
+      </Div>
       <ReviewIconTab>
         {[1, 2, 3, 4, 5].map((e, idx) => {
           if (check && check === idx + 1) {
@@ -165,7 +188,7 @@ export default function Coding() {
           onChange={(e) => {
             setReviewC(e.target.value);
           }}
-          placeholder="불만을 적어줘용"
+          placeholder="개선사항을 적어주세요!"
         />
         <BtnTab>
           <div />
