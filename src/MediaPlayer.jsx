@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import styled from "styled-components";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { OverlappingAtom, QuestionAtom, VideoAtom } from "./atom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Quest } from "./data.js";
 import Swal from "sweetalert2";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +20,17 @@ const Hm = styled.div`
   height: 100vh;
 `;
 
+const BlockCapBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  position: absolute;
+`;
+
 const Wrapper = styled.div`
   display: grid;
   /* height: 95vh; */
@@ -30,6 +41,7 @@ const Wrapper = styled.div`
   @media screen and (max-width: 1500px) {
     grid-template-columns: 100%;
   }
+  position: relative;
 `;
 
 const VideoTab = styled.div`
@@ -45,33 +57,19 @@ const BarTab = styled.div`
   }
 `;
 
-const CheckTab = styled(motion.div)`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-`;
-
-const CheckBox = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 const H1 = styled.h1`
   font-weight: bold;
   font-size: 18vh;
+  color: white;
 `;
 
 export default function MediaPlayer() {
   const setQuestionVal = useSetRecoilState(QuestionAtom);
   const overlappingVal = useRecoilValue(OverlappingAtom);
   const setOverlappingVal = useSetRecoilState(OverlappingAtom);
+  const wrapperRef = useRef();
   const [isUser, setUser] = useState(null);
+  const [isCapture, setCapture] = useState(false);
   // 중복로그인 에러가 일어나면 이 아톰을 바꾸고, 알림창을 띄우자
   const questionDown = () => {
     const question = Quest();
@@ -80,6 +78,31 @@ export default function MediaPlayer() {
     //   setOverlappingVal(true);
     // }, 3000);
   };
+
+  const keyUpHandler = (e) => {
+    var keyCode = e.keyCode ? e.keyCode : e.which;
+    if (keyCode == 44) {
+      stopPrntScr();
+      setCapture(true);
+      wrapperRef.current.focus();
+      setTimeout(() => {
+        setCapture(false);
+      }, 3000);
+    }
+  };
+
+  function stopPrntScr() {
+    var inpFld = document.createElement("input");
+    inpFld.setAttribute("value", ".");
+    inpFld.setAttribute("width", "0");
+    inpFld.style.height = "0px";
+    inpFld.style.width = "0px";
+    inpFld.style.border = "0px";
+    document.body.appendChild(inpFld);
+    inpFld.select();
+    document.execCommand("copy");
+    inpFld.remove(inpFld);
+  }
 
   useEffect(questionDown, []);
   if (overlappingVal === true) {
@@ -158,7 +181,12 @@ export default function MediaPlayer() {
         <Manager />
       )} */}
 
-      <Wrapper>
+      <Wrapper tabIndex={0} onKeyUp={keyUpHandler} ref={wrapperRef}>
+        {!isCapture ? null : (
+          <BlockCapBox>
+            <H1>캡쳐 금지</H1>
+          </BlockCapBox>
+        )}
         <VideoTab>
           <Player />
         </VideoTab>

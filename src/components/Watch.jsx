@@ -34,21 +34,6 @@ export default function Watch() {
       });
   };
 
-  const xml = () => {
-    const xhr = new XMLHttpRequest();
-
-    xhr.open("POST", `${STATICURL}/test/player/on`);
-
-    xhr.send();
-
-    xhr.onreadystatechange = function () {
-      if (this.readyState === this.DONE) {
-        console.log(this.responseUR);
-        this.abort();
-      }
-    };
-  };
-
   const opena = () => {
     axios
       .post(
