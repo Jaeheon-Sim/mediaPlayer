@@ -76,6 +76,9 @@ export default function MediaPlayer() {
   const questionDown = () => {
     const question = Quest();
     setQuestionVal(question);
+    // setTimeout(() => {
+    //   setOverlappingVal(true);
+    // }, 3000);
   };
 
   useEffect(questionDown, []);
@@ -101,13 +104,9 @@ export default function MediaPlayer() {
 
   // 어떤 강의랑 연결되었는지를 딱 판단해서 아톰값 수정해야함
 
-  setTimeout(() => {
-    setOverlappingVal(true);
-  }, 3000);
-
   return (
     <Hm>
-      {isUser === null ? (
+      {/* {isUser === null ? (
         <CheckBox>
           <CheckTab
             initial={{ backgroundColor: "#000000", color: "#000000" }}
@@ -157,7 +156,16 @@ export default function MediaPlayer() {
         </Wrapper>
       ) : (
         <Manager />
-      )}
+      )} */}
+
+      <Wrapper>
+        <VideoTab>
+          <Player />
+        </VideoTab>
+        <BarTab>
+          <SideBar />
+        </BarTab>
+      </Wrapper>
     </Hm>
   );
 }

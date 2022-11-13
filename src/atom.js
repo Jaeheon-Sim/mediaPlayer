@@ -23,6 +23,7 @@ export const RateAtom = atom({
   key: "isRate",
   default: false,
 });
+
 export const CCAtom = atom({
   key: "isCC",
   default: false,

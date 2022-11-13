@@ -65,13 +65,6 @@ export default function Manager() {
         { type: "application/json" }
       )
     );
-    // formData.append(
-    //   "unitRequestDto",
-    //   JSON.stringify(
-    //     { courseId: Number(unit), title: String(title) },
-    //     { type: "application/json" }
-    //   )
-    // );
 
     fetch(`${STATICURL}/open/course/unit`, {
       method: "POST",

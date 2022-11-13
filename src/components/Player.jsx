@@ -124,16 +124,14 @@ export default function Player() {
     })
       .then((e) => e.json())
       .then((res) => {
-        console.log(res);
         setURL(`http://34.64.197.110${res.fileUrl}`);
+        videoRef?.current?.seekTo(0.1);
       })
       .catch((err) => {
         console.log(err);
       });
 
-    // setTimeout(() => {
-    //   videoRef?.current?.seekTo(0.3);
-    // }, 3500);
+    // setTimeout(() => {}, 3500);
   }, []);
 
   useEffect(() => {
