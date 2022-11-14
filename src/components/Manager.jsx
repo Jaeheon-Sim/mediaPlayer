@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { useEffect, useState } from "react";
-import { STATICURL } from "../api";
+import { STATICURL } from "../static";
 import Watch from "./Watch";
 
 const Wrapper = styled.div`

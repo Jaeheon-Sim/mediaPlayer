@@ -8,6 +8,7 @@ import { QuestionAtom, VideoAtom, VideoTimeCheckAtom } from "../atom";
 import { useEffect, useRef, useState } from "react";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
+import { STATICURL, TESTTOKEN, TESTUNIT } from "../static";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -184,8 +185,9 @@ export default function Question() {
   const questionChecker = () => {
     var list = [];
     setNowQ(null);
+    console.log(questionVal);
     questionVal.map((e) => {
-      if (e.time <= videoTimeVal + 4 && e.time >= videoTimeVal - 4) {
+      if (e.timeline <= videoTimeVal + 4 && e.timeline >= videoTimeVal - 4) {
         list.push(e);
       }
     });
@@ -193,7 +195,7 @@ export default function Question() {
   };
 
   const toggle = (n) => {
-    console.log(n);
+    // console.log(n);
     setClicked(n);
   };
 
@@ -207,26 +209,37 @@ export default function Question() {
       }
       const lecTime = Math.trunc(videoVal.playedSec / 60); // 시간을 단계로 나눠
 
-      const dummy = {
-        title: qTitle,
-        content: q,
-        reply: false,
-        replyContent: "",
-        time: lecTime,
-      };
+      fetch(`${STATICURL}/front/course/unit/${TESTUNIT}/question`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-AUTH-TOKEN": TESTTOKEN,
+        },
+        body: JSON.stringify({
+          content: q,
+          title: qTitle,
+          timeline: lecTime,
+        }),
+      })
+        .then((e) => {
+          if (e.status == 200) {
+            Swal.fire({
+              icon: "success",
+              title: "등록 완료",
+              text: "곧 강사님이 답변을 주실거에요!",
+              confirmButtonText: "확인",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log("입니다");
+        });
 
-      setNowQ([...nowQ, dummy]);
+      // setNowQ([...nowQ, dummy]);
       setVideoVal({ ...videoVal, playing: true });
-
-      Swal.fire({
-        icon: "success",
-        title: "등록 완료",
-        text: "곧 강사님이 답변을 주실거에요!",
-        confirmButtonText: "확인",
-      });
     }
   };
-
+  console.log(nowQ);
   useEffect(questionChecker, [videoTimeVal]);
   return (
     <Wrapper>
@@ -330,7 +343,7 @@ export default function Question() {
                     {!qData ? (
                       <ReplyBox>{nowQ[clicked - 1].replyContent}</ReplyBox>
                     ) : (
-                      <ReplyBox>질문내용</ReplyBox>
+                      <ReplyBox>{nowQ[clicked - 1].content}</ReplyBox>
                     )}
                   </Box>
                 </Overlay>
@@ -348,7 +361,7 @@ export default function Question() {
                   layoutId={idx + 1}
                 >
                   <Tab>{e.title}</Tab>
-                  <Tab>답변상태: {e.reply ? "YES" : "NO"}</Tab>
+                  <Tab>답변상태: {e.replyCount != 0 ? "YES" : "NO"}</Tab>
                 </QuestionTab>
               );
             })}

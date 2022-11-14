@@ -3,13 +3,22 @@ import Player from "./components/Player";
 import SideBar from "./components/SideBar";
 import { motion } from "framer-motion";
 import styled from "styled-components";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { OverlappingAtom, QuestionAtom, VideoAtom } from "./atom";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
+import {
+  CourseListAtom,
+  OverlappingAtom,
+  QueryListAtom,
+  QuestionAtom,
+  UrlAtom,
+  UserTokenAtom,
+  VideoAtom,
+} from "./atom";
 import { useEffect, useRef, useState } from "react";
 import { Quest } from "./data.js";
 import Swal from "sweetalert2";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import Manager from "./components/Manager";
+import { STATICURL, TESTCOURSE, TESTTOKEN, TESTUNIT } from "./static";
 // import withReactContent from "sweetalert2-react-content";
 
 const Hm = styled.div`
@@ -67,16 +76,138 @@ export default function MediaPlayer() {
   const setQuestionVal = useSetRecoilState(QuestionAtom);
   const overlappingVal = useRecoilValue(OverlappingAtom);
   const setOverlappingVal = useSetRecoilState(OverlappingAtom);
+  const accessToken = useRecoilValue(UserTokenAtom);
+  const setAccesToken = useResetRecoilState(UserTokenAtom);
+  const mediaUrl = useRecoilValue(UrlAtom);
+  const setMediaUrl = useSetRecoilState(UrlAtom);
+  const queryList = useRecoilValue(QueryListAtom);
+  const setCourseList = useSetRecoilState(CourseListAtom);
+  const setQueryList = useSetRecoilState(QueryListAtom);
+  // const code = new URL(window.location.href).searchParams.get("code");
+  const searchParams = new URLSearchParams(window.location.search);
+
+  // for (const param of searchParams) {
+  //   alert(param);
+  // }
   const wrapperRef = useRef();
   const [isUser, setUser] = useState(null);
   const [isCapture, setCapture] = useState(false);
   // 중복로그인 에러가 일어나면 이 아톰을 바꾸고, 알림창을 띄우자
+
+  function getParams() {
+    setQueryList((queryList) => ({ ...queryList, userId: getParam("userId") }));
+    setQueryList((queryList) => ({
+      ...queryList,
+      courseId: getParam("courseId"),
+    }));
+    setQueryList((queryList) => ({ ...queryList, unitId: getParam("unitId") }));
+  }
+
+  const getParam = (code) => {
+    return new URL(window.location.href).searchParams.get(code);
+  };
+
+  async function login() {
+    try {
+      const res = await fetch(`${STATICURL}/front/player/on`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: "4247e6b6-c014-45a6-8f9d-c766819a6f2f",
+        }),
+      });
+      const json = await res.json(); // json으로 파싱할 수 없을 때
+      console.log(json);
+      setAccesToken(json.accestoken);
+      getCourseList();
+      getMediaUrl();
+    } catch (error) {
+      console.log(error); // 발생한 에러 표시
+    }
+  }
+
+  // async function login() {
+  //   fetch(`${STATICURL}/front/player/on`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       userId: "4247e6b6-c014-45a6-8f9d-c766819a6f2f",
+  //     }),
+  //   })
+  //     .then((res) => {
+  //       res.json();
+  //     })
+  //     .then((data) => {
+  //       // setAccesToken(data.accestoken);
+  //       // getCourseList();
+  //       // getMediaUrl();
+  //     })
+  //     .catch((err) => {
+  //       alert(err);
+  //     });
+  // }
+
+  const getMediaUrl = () => {
+    fetch(`${STATICURL}/front/course/unit/${TESTUNIT}`, {
+      method: "POST",
+      headers: {
+        "X-AUTH-TOKEN": TESTTOKEN,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        complete: true,
+        currentUnitId: -1,
+        recordTime: 0,
+      }),
+    })
+      .then((e) => e.json())
+      .then((res) => {
+        setMediaUrl(`${STATICURL}${res.fileUrl}`);
+        questionDown();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getCourseList = () => {
+    fetch(`${STATICURL}/open/course/${TESTCOURSE}/unit`, {
+      method: "GET",
+    })
+      .then((e) => e.json())
+      .then((res) => {
+        const list = [];
+        res.map((e) => {
+          list.push(e);
+        });
+        setCourseList(list);
+        // console.log(res);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  };
+
   const questionDown = () => {
-    const question = Quest();
-    setQuestionVal(question);
-    // setTimeout(() => {
-    //   setOverlappingVal(true);
-    // }, 3000);
+    // const question = Quest();
+    //;
+    fetch(`${STATICURL}/front/course/unit/${TESTUNIT}/question/`, {
+      method: "GET",
+    })
+      .then((e) => e.json())
+      .then((res) => {
+        console.log(res);
+        setQuestionVal(res);
+      })
+      .catch((err) => {
+        alert(err);
+      });
   };
 
   const keyUpHandler = (e) => {
@@ -104,15 +235,23 @@ export default function MediaPlayer() {
     inpFld.remove(inpFld);
   }
 
-  useEffect(questionDown, []);
+  useEffect(() => {
+    getParams();
+    login();
+    // getMediaUrl();
+    // getCourseList();
+  }, []);
+
+  // useEffect(() => {
+  //   console.log("WWWWWW");
+  // }, [queryList]);
+
   if (overlappingVal === true) {
     Swal.fire({
       title: "누군가가 로그인을 했어요",
-
       showCancelButton: true,
       confirmButtonText: "내가 쓸래요",
       cancelButtonText: "나가기",
-
       // 실행되는 동안 배경 누를때 모달창 안닫히도록 설정
       // isLoading() 즉, 로딩이 진행되는 동안 false를 리턴하게 해서 ousideClick을 안되게 하고, 로딩 상태가 아니면 ousideClick을 허용한다.
       allowOutsideClick: () => Swal.isLoading(),

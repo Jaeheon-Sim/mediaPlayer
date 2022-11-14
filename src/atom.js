@@ -65,3 +65,27 @@ export const OverlappingAtom = atom({
   default: false,
   storage: sessionStorage,
 });
+
+export const UserTokenAtom = atom({
+  key: "isUserAtom",
+  default: "",
+  storage: sessionStorage,
+});
+
+export const UrlAtom = atom({
+  key: "isUrlAtom",
+  default: "s",
+  storage: sessionStorage,
+});
+
+export const CourseListAtom = atom({
+  key: "isCourseListAtom",
+  default: [],
+  storage: sessionStorage,
+});
+
+export const QueryListAtom = atom({
+  key: "isQueryListAtom",
+  default: { userId: "", courseId: "", unitId: "" },
+  storage: sessionStorage,
+});

@@ -8,6 +8,7 @@ import {
   GearAtom,
   RateAtom,
   SeekAtom,
+  UrlAtom,
   VideoAtom,
 } from "../atom";
 import Controller from "./Controller";
@@ -16,7 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { faCirclePause } from "@fortawesome/free-solid-svg-icons";
 import screenfull from "screenfull";
-import { STATICURL } from "../api.js";
+import { STATICURL, TESTUNIT } from "../static";
 
 const Splayer = styled(ReactPlayer)`
   background-color: black;
@@ -66,12 +67,13 @@ export default function Player() {
   const setVideoVal = useSetRecoilState(VideoAtom);
   const setRateVal = useSetRecoilState(RateAtom);
   const setCCVal = useSetRecoilState(CCAtom);
+  const url = useRecoilValue(UrlAtom);
   const [controlOn, setControl] = useState(false);
   const [isBar, setIsBar] = useState(false);
-  const [url, setURL] = useState("");
+
   const seekVal = useRecoilValue(SeekAtom);
-  const unitId = 2;
   let mouseX = 0;
+
   const cMoveHandeler = (e) => {
     setControl(true);
     if (!isBar) {
@@ -113,26 +115,8 @@ export default function Player() {
         played: changeState.played,
         playedSec: changeState.playedSeconds.toFixed(),
       });
-    } else {
-      console.log("hello");
     }
   };
-
-  useEffect(() => {
-    fetch(`${STATICURL}/front/course/unit/${unitId}`, {
-      method: "GET",
-    })
-      .then((e) => e.json())
-      .then((res) => {
-        setURL(`http://34.64.197.110${res.fileUrl}`);
-        videoRef?.current?.seekTo(0.1);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    // setTimeout(() => {}, 3500);
-  }, []);
 
   useEffect(() => {
     if (controlOn) {
@@ -188,8 +172,8 @@ export default function Player() {
               // url={
               //   "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
               // }
-              url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
-              // url={url}
+              // url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
+              url={url}
               playing={videoVal.playing}
               muted={videoVal.muted}
               controls={false} // 플레이어 컨트롤 노출 여부

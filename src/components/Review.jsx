@@ -7,7 +7,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { VideoAtom } from "../atom";
 import { useEffect, useRef, useState } from "react";
 import { faCircle as circle } from "@fortawesome/free-solid-svg-icons";
-import { AccessToken, STATICURL } from "../api";
+import { STATICURL, TESTTOKEN, TESTUNIT } from "../static";
 import Swal from "sweetalert2";
 
 const Wrapper = styled.div`
@@ -95,6 +95,27 @@ export default function Coding() {
     setCheck(e);
   };
 
+  const fetchReview = () => {
+    fetch(`${STATICURL}/front/course/unit/${TESTUNIT}/rating`, {
+      method: "post",
+      headers: {
+        "X-AUTH-TOKEN": TESTTOKEN,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        score: check,
+      }),
+    })
+      .then((res) => {
+        if (res.status == 200) {
+        }
+      })
+
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const goReview = (e) => {
     e.preventDefault();
     //강의를 80퍼 이상 봐야지 보낼 수 있게
@@ -114,25 +135,7 @@ export default function Coding() {
           confirmButtonText: "확인",
         });
       } else {
-        fetch(`${STATICURL}/front/course/rating`, {
-          method: "post",
-          headers: {
-            "X-AUTH-TOKEN": AccessToken,
-          },
-          body: JSON.stringify({
-            unitId: 1,
-            score: check,
-          }),
-        })
-          .then((e) => e.json())
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        console.log(check);
-        console.log(reviewC);
+        fetchReview();
         Swal.fire({
           icon: "success",
           title: "감사합니다",
