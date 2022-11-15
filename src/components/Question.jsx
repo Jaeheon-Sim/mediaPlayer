@@ -4,7 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning as regular } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { QuestionAtom, VideoAtom, VideoTimeCheckAtom } from "../atom";
+import {
+  QueryListAtom,
+  QuestionAtom,
+  UserTokenAtom,
+  VideoAtom,
+  VideoTimeCheckAtom,
+} from "../atom";
 import { useEffect, useRef, useState } from "react";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
@@ -175,13 +181,14 @@ export default function Question() {
   const setVideoVal = useSetRecoilState(VideoAtom);
   const questionVal = useRecoilValue(QuestionAtom);
   const videoTimeVal = useRecoilValue(VideoTimeCheckAtom);
+  const accessToken = useRecoilValue(UserTokenAtom);
   const [type, setType] = useState(false);
   const [nowQ, setNowQ] = useState(null);
   const [qTitle, setQTitle] = useState("");
   const [q, setQ] = useState("");
   const [clicked, setClicked] = useState(null);
   const [qData, setQData] = useState(true);
-
+  const queryList = useRecoilValue(QueryListAtom);
   const questionChecker = () => {
     var list = [];
     setNowQ(null);
@@ -209,11 +216,11 @@ export default function Question() {
       }
       const lecTime = Math.trunc(videoVal.playedSec / 60); // 시간을 단계로 나눠
 
-      fetch(`${STATICURL}/front/course/unit/${TESTUNIT}/question`, {
+      fetch(`${STATICURL}/front/course/unit/${queryList.unitId}/question`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-AUTH-TOKEN": TESTTOKEN,
+          "X-AUTH-TOKEN": accessToken,
         },
         body: JSON.stringify({
           content: q,

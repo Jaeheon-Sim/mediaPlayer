@@ -95,6 +95,7 @@ const PRImg = styled(Img)`
 const IconTab = styled.div`
   display: flex;
   align-items: center;
+  padding-right: 10px;
 `;
 
 const VolumnTab = styled(motion.div)`

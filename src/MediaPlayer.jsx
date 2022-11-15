@@ -14,7 +14,6 @@ import {
   VideoAtom,
 } from "./atom";
 import { useEffect, useRef, useState } from "react";
-import { Quest } from "./data.js";
 import Swal from "sweetalert2";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import Manager from "./components/Manager";
@@ -74,21 +73,17 @@ const H1 = styled.h1`
 
 export default function MediaPlayer() {
   const setQuestionVal = useSetRecoilState(QuestionAtom);
+  const accessToken = useRecoilValue(UserTokenAtom);
   const overlappingVal = useRecoilValue(OverlappingAtom);
   const setOverlappingVal = useSetRecoilState(OverlappingAtom);
-  const accessToken = useRecoilValue(UserTokenAtom);
-  const setAccesToken = useResetRecoilState(UserTokenAtom);
+  const setAccesToken = useSetRecoilState(UserTokenAtom);
   const mediaUrl = useRecoilValue(UrlAtom);
   const setMediaUrl = useSetRecoilState(UrlAtom);
   const queryList = useRecoilValue(QueryListAtom);
   const setCourseList = useSetRecoilState(CourseListAtom);
   const setQueryList = useSetRecoilState(QueryListAtom);
-  // const code = new URL(window.location.href).searchParams.get("code");
   const searchParams = new URLSearchParams(window.location.search);
 
-  // for (const param of searchParams) {
-  //   alert(param);
-  // }
   const wrapperRef = useRef();
   const [isUser, setUser] = useState(null);
   const [isCapture, setCapture] = useState(false);
@@ -119,10 +114,10 @@ export default function MediaPlayer() {
         }),
       });
       const json = await res.json(); // json으로 파싱할 수 없을 때
-      console.log(json);
-      setAccesToken(json.accestoken);
+      console.log(json.accessToken);
+      setAccesToken(json.accessToken);
       getCourseList();
-      getMediaUrl();
+      getMediaUrl(json.accessToken);
     } catch (error) {
       console.log(error); // 발생한 에러 표시
     }
@@ -151,11 +146,11 @@ export default function MediaPlayer() {
   //     });
   // }
 
-  const getMediaUrl = () => {
+  const getMediaUrl = (accessToken) => {
     fetch(`${STATICURL}/front/course/unit/${TESTUNIT}`, {
       method: "POST",
       headers: {
-        "X-AUTH-TOKEN": TESTTOKEN,
+        "X-AUTH-TOKEN": accessToken,
         "Content-Type": "application/json",
         "Access-Control-Allow-Credentials": true,
         "Access-Control-Allow-Origin": "*",
@@ -169,6 +164,7 @@ export default function MediaPlayer() {
       .then((e) => e.json())
       .then((res) => {
         setMediaUrl(`${STATICURL}${res.fileUrl}`);
+
         questionDown();
       })
       .catch((err) => {
@@ -195,8 +191,6 @@ export default function MediaPlayer() {
   };
 
   const questionDown = () => {
-    // const question = Quest();
-    //;
     fetch(`${STATICURL}/front/course/unit/${TESTUNIT}/question/`, {
       method: "GET",
     })
@@ -238,8 +232,6 @@ export default function MediaPlayer() {
   useEffect(() => {
     getParams();
     login();
-    // getMediaUrl();
-    // getCourseList();
   }, []);
 
   // useEffect(() => {

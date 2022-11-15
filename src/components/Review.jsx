@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { VideoAtom } from "../atom";
+import { QueryListAtom, QuestionAtom, UserTokenAtom, VideoAtom } from "../atom";
 import { useEffect, useRef, useState } from "react";
 import { faCircle as circle } from "@fortawesome/free-solid-svg-icons";
 import { STATICURL, TESTTOKEN, TESTUNIT } from "../static";
@@ -94,12 +94,13 @@ export default function Coding() {
   const reviewChecker = (e) => {
     setCheck(e);
   };
-
+  const accessToken = useRecoilValue(UserTokenAtom);
+  const queryList = useRecoilValue(QueryListAtom);
   const fetchReview = () => {
-    fetch(`${STATICURL}/front/course/unit/${TESTUNIT}/rating`, {
+    fetch(`${STATICURL}/front/course/unit/${queryList.unitId}/rating`, {
       method: "post",
       headers: {
-        "X-AUTH-TOKEN": TESTTOKEN,
+        "X-AUTH-TOKEN": accessToken,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

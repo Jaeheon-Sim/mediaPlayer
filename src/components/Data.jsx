@@ -4,7 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning as regular } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { QuestionAtom, VideoAtom, VideoTimeCheckAtom } from "../atom";
+import {
+  CourseListAtom,
+  QueryListAtom,
+  QuestionAtom,
+  VideoAtom,
+  VideoTimeCheckAtom,
+} from "../atom";
 import { useEffect, useRef, useState } from "react";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
@@ -20,7 +26,7 @@ const Wrapper = styled.div`
 `;
 
 const TitleBox = styled.div`
-  font-size: 30px;
+  font-size: 25px;
 `;
 const PrepareBox = styled.div`
   display: flex;
@@ -71,10 +77,24 @@ const PrepareTab = styled.li`
 `;
 
 export default function Data() {
+  const queryList = useRecoilValue(QueryListAtom);
+  const courseList = useRecoilValue(CourseListAtom);
+  var unit;
+  const [title, setTitle] = useState("");
+  console.log(queryList);
+  useEffect(() => {
+    courseList.map((e) => {
+      console.log(e);
+      if (e.unitId == queryList.unitId) {
+        setTitle(e.title);
+      }
+    });
+  }, [queryList.unitId]);
+
   return (
     <Wrapper>
       <TitleBox>
-        <Title>1강 Test Movie</Title>
+        <Title>{title}</Title>
       </TitleBox>
       <DetailBox>
         <DetailTab>강의 목표</DetailTab>

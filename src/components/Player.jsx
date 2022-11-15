@@ -174,6 +174,7 @@ export default function Player() {
               // }
               // url={"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"}
               url={url}
+              // url={"http://media2.panda79.com/online211214/19.mp4"}
               playing={videoVal.playing}
               muted={videoVal.muted}
               controls={false} // 플레이어 컨트롤 노출 여부
@@ -189,7 +190,7 @@ export default function Player() {
               onEnded={() => {}}
               onError={() => {}}
               width="100%"
-              height="98vh"
+              height="100%"
               // config={{
               //   file: {
               //     forceAudio: {},

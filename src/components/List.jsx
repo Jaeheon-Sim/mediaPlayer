@@ -2,7 +2,13 @@ import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { CourseListAtom, QuestionAtom, UrlAtom, UserTokenAtom } from "../atom";
+import {
+  CourseListAtom,
+  QueryListAtom,
+  QuestionAtom,
+  UrlAtom,
+  UserTokenAtom,
+} from "../atom";
 import { STATICURL, TESTTOKEN, TESTUNIT } from "../static";
 
 const Wrapper = styled.div`
@@ -32,35 +38,97 @@ export default function List() {
   const setQuestionVal = useSetRecoilState(QuestionAtom);
   const setMediaUrl = useSetRecoilState(UrlAtom);
   const courseList = useRecoilValue(CourseListAtom);
+  const setQueryList = useSetRecoilState(QueryListAtom);
   // 리스트별로 현재 리스트에 색 띄우게 하지 뭐
 
-  const getAnotherCourseUnit = (unitId) => {
-    fetch(`${STATICURL}/front/course/unit/${unitId}`, {
-      method: "POST",
-      headers: {
-        "X-AUTH-TOKEN": TESTTOKEN,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({
-        complete: true,
-        currentUnitId: TESTUNIT,
-        recordTime: 0,
-      }),
-    })
-      .then((e) => e.json())
-      .then((res) => {
-        setMediaUrl(`${STATICURL}${res.fileUrl}`);
-        questionDown();
-      })
-      .catch((err) => {
-        console.log(err);
+  async function getAnotherCourseUnit(unitId) {
+    setQueryList((queryList) => ({ ...queryList, unitId: unitId }));
+    try {
+      const res = await fetch(`${STATICURL}/front/course/unit/${unitId}`, {
+        method: "POST",
+        headers: {
+          "X-AUTH-TOKEN": userToken,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          complete: true,
+          currentUnitId: -1,
+          recordTime: 0,
+        }),
       });
-  };
+      console.log(res);
+      const json = await res.json();
+      console.log(json);
+      if (json.fileUrl.includes("http")) {
+        setMediaUrl(`${json.fileUrl}`);
+      } else {
+        setMediaUrl(`${STATICURL}${json.fileUrl}`);
+      }
 
-  const questionDown = () => {
-    fetch(`${STATICURL}/front/course/unit/${TESTUNIT}/question/`, {
+      questionDown(unitId);
+    } catch (error) {
+      console.log(error); // 발생한 에러 표시
+    }
+  }
+
+  async function goRedirect() {
+    try {
+      const res = await fetch(`http://34.64.177.193/open/player/execute`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+          "X-AUTH-TOKEN":
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjY4NDIwNTUyLCJleHAiOjE2OTk5NTY1NTJ9.-yNC5_VG7AarMyIZzHvzrh0hiDbcT08A6HhYr6UWcmQ",
+        },
+        body: JSON.stringify({ unitId: 6 }),
+      });
+
+      console.log(res);
+      const json = await res.json();
+      console.log(json);
+    } catch (error) {
+      console.log(error); // 발생한 에러 표시
+    }
+  }
+
+  // const getAnotherCourseUnit = (unitId) => {
+  //   setQueryList((queryList) => ({ ...queryList, unitId: unitId }));
+  //   fetch(`${STATICURL}/front/course/unit/${unitId}`, {
+  //     method: "POST",
+  //     headers: {
+  //       "X-AUTH-TOKEN": userToken,
+  //       "Content-Type": "application/json",
+  //       "Access-Control-Allow-Credentials": true,
+  //       "Access-Control-Allow-Origin": "*",
+  //     },
+  //     body: JSON.stringify({
+  //       complete: true,
+  //       currentUnitId: TESTUNIT,
+  //       recordTime: 0,
+  //     }),
+  //   })
+  //     .then((e) => e.json())
+  //     .then((res) => {
+  //       console.log(res);
+  //       if (res.fileUrl.includes("http")) {
+  //         setMediaUrl(`${res.fileUrl}`);
+  //       } else {
+  //         setMediaUrl(`${STATICURL}${res.fileUrl}`);
+  //       }
+
+  //       questionDown(unitId);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+
+  const questionDown = (unitId) => {
+    fetch(`${STATICURL}/front/course/unit/${unitId}/question/`, {
       method: "GET",
     })
       .then((e) => e.json())
@@ -79,13 +147,13 @@ export default function List() {
         return (
           <Catalog
             onClick={() => {
-              getAnotherCourseUnit(idx + 1);
+              getAnotherCourseUnit(e.unitId);
             }}
             key={idx}
             whileHover={{ backgroundColor: "#dfdede" }}
           >
             <Tab>
-              {e.unitId}. {e.title}
+              {idx}. {e.title}
             </Tab>
           </Catalog>
         );
