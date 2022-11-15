@@ -147,7 +147,7 @@ export default function MediaPlayer() {
   // }
 
   const getMediaUrl = (accessToken) => {
-    fetch(`${STATICURL}/front/course/unit/${TESTUNIT}`, {
+    fetch(`${STATICURL}/front/course/unit/${queryList.unitId}`, {
       method: "POST",
       headers: {
         "X-AUTH-TOKEN": accessToken,
@@ -173,7 +173,7 @@ export default function MediaPlayer() {
   };
 
   const getCourseList = () => {
-    fetch(`${STATICURL}/open/course/${TESTCOURSE}/unit`, {
+    fetch(`${STATICURL}/open/course/${queryList.courseId}/unit`, {
       method: "GET",
     })
       .then((e) => e.json())
@@ -191,7 +191,7 @@ export default function MediaPlayer() {
   };
 
   const questionDown = () => {
-    fetch(`${STATICURL}/front/course/unit/${TESTUNIT}/question/`, {
+    fetch(`${STATICURL}/front/course/unit/${queryList.unitId}/question/`, {
       method: "GET",
     })
       .then((e) => e.json())
