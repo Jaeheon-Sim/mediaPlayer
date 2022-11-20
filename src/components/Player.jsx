@@ -8,6 +8,7 @@ import {
   GearAtom,
   RateAtom,
   SeekAtom,
+  unitInfoAtom,
   UrlAtom,
   VideoAtom,
 } from "../atom";
@@ -70,6 +71,7 @@ export default function Player() {
   const url = useRecoilValue(UrlAtom);
   const [controlOn, setControl] = useState(false);
   const [isBar, setIsBar] = useState(false);
+  const unitInfo = useRecoilValue(unitInfoAtom);
 
   const seekVal = useRecoilValue(SeekAtom);
   let mouseX = 0;
@@ -123,6 +125,18 @@ export default function Player() {
       screenfull.toggle(fullRef.current);
     }
   }, [fullVal]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      goToRecord().then((video) => {
+        video.seekTo(unitInfo.time);
+      });
+    }, 100);
+  }, [url]);
+
+  async function goToRecord() {
+    return await videoRef.current;
+  }
 
   return (
     <CControl

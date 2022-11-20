@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { useCallback } from "react";
 import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -6,13 +8,15 @@ import {
   CourseListAtom,
   QueryListAtom,
   QuestionAtom,
+  unitInfoAtom,
   UrlAtom,
   UserTokenAtom,
+  VideoAtom,
 } from "../atom";
 import { STATICURL, TESTTOKEN, TESTUNIT } from "../static";
 
 const Wrapper = styled.div`
-  height: 82vh;
+  max-height: 80vh;
   overflow: auto;
 `;
 
@@ -22,7 +26,9 @@ const Catalog = styled(motion.li)`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  color: ${(props) => (props.men === props.now ? null : "black")}; //props 활용
+
+  color: ${(props) =>
+    props.men === props.now ? "#a8a7a7" : "black"}; //props 활용
   margin: 10px 0px;
 `;
 
@@ -33,17 +39,22 @@ const Tab = styled.div`
 export default function List() {
   // 강의 목록을 누르면 비디오 url을 바꾸는 형식으로 진행해야할것같음 라우터 없이 -> 성능 업그레이드
   // api요청 -> 받아옴 -> state에 저장 -> video url 변경 (초기화)
-
+  const queryList = useRecoilValue(QueryListAtom);
   const userToken = useRecoilValue(UserTokenAtom);
   const setQuestionVal = useSetRecoilState(QuestionAtom);
   const setMediaUrl = useSetRecoilState(UrlAtom);
   const courseList = useRecoilValue(CourseListAtom);
   const setQueryList = useSetRecoilState(QueryListAtom);
-  // 리스트별로 현재 리스트에 색 띄우게 하지 뭐
+  const setUnitInfo = useSetRecoilState(unitInfoAtom);
+  const unitInfo = useRecoilValue(unitInfoAtom);
+  const videoVal = useRecoilValue(VideoAtom);
 
   async function getAnotherCourseUnit(unitId) {
-    setQueryList((queryList) => ({ ...queryList, unitId: unitId }));
     try {
+      var isCheck = false;
+      if (videoVal.duration == videoVal.playedSec) {
+        isCheck = true;
+      }
       const res = await fetch(`${STATICURL}/front/course/unit/${unitId}`, {
         method: "POST",
         headers: {
@@ -53,14 +64,15 @@ export default function List() {
           "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({
-          complete: true,
-          currentUnitId: -1,
-          recordTime: 0,
+          complete: isCheck,
+          currentUnitId: queryList.unitId,
+          recordTime: videoVal.played,
         }),
       });
-      console.log(res);
+      setQueryList((queryList) => ({ ...queryList, unitId: unitId }));
       const json = await res.json();
-      console.log(json);
+
+      setUnitInfo({ title: json.title, unitId: json.unitId, time: json.time });
       if (json.fileUrl.includes("http")) {
         setMediaUrl(`${json.fileUrl}`);
       } else {
@@ -69,29 +81,7 @@ export default function List() {
 
       questionDown(unitId);
     } catch (error) {
-      console.log(error); // 발생한 에러 표시
-    }
-  }
-
-  async function goRedirect() {
-    try {
-      const res = await fetch(`http://34.64.177.193/open/player/execute`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": "*",
-          "X-AUTH-TOKEN":
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjY4NDIwNTUyLCJleHAiOjE2OTk5NTY1NTJ9.-yNC5_VG7AarMyIZzHvzrh0hiDbcT08A6HhYr6UWcmQ",
-        },
-        body: JSON.stringify({ unitId: 6 }),
-      });
-
-      console.log(res);
-      const json = await res.json();
-      console.log(json);
-    } catch (error) {
-      console.log(error); // 발생한 에러 표시
+      alert(error); // 발생한 에러 표시
     }
   }
 
@@ -133,7 +123,6 @@ export default function List() {
     })
       .then((e) => e.json())
       .then((res) => {
-        console.log(res);
         setQuestionVal(res);
       })
       .catch((err) => {
@@ -149,6 +138,8 @@ export default function List() {
             onClick={() => {
               getAnotherCourseUnit(e.unitId);
             }}
+            men={e.unitId}
+            now={unitInfo.unitId}
             key={idx}
             whileHover={{ backgroundColor: "#dfdede" }}
           >

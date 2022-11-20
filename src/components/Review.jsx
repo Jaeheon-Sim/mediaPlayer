@@ -102,6 +102,8 @@ export default function Coding() {
       headers: {
         "X-AUTH-TOKEN": accessToken,
         "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify({
         score: check,

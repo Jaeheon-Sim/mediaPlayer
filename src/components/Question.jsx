@@ -221,6 +221,8 @@ export default function Question() {
         headers: {
           "Content-Type": "application/json",
           "X-AUTH-TOKEN": accessToken,
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({
           content: q,

@@ -8,6 +8,7 @@ import {
   CourseListAtom,
   QueryListAtom,
   QuestionAtom,
+  unitInfoAtom,
   VideoAtom,
   VideoTimeCheckAtom,
 } from "../atom";
@@ -79,22 +80,16 @@ const PrepareTab = styled.li`
 export default function Data() {
   const queryList = useRecoilValue(QueryListAtom);
   const courseList = useRecoilValue(CourseListAtom);
-  var unit;
-  const [title, setTitle] = useState("");
-  console.log(queryList);
+  const unitInfo = useRecoilValue(unitInfoAtom);
+
   useEffect(() => {
-    courseList.map((e) => {
-      console.log(e);
-      if (e.unitId == queryList.unitId) {
-        setTitle(e.title);
-      }
-    });
+    courseList.map((e) => {});
   }, [queryList.unitId]);
 
   return (
     <Wrapper>
       <TitleBox>
-        <Title>{title}</Title>
+        <Title>{unitInfo.title}</Title>
       </TitleBox>
       <DetailBox>
         <DetailTab>강의 목표</DetailTab>

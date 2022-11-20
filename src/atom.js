@@ -89,3 +89,12 @@ export const QueryListAtom = atom({
   default: { userId: "", courseId: "", unitId: "" },
   storage: sessionStorage,
 });
+
+export const unitInfoAtom = atom({
+  key: "isUnitListAtom",
+  default: {
+    time: "",
+    title: "",
+    unitId: "",
+  },
+});
