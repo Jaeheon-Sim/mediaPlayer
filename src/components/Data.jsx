@@ -27,7 +27,7 @@ const Wrapper = styled.div`
 `;
 
 const TitleBox = styled.div`
-  font-size: 25px;
+  font-size: 1.3rem;
 `;
 const PrepareBox = styled.div`
   display: flex;

@@ -85,38 +85,6 @@ export default function List() {
     }
   }
 
-  // const getAnotherCourseUnit = (unitId) => {
-  //   setQueryList((queryList) => ({ ...queryList, unitId: unitId }));
-  //   fetch(`${STATICURL}/front/course/unit/${unitId}`, {
-  //     method: "POST",
-  //     headers: {
-  //       "X-AUTH-TOKEN": userToken,
-  //       "Content-Type": "application/json",
-  //       "Access-Control-Allow-Credentials": true,
-  //       "Access-Control-Allow-Origin": "*",
-  //     },
-  //     body: JSON.stringify({
-  //       complete: true,
-  //       currentUnitId: TESTUNIT,
-  //       recordTime: 0,
-  //     }),
-  //   })
-  //     .then((e) => e.json())
-  //     .then((res) => {
-  //       console.log(res);
-  //       if (res.fileUrl.includes("http")) {
-  //         setMediaUrl(`${res.fileUrl}`);
-  //       } else {
-  //         setMediaUrl(`${STATICURL}${res.fileUrl}`);
-  //       }
-
-  //       questionDown(unitId);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
   const questionDown = (unitId) => {
     fetch(`${STATICURL}/front/course/unit/${unitId}/question/`, {
       method: "GET",

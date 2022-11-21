@@ -96,5 +96,6 @@ export const unitInfoAtom = atom({
     time: "",
     title: "",
     unitId: "",
+    rating: 0,
   },
 });

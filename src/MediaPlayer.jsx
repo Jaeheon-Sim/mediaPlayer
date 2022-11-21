@@ -157,7 +157,7 @@ export default function MediaPlayer() {
 
   async function goRedirect() {
     try {
-      const res = await fetch(`http://34.64.177.193/open/player/execute`, {
+      await fetch(`http://34.64.177.193/open/player/execute`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -211,7 +211,6 @@ export default function MediaPlayer() {
     })
       .then((e) => e.json())
       .then((res) => {
-        console.log(res);
         setUnitInfo({ title: res.title, unitId: res.unitId, time: res.time });
         if (res.fileUrl.includes("http")) {
           setMediaUrl(`${res.fileUrl}`);
@@ -251,9 +250,29 @@ export default function MediaPlayer() {
       .then((e) => e.json())
       .then((res) => {
         setQuestionVal(res);
+        //getThisUnitRate();
       })
       .catch((err) => {
         alert(err);
+      });
+  };
+
+  const getThisUnitRate = () => {
+    fetch(`${STATICURL}/front/course/unit/${getParam("unitId")}/rating`, {
+      method: "get",
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        // setUnitInfo((prev) => ({ ...prev, rating: res }));
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 

@@ -189,10 +189,11 @@ export default function Question() {
   const [clicked, setClicked] = useState(null);
   const [qData, setQData] = useState(true);
   const queryList = useRecoilValue(QueryListAtom);
+  const setQuestionVal = useSetRecoilState(QuestionAtom);
+
   const questionChecker = () => {
     var list = [];
     setNowQ(null);
-    console.log(questionVal);
     questionVal.map((e) => {
       if (e.timeline <= videoTimeVal + 4 && e.timeline >= videoTimeVal - 4) {
         list.push(e);
@@ -202,14 +203,26 @@ export default function Question() {
   };
 
   const toggle = (n) => {
-    // console.log(n);
     setClicked(n);
+  };
+
+  const questionDown = () => {
+    fetch(`${STATICURL}/front/course/unit/${queryList.unitId}/question/`, {
+      method: "GET",
+    })
+      .then((e) => e.json())
+      .then((res) => {
+        setQuestionVal(res);
+      })
+      .catch((err) => {
+        alert(err);
+      });
   };
 
   const questionUpload = (e) => {
     e.preventDefault();
     if (qTitle === "" || q === "") {
-      alert("입력해");
+      alert("질문을 입력하세요.");
     } else {
       if (videoVal.playing === true) {
         setVideoVal({ ...videoVal, playing: false });
@@ -232,24 +245,26 @@ export default function Question() {
       })
         .then((e) => {
           if (e.status == 200) {
+            questionDown();
             Swal.fire({
               icon: "success",
               title: "등록 완료",
               text: "곧 강사님이 답변을 주실거에요!",
               confirmButtonText: "확인",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                setVideoVal({ ...videoVal, playing: true });
+              }
             });
           }
         })
         .catch((err) => {
-          console.log("입니다");
+          alert(err);
         });
-
-      // setNowQ([...nowQ, dummy]);
-      setVideoVal({ ...videoVal, playing: true });
     }
   };
-  console.log(nowQ);
-  useEffect(questionChecker, [videoTimeVal]);
+
+  useEffect(questionChecker, [videoTimeVal, questionVal]);
   return (
     <Wrapper>
       <CateBox>

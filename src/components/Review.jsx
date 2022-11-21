@@ -3,6 +3,9 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-regular-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStarHalfStroke } from "@fortawesome/free-solid-svg-icons";
+import { faStar as emptyStar } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { QueryListAtom, QuestionAtom, UserTokenAtom, VideoAtom } from "../atom";
 import { useEffect, useRef, useState } from "react";
@@ -62,12 +65,11 @@ const Icon = styled(FontAwesomeIcon)`
 `;
 
 const Div = styled.div`
-  margin-top: 10vh;
   margin-bottom: 10px;
 `;
 
 const Form = styled.div`
-  margin-top: 20px;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -96,6 +98,10 @@ export default function Coding() {
   };
   const accessToken = useRecoilValue(UserTokenAtom);
   const queryList = useRecoilValue(QueryListAtom);
+  const [starList, setStarList] = useState({
+    starCnt: 0,
+    isHalf: false,
+  });
   const fetchReview = () => {
     fetch(`${STATICURL}/front/course/unit/${queryList.unitId}/rating`, {
       method: "post",
@@ -111,9 +117,16 @@ export default function Coding() {
     })
       .then((res) => {
         if (res.status == 200) {
+          Swal.fire({
+            icon: "success",
+            title: "감사합니다",
+            text: "강의 품질 개선에 참고하겠습니다.",
+            confirmButtonText: "확인",
+          });
+        } else {
+          alert("알 수없는 오류가 발생했습니다.");
         }
       })
-
       .catch((err) => {
         console.log(err);
       });
@@ -139,18 +152,38 @@ export default function Coding() {
         });
       } else {
         fetchReview();
-        Swal.fire({
-          icon: "success",
-          title: "감사합니다",
-          text: "강의 품질 개선에 참고하겠습니다.",
-          confirmButtonText: "확인",
-        });
       }
     }
   };
 
+  const makeRateStarList = () => {
+    const rate = 4.7;
+    const starCnt = parseInt(rate % 5);
+    var isStarHalf = true;
+    if (Number((rate - starCnt).toFixed(1)) < 0.5) {
+      isStarHalf = false;
+    }
+
+    setStarList({
+      starCnt: starCnt,
+      isHalf: isStarHalf,
+    });
+  };
+
+  useEffect(makeRateStarList, []);
+
   return (
     <Wrapper>
+      <Div>
+        {[...Array(starList.starCnt).keys()].map((e) => {
+          return <Icon icon={faStar} />;
+        })}
+        {starList.isHalf ? (
+          <Icon icon={faStarHalfStroke} />
+        ) : (
+          <Icon icon={emptyStar} />
+        )}
+      </Div>
       <Div>
         <Title>강의가 만족스러우셨나요?</Title>
       </Div>
