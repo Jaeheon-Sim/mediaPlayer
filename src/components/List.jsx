@@ -1,3 +1,4 @@
+import axios from "axios";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useCallback } from "react";
@@ -6,6 +7,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import {
   CourseListAtom,
+  OverlappingAtom,
   QueryListAtom,
   QuestionAtom,
   unitInfoAtom,
@@ -48,6 +50,7 @@ export default function List() {
   const setUnitInfo = useSetRecoilState(unitInfoAtom);
   const unitInfo = useRecoilValue(unitInfoAtom);
   const videoVal = useRecoilValue(VideoAtom);
+  const setOverlappingVal = useSetRecoilState(OverlappingAtom);
 
   async function getAnotherCourseUnit(unitId) {
     try {
@@ -55,48 +58,70 @@ export default function List() {
       if (videoVal.duration == videoVal.playedSec) {
         isCheck = true;
       }
-      const res = await fetch(`${STATICURL}/front/course/unit/${unitId}`, {
-        method: "POST",
-        headers: {
-          "X-AUTH-TOKEN": userToken,
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
+      const res = await axios.post(
+        `${STATICURL}/front/course/unit/${unitId}`,
+        {
           complete: isCheck,
           currentUnitId: queryList.unitId,
           recordTime: videoVal.played,
-        }),
-      });
+        },
+        {
+          headers: {
+            "X-AUTH-TOKEN": userToken,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
       setQueryList((queryList) => ({ ...queryList, unitId: unitId }));
-      const json = await res.json();
-
-      setUnitInfo({ title: json.title, unitId: json.unitId, time: json.time });
-      if (json.fileUrl.includes("http")) {
-        setMediaUrl(`${json.fileUrl}`);
+      setUnitInfo({
+        title: res.data.title,
+        unitId: res.data.unitId,
+        time: res.data.time,
+      });
+      if (res.data.fileUrl.includes("http")) {
+        setMediaUrl(`${res.data.fileUrl}`);
       } else {
-        setMediaUrl(`${STATICURL}${json.fileUrl}`);
+        setMediaUrl(`${STATICURL}${res.data.fileUrl}`);
       }
-
       questionDown(unitId);
     } catch (error) {
-      alert(error); // 발생한 에러 표시
+      console.log(error.response);
     }
   }
 
-  const questionDown = (unitId) => {
-    fetch(`${STATICURL}/front/course/unit/${unitId}/question/`, {
-      method: "GET",
-    })
-      .then((e) => e.json())
-      .then((res) => {
-        setQuestionVal(res);
-      })
-      .catch((err) => {
-        alert(err);
-      });
-  };
+  async function questionDown(unitId) {
+    try {
+      const res = await axios.get(
+        `${STATICURL}/front/course/unit/${unitId}/question/`
+      );
+      setQuestionVal(res.data);
+      getThisUnitRate(unitId);
+    } catch (error) {
+      console.log(error.response);
+    }
+  }
+
+  async function getThisUnitRate(unitId) {
+    try {
+      const res = await axios.get(
+        `${STATICURL}/front/course/unit/${unitId}/rating`,
+        {
+          headers: {
+            "X-AUTH-TOKEN": userToken,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+
+      setUnitInfo((prev) => ({ ...prev, rating: res.data }));
+    } catch (error) {
+      console.log(error.response);
+    }
+  }
 
   return (
     <Wrapper>

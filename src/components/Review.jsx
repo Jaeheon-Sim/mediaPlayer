@@ -7,11 +7,19 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStarHalfStroke } from "@fortawesome/free-solid-svg-icons";
 import { faStar as emptyStar } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { QueryListAtom, QuestionAtom, UserTokenAtom, VideoAtom } from "../atom";
+import {
+  OverlappingAtom,
+  QueryListAtom,
+  QuestionAtom,
+  unitInfoAtom,
+  UserTokenAtom,
+  VideoAtom,
+} from "../atom";
 import { useEffect, useRef, useState } from "react";
 import { faCircle as circle } from "@fortawesome/free-solid-svg-icons";
 import { STATICURL, TESTTOKEN, TESTUNIT } from "../static";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 const Wrapper = styled.div`
   display: flex;
@@ -64,6 +72,10 @@ const Icon = styled(FontAwesomeIcon)`
   cursor: pointer;
 `;
 
+const Star = styled(Icon)`
+  cursor: default;
+`;
+
 const Div = styled.div`
   margin-bottom: 10px;
 `;
@@ -89,6 +101,17 @@ const Title = styled.h1`
   font-weight: bolder;
 `;
 
+const StartTitle = styled(Title)`
+  margin-left: 2vw;
+`;
+
+const StartTab = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
 export default function Coding() {
   const videoVal = useRecoilValue(VideoAtom);
   const [check, setCheck] = useState(null);
@@ -98,25 +121,30 @@ export default function Coding() {
   };
   const accessToken = useRecoilValue(UserTokenAtom);
   const queryList = useRecoilValue(QueryListAtom);
+  const unitInfo = useRecoilValue(unitInfoAtom);
+  const setOverlappingVal = useSetRecoilState(OverlappingAtom);
   const [starList, setStarList] = useState({
     starCnt: 0,
     isHalf: false,
   });
+
   const fetchReview = () => {
-    fetch(`${STATICURL}/front/course/unit/${queryList.unitId}/rating`, {
-      method: "post",
-      headers: {
-        "X-AUTH-TOKEN": accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({
-        score: check,
-      }),
-    })
+    axios
+      .post(
+        `${STATICURL}/front/course/unit/${queryList.unitId}/rating`,
+        { score: check },
+        {
+          headers: {
+            "X-AUTH-TOKEN": accessToken,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
       .then((res) => {
-        if (res.status == 200) {
+        console.log(res);
+        if (res.status === 200) {
           Swal.fire({
             icon: "success",
             title: "감사합니다",
@@ -128,7 +156,9 @@ export default function Coding() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response) {
+          console.log(err.response);
+        }
       });
   };
 
@@ -157,7 +187,8 @@ export default function Coding() {
   };
 
   const makeRateStarList = () => {
-    const rate = 4.7;
+    const rate = unitInfo.rating;
+
     const starCnt = parseInt(rate % 5);
     var isStarHalf = true;
     if (Number((rate - starCnt).toFixed(1)) < 0.5) {
@@ -174,16 +205,17 @@ export default function Coding() {
 
   return (
     <Wrapper>
-      <Div>
+      <StartTab>
         {[...Array(starList.starCnt).keys()].map((e) => {
-          return <Icon icon={faStar} />;
+          return <Star icon={faStar} />;
         })}
         {starList.isHalf ? (
-          <Icon icon={faStarHalfStroke} />
+          <Star icon={faStarHalfStroke} />
         ) : (
-          <Icon icon={emptyStar} />
+          <Star icon={emptyStar} />
         )}
-      </Div>
+        <StartTitle>{unitInfo.rating}</StartTitle>
+      </StartTab>
       <Div>
         <Title>강의가 만족스러우셨나요?</Title>
       </Div>

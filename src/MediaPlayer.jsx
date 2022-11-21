@@ -92,25 +92,7 @@ export default function MediaPlayer() {
   // 중복로그인 에러가 일어나면 이 아톰을 바꾸고, 알림창을 띄우자
 
   window.onbeforeunload = function (event) {
-    // event.preventDefault();
     exitPlayer();
-    // test();
-    // alert("nooo");
-    // event.returnValue = "";
-  };
-
-  const test = () => {
-    Swal.fire({
-      icon: "warning",
-      title: "강의 수강 내역을 저장하시겠습니까?",
-      showCancelButton: true,
-      confirmButtonText: "네",
-      cancelButtonText: "아니요",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        exitPlayer();
-      }
-    });
   };
 
   const exitPlayer = () => {
@@ -148,7 +130,6 @@ export default function MediaPlayer() {
       courseId: getParam("courseId"),
     }));
     setQueryList((queryList) => ({ ...queryList, unitId: getParam("unitId") }));
-    console.log(getParam("unitId"));
   }
 
   const getParam = (code) => {
@@ -164,7 +145,7 @@ export default function MediaPlayer() {
           "Access-Control-Allow-Credentials": true,
           "Access-Control-Allow-Origin": "*",
           "X-AUTH-TOKEN":
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjY4NDIwNTUyLCJleHAiOjE2OTk5NTY1NTJ9.-yNC5_VG7AarMyIZzHvzrh0hiDbcT08A6HhYr6UWcmQ",
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY2OTAzMDEyMSwiZXhwIjoxNzAwNTY2MTIxfQ.s0qjMGjo1dvCdLUtUJbgCSmoSm2mgp7j6ujFFOL3sxs",
         },
         body: JSON.stringify({ unitId: 6, courseId: 1 }),
       });
@@ -250,31 +231,34 @@ export default function MediaPlayer() {
       .then((e) => e.json())
       .then((res) => {
         setQuestionVal(res);
-        //getThisUnitRate();
+        getThisUnitRate();
       })
       .catch((err) => {
         alert(err);
       });
   };
 
-  const getThisUnitRate = () => {
-    fetch(`${STATICURL}/front/course/unit/${getParam("unitId")}/rating`, {
-      method: "get",
-      headers: {
-        "X-AUTH-TOKEN": accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
-      .then((res) => {
-        console.log(res);
-        // setUnitInfo((prev) => ({ ...prev, rating: res }));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  async function getThisUnitRate() {
+    try {
+      const res = await fetch(
+        `${STATICURL}/front/course/unit/${getParam("unitId")}/rating`,
+        {
+          method: "get",
+          headers: {
+            "X-AUTH-TOKEN": accessToken,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+      const json = await res.json();
+
+      setUnitInfo((prev) => ({ ...prev, rating: json }));
+    } catch (e) {
+      alert(e);
+    }
+  }
 
   const keyUpHandler = (e) => {
     var keyCode = e.keyCode ? e.keyCode : e.which;
@@ -284,7 +268,7 @@ export default function MediaPlayer() {
       wrapperRef.current.focus();
       setTimeout(() => {
         setCapture(false);
-      }, 3000);
+      }, 10000);
     }
   };
 
@@ -301,49 +285,61 @@ export default function MediaPlayer() {
     inpFld.remove(inpFld);
   }
 
+  const duplicateLogin = () => {
+    if (overlappingVal === true) {
+      Swal.fire({
+        title: "누군가가 로그인을 했어요",
+        showCancelButton: true,
+        confirmButtonText: "내가 쓸래요",
+        cancelButtonText: "나가기",
+        // 실행되는 동안 배경 누를때 모달창 안닫히도록 설정
+        // isLoading() 즉, 로딩이 진행되는 동안 false를 리턴하게 해서 ousideClick을 안되게 하고, 로딩 상태가 아니면 ousideClick을 허용한다.
+        allowOutsideClick: () => Swal.isLoading(),
+      }).then((result) => {
+        if (result.isConfirmed) {
+          duplicateLoginController(true);
+        } else {
+          alert("연결 종료");
+          duplicateLoginController(false);
+        }
+      });
+    }
+  };
+
+  const duplicateLoginController = (keepGo) => {
+    fetch(`${STATICURL}/open/auth/conflict`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        accessToken: accessToken,
+        keepGoing: keepGo,
+      }),
+    })
+      .then((e) => {
+        setOverlappingVal(false);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     getParams();
-    goRedirect().then(login());
+    goRedirect();
+    setTimeout(() => login(), 1000);
   }, []);
 
-  // const handleBeforeunload = (e) => {
-  //   exitPlayer();
-
-  //   return "";
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener("beforeunload", handleBeforeunload);
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleBeforeunload);
-  //   };
-  // }, []);
-
-  if (overlappingVal === true) {
-    Swal.fire({
-      title: "누군가가 로그인을 했어요",
-      showCancelButton: true,
-      confirmButtonText: "내가 쓸래요",
-      cancelButtonText: "나가기",
-      // 실행되는 동안 배경 누를때 모달창 안닫히도록 설정
-      // isLoading() 즉, 로딩이 진행되는 동안 false를 리턴하게 해서 ousideClick을 안되게 하고, 로딩 상태가 아니면 ousideClick을 허용한다.
-      allowOutsideClick: () => Swal.isLoading(),
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setOverlappingVal(false);
-      } else {
-        alert("연결 종료");
-      }
-    });
-  }
-
+  // useEffect(duplicateLogin, [overlappingVal]);
+  // duplicateLogin();
   // 어떤 강의랑 연결되었는지를 딱 판단해서 아톰값 수정해야함
 
   return (
     <Hm>
       {/* {isUser === null ? (
-        <CheckBox>
-          <CheckTab
+        <div>
+          <div
             initial={{ backgroundColor: "#000000", color: "#000000" }}
             animate={{
               backgroundColor: "#0000007f",
@@ -360,8 +356,8 @@ export default function MediaPlayer() {
             }}
           >
             <H1>플레이어</H1>
-          </CheckTab>
-          <CheckTab
+          </div>
+          <div
             initial={{ backgroundColor: "#ffffff", color: "#000000" }}
             animate={{
               backgroundColor: "#0000007f",
@@ -378,8 +374,8 @@ export default function MediaPlayer() {
             }}
           >
             <H1>임시 플랫폼</H1>
-          </CheckTab>
-        </CheckBox>
+          </div>
+        </div>
       ) : isUser ? (
         <Wrapper>
           <VideoTab>

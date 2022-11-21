@@ -5,6 +5,7 @@ import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning as regular } from "@fortawesome/free-regular-svg-icons";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
+  OverlappingAtom,
   QueryListAtom,
   QuestionAtom,
   UserTokenAtom,
@@ -15,6 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { STATICURL, TESTTOKEN, TESTUNIT } from "../static";
+import axios from "axios";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -190,6 +192,7 @@ export default function Question() {
   const [qData, setQData] = useState(true);
   const queryList = useRecoilValue(QueryListAtom);
   const setQuestionVal = useSetRecoilState(QuestionAtom);
+  const setOverlappingVal = useSetRecoilState(OverlappingAtom);
 
   const questionChecker = () => {
     var list = [];
@@ -206,18 +209,17 @@ export default function Question() {
     setClicked(n);
   };
 
-  const questionDown = () => {
-    fetch(`${STATICURL}/front/course/unit/${queryList.unitId}/question/`, {
-      method: "GET",
-    })
-      .then((e) => e.json())
-      .then((res) => {
-        setQuestionVal(res);
-      })
-      .catch((err) => {
-        alert(err);
-      });
-  };
+  async function questionDown() {
+    try {
+      const res = await axios.get(
+        `${STATICURL}/front/course/unit/${queryList.unitId}/question/`
+      );
+
+      setQuestionVal(res.data);
+    } catch (error) {
+      alert(error);
+    }
+  }
 
   const questionUpload = (e) => {
     e.preventDefault();
@@ -229,22 +231,29 @@ export default function Question() {
       }
       const lecTime = Math.trunc(videoVal.playedSec / 60); // 시간을 단계로 나눠
 
-      fetch(`${STATICURL}/front/course/unit/${queryList.unitId}/question`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-AUTH-TOKEN": accessToken,
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
-          content: q,
-          title: qTitle,
-          timeline: lecTime,
-        }),
-      })
-        .then((e) => {
-          if (e.status == 200) {
+      axios
+        .post(
+          `${STATICURL}/front/course/unit/${queryList.unitId}/question`,
+          {
+            content: q,
+            title: qTitle,
+            timeline: lecTime,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-AUTH-TOKEN": accessToken,
+              "Access-Control-Allow-Credentials": true,
+              "Access-Control-Allow-Origin": "*",
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.status);
+          // if (response.status === 409) {
+          //   setOverlappingVal(true);
+          // }
+          if (response.status === 200) {
             questionDown();
             Swal.fire({
               icon: "success",
@@ -259,7 +268,8 @@ export default function Question() {
           }
         })
         .catch((err) => {
-          alert(err);
+          console.log(err.status);
+          console.log(err.statusText);
         });
     }
   };
