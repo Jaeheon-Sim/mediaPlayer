@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import Manager from "./components/Manager";
 import { STATICURL } from "./static";
+import axios from "axios";
 // import withReactContent from "sweetalert2-react-content";
 
 const Hm = styled.div`
@@ -299,30 +300,32 @@ export default function MediaPlayer() {
         if (result.isConfirmed) {
           duplicateLoginController(true);
         } else {
-          alert("연결 종료");
-          duplicateLoginController(false);
+          window.open("", "_self").close();
         }
       });
     }
   };
 
   const duplicateLoginController = (keepGo) => {
-    fetch(`${STATICURL}/open/auth/conflict`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({
-        accessToken: accessToken,
-        keepGoing: keepGo,
-      }),
-    })
+    axios
+      .post(
+        `${STATICURL}/open/auth/conflict`,
+        {
+          accessToken: accessToken,
+          keepGoing: keepGo,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
       .then((e) => {
         setOverlappingVal(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err.response));
   };
 
   useEffect(() => {
@@ -331,8 +334,8 @@ export default function MediaPlayer() {
     setTimeout(() => login(), 1000);
   }, []);
 
-  // useEffect(duplicateLogin, [overlappingVal]);
-  // duplicateLogin();
+  useEffect(duplicateLogin, [overlappingVal]);
+
   // 어떤 강의랑 연결되었는지를 딱 판단해서 아톰값 수정해야함
 
   return (

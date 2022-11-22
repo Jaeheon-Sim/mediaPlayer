@@ -156,8 +156,10 @@ export default function Coding() {
         }
       })
       .catch((err) => {
-        if (err.response) {
-          console.log(err.response);
+        if (err.response.status === 409) {
+          setOverlappingVal(true);
+        } else {
+          alert(err);
         }
       });
   };

@@ -214,10 +214,13 @@ export default function Question() {
       const res = await axios.get(
         `${STATICURL}/front/course/unit/${queryList.unitId}/question/`
       );
-
       setQuestionVal(res.data);
     } catch (error) {
-      alert(error);
+      if (error.response.status === 409) {
+        setOverlappingVal(true);
+      } else {
+        alert(error);
+      }
     }
   }
 
@@ -250,9 +253,6 @@ export default function Question() {
         )
         .then((response) => {
           console.log(response.status);
-          // if (response.status === 409) {
-          //   setOverlappingVal(true);
-          // }
           if (response.status === 200) {
             questionDown();
             Swal.fire({
@@ -267,9 +267,13 @@ export default function Question() {
             });
           }
         })
-        .catch((err) => {
-          console.log(err.status);
-          console.log(err.statusText);
+        .catch((error) => {
+          if (error.response.status === 409) {
+            console.log(error.response.status);
+            setOverlappingVal(true);
+          } else {
+            alert(error);
+          }
         });
     }
   };

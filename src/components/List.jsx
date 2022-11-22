@@ -87,7 +87,11 @@ export default function List() {
       }
       questionDown(unitId);
     } catch (error) {
-      console.log(error.response);
+      if (error.response.status === 409) {
+        setOverlappingVal(true);
+      } else {
+        alert(error);
+      }
     }
   }
 
@@ -99,7 +103,11 @@ export default function List() {
       setQuestionVal(res.data);
       getThisUnitRate(unitId);
     } catch (error) {
-      console.log(error.response);
+      if (error.response.status === 409) {
+        setOverlappingVal(true);
+      } else {
+        alert(error);
+      }
     }
   }
 
@@ -119,7 +127,11 @@ export default function List() {
 
       setUnitInfo((prev) => ({ ...prev, rating: res.data }));
     } catch (error) {
-      console.log(error.response);
+      if (error.response.status === 409) {
+        setOverlappingVal(true);
+      } else {
+        alert(error);
+      }
     }
   }
 
