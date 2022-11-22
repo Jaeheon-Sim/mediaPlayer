@@ -330,8 +330,9 @@ export default function MediaPlayer() {
 
   useEffect(() => {
     getParams();
-    goRedirect();
-    setTimeout(() => login(), 1000);
+    // goRedirect();
+    // setTimeout(() => login(), 1000);
+    login();
   }, []);
 
   useEffect(duplicateLogin, [overlappingVal]);
