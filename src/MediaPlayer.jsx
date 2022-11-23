@@ -74,6 +74,18 @@ const H1 = styled.h1`
   color: white;
 `;
 
+const Title = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "IBM Plex Sans KR", sans-serif;
+  font-size: 3vh;
+  margin-bottom: 10px;
+  margin-top: -30px;
+  color: black;
+`;
+
 export default function MediaPlayer() {
   const setQuestionVal = useSetRecoilState(QuestionAtom);
   const accessToken = useRecoilValue(UserTokenAtom);
@@ -85,6 +97,7 @@ export default function MediaPlayer() {
   const queryList = useRecoilValue(QueryListAtom);
   const setCourseList = useSetRecoilState(CourseListAtom);
   const setQueryList = useSetRecoilState(QueryListAtom);
+  const unitInfo = useRecoilValue(unitInfoAtom);
   const setUnitInfo = useSetRecoilState(unitInfoAtom);
 
   const wrapperRef = useRef();
@@ -330,9 +343,9 @@ export default function MediaPlayer() {
 
   useEffect(() => {
     getParams();
-    goRedirect();
-    setTimeout(() => login(), 1000);
-    // login();
+    // goRedirect();
+    // setTimeout(() => login(), 1000);
+    login();
   }, []);
 
   useEffect(duplicateLogin, [overlappingVal]);
@@ -400,6 +413,8 @@ export default function MediaPlayer() {
           </BlockCapBox>
         )}
         <VideoTab>
+          <Title>{unitInfo?.title}</Title>
+
           <Player />
         </VideoTab>
         <BarTab>

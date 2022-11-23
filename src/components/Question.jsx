@@ -96,7 +96,8 @@ const QuestionInfoBox = styled(TitleBox)`
 
 const QuestionBox = styled(motion.div)`
   width: 100%;
-  height: 61vh;
+  height: 65vh;
+  /* height: 61vh; */
   /* height: ${(props) => (props.click ? "70vh" : "auto")}; //props 활용 */
   /* display: flex;
   align-items: center;
