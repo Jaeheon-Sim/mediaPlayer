@@ -207,6 +207,9 @@ export default function Coding() {
 
   return (
     <Wrapper>
+      <br />
+      <br />
+      <Title>강의 평점</Title>
       <StartTab>
         {[...Array(starList.starCnt).keys()].map((e) => {
           return <Star icon={faStar} />;
@@ -216,8 +219,9 @@ export default function Coding() {
         ) : (
           <Star icon={emptyStar} />
         )}
-        <StartTitle>{unitInfo.rating}</StartTitle>
+        <startTitle>{unitInfo.rating} 몇 명</startTitle>
       </StartTab>
+
       <Div>
         <Title>강의가 만족스러우셨나요?</Title>
       </Div>

@@ -146,7 +146,7 @@ export default function MediaPlayer() {
           "Access-Control-Allow-Credentials": true,
           "Access-Control-Allow-Origin": "*",
           "X-AUTH-TOKEN":
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY2OTAzMDEyMSwiZXhwIjoxNzAwNTY2MTIxfQ.s0qjMGjo1dvCdLUtUJbgCSmoSm2mgp7j6ujFFOL3sxs",
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY2OTE5OTA3OCwiZXhwIjoxNzAwNzM1MDc4fQ.ahwmmKHrmf8bmZ8AC9M7AgPIcpCHKrdizy9_dPiG3ak",
         },
         body: JSON.stringify({ unitId: 6, courseId: 1 }),
       });
