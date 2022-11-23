@@ -139,7 +139,7 @@ export default function MediaPlayer() {
 
   async function goRedirect() {
     try {
-      await fetch(`http://34.64.177.193/open/player/execute`, {
+      await fetch(`http://34.64.177.193/api/open/player/execute`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
