@@ -105,7 +105,7 @@ const QuestionBox = styled(motion.div)`
   display: grid;
   position: relative;
   // width 넓으면 4개로 늘리지 뭐
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
 
   place-items: start center;
   border-radius: 25px;
@@ -114,6 +114,12 @@ const QuestionBox = styled(motion.div)`
   /* @media screen and (max-height: 90vh) and (min-height: 617px) {
     height: 30vh;
   } */
+`;
+
+const OverLay = styled(Overlay)`
+  position: fixed;
+  max-width: 21vw;
+  max-height: 90vh;
 `;
 
 const QuestionTab = styled(motion.div)`
@@ -139,11 +145,12 @@ const Box = styled(motion.div)`
   border: 1px solid;
 `;
 
-const Tab = styled.div`
+const Tab = styled(motion.div)`
   margin: 0 10px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  /* display: ${(props) => (props.visible ? "default" : "none")}; */
 `;
 
 const QBox = styled.div`
@@ -193,7 +200,7 @@ export default function Question() {
   const queryList = useRecoilValue(QueryListAtom);
   const setQuestionVal = useSetRecoilState(QuestionAtom);
   const setOverlappingVal = useSetRecoilState(OverlappingAtom);
-
+  const [visible, setVisible] = useState(true);
   const questionChecker = () => {
     var list = [];
     setNowQ(null);
@@ -278,6 +285,11 @@ export default function Question() {
     }
   };
 
+  const variants = {
+    open: { opacity: 1 },
+    closed: { opacity: 0.4 },
+  };
+
   useEffect(questionChecker, [videoTimeVal, questionVal]);
   return (
     <Wrapper>
@@ -342,12 +354,15 @@ export default function Question() {
           <QuestionBox click={clicked}>
             <AnimatePresence>
               {clicked ? (
-                <Overlay
+                <OverLay
                   initial={{ backgroundColor: "rgba(0,0,0,0)" }}
                   animate={{
+                    display: ["none", "default"],
                     zIndex: "1",
                   }}
-                  exit={{ height: "auto", backgroundColor: "rgba(0,0,0,0)" }}
+                  exit={{
+                    backgroundColor: "rgba(0,0,0,0)",
+                  }}
                 >
                   <Box layoutId={clicked}>
                     <QBox>
@@ -355,6 +370,10 @@ export default function Question() {
                       <Div
                         onClick={() => {
                           setClicked(null);
+                          setVisible(false);
+                          setTimeout(() => {
+                            setVisible(true);
+                          }, 300);
                         }}
                       >
                         나가기
@@ -384,7 +403,7 @@ export default function Question() {
                       <ReplyBox>{nowQ[clicked - 1].content}</ReplyBox>
                     )}
                   </Box>
-                </Overlay>
+                </OverLay>
               ) : null}
             </AnimatePresence>
             {nowQ?.map((e, idx) => {
@@ -398,8 +417,18 @@ export default function Question() {
                   key={idx + 1}
                   layoutId={idx + 1}
                 >
-                  <Tab>{e.title}</Tab>
-                  <Tab>답변상태: {e.replyCount != 0 ? "YES" : "NO"}</Tab>
+                  <Tab
+                    animate={visible ? "open" : "closed"}
+                    variants={variants}
+                  >
+                    {e.title}
+                  </Tab>
+                  <Tab
+                    animate={visible ? "open" : "closed"}
+                    variants={variants}
+                  >
+                    {e.replyCount}개의 답변이 있어요.
+                  </Tab>
                 </QuestionTab>
               );
             })}
