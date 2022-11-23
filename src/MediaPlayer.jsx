@@ -197,7 +197,7 @@ export default function MediaPlayer() {
         if (res.fileUrl.includes("http")) {
           setMediaUrl(`${res.fileUrl}`);
         } else {
-          setMediaUrl(`${STATICURL}${res.fileUrl}`);
+          setMediaUrl(`http://34.64.177.193/${res.fileUrl}`);
         }
 
         questionDown();

@@ -83,7 +83,7 @@ export default function List() {
       if (res.data.fileUrl.includes("http")) {
         setMediaUrl(`${res.data.fileUrl}`);
       } else {
-        setMediaUrl(`${STATICURL}${res.data.fileUrl}`);
+        setMediaUrl(`http://34.64.177.193/${res.data.fileUrl}`);
       }
       questionDown(unitId);
     } catch (error) {
