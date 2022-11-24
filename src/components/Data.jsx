@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  margin-top: 20px;
+  margin-top: 2vh;
   margin-left: 15px;
   height: 98%;
 `;
@@ -34,6 +34,7 @@ const PrepareBox = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   flex-direction: column;
+  width: 100%;
 `;
 const Title = styled.div`
   font-weight: bolder;
@@ -44,7 +45,7 @@ const DetailBox = styled.div`
   justify-content: center;
   width: 95%;
   min-height: 3vh;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 
   padding: 30px 0px 30px 0px;
   flex-direction: column;
@@ -58,7 +59,7 @@ const DetailTab = styled.div`
 
 const Detail = styled.div`
   width: 80%;
-  margin-top: 10px;
+  margin-top: 20px;
   margin-left: 10px;
   background-color: #efefef;
   padding: 10px 10px 10px 5px;
@@ -93,7 +94,9 @@ export default function Data() {
       </TitleBox>
       <DetailBox>
         <DetailTab>강의 목표</DetailTab>
-        <Detail>Test....</Detail>
+        <PrepareTab>test </PrepareTab>
+        <PrepareTab>test </PrepareTab>
+
         <br />
         <DetailTab>세부 내용</DetailTab>
         <Detail>Test....</Detail>
@@ -103,9 +106,7 @@ export default function Data() {
           <Icon icon={faCheck} />
           무엇이 필요할까요?
         </Title>
-
-        <PrepareTab>test </PrepareTab>
-        <PrepareTab>test </PrepareTab>
+        <Detail>Test....</Detail>
       </PrepareBox>
     </Wrapper>
   );

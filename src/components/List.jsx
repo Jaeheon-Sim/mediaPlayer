@@ -35,7 +35,20 @@ const Catalog = styled(motion.li)`
 `;
 
 const Tab = styled.div`
+  margin-left: 25px;
+`;
+
+const Title = styled.div`
+  font-weight: bolder;
+`;
+const TitleBox = styled.div`
+  font-size: 1.3rem;
   margin-left: 15px;
+  margin-top: 2vh;
+`;
+
+const ListBox = styled.ul`
+  margin-top: 20px;
 `;
 
 export default function List() {
@@ -134,26 +147,34 @@ export default function List() {
       }
     }
   }
-
+  const courseTitle = "법원 강의";
   return (
     <Wrapper>
-      {courseList?.map((e, idx) => {
-        return (
-          <Catalog
-            onClick={() => {
-              getAnotherCourseUnit(e.unitId);
-            }}
-            men={e.unitId}
-            now={unitInfo.unitId}
-            key={idx}
-            whileHover={{ backgroundColor: "#dfdede" }}
-          >
-            <Tab>
-              {idx}. {e.title}
-            </Tab>
-          </Catalog>
-        );
-      })}
+      <TitleBox>
+        <Title>&lt;{courseTitle}&gt;</Title>
+      </TitleBox>
+      <TitleBox>
+        <Title>{unitInfo.title}</Title>
+      </TitleBox>
+      <ListBox>
+        {courseList?.map((e, idx) => {
+          return (
+            <Catalog
+              onClick={() => {
+                getAnotherCourseUnit(e.unitId);
+              }}
+              men={e.unitId}
+              now={unitInfo.unitId}
+              key={idx}
+              whileHover={{ backgroundColor: "#dfdede" }}
+            >
+              <Tab>
+                {idx}. {e.title}
+              </Tab>
+            </Catalog>
+          );
+        })}
+      </ListBox>
     </Wrapper>
   );
 }

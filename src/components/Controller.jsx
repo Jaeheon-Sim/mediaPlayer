@@ -34,14 +34,18 @@ import Slider from "@mui/material/Slider";
 import { useEffect, useRef, useState } from "react";
 
 const BarWarpper = styled.div`
-  height: 10%;
+  height: 7vh;
+  min-height: 50px;
   width: 100%;
-  margin-bottom: 9px;
+  padding-bottom: 1vh;
+  padding-top: 10px;
+  margin-bottom: 0.5vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: absolute;
   background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.8);
   @media screen and (max-width: 1000px) {
     bottom: 5px;
   }
@@ -52,6 +56,7 @@ const BarWarpper = styled.div`
 const ProgressTab = styled.div`
   margin-left: 15px;
   margin-right: 15px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -84,6 +89,8 @@ const Img = styled.img`
   margin-right: 10px;
   width: 2.5vh;
   height: 2.5vh;
+  min-height: 30px;
+  min-width: 30px;
 `;
 
 const PRImg = styled(Img)`
@@ -95,7 +102,11 @@ const PRImg = styled(Img)`
 const IconTab = styled.div`
   display: flex;
   align-items: center;
-  padding-right: 10px;
+  padding-right: 0.5vw;
+`;
+
+const IconSecTab = styled(IconTab)`
+  margin-bottom: 3px;
 `;
 
 const VolumnTab = styled(motion.div)`
@@ -161,6 +172,7 @@ const Cc = styled(motion.div)`
 const TimeTab = styled.div`
   margin-left: 15px;
   margin-right: 5px;
+  font-size: 1.2rem;
 `;
 
 const Div = styled(motion.div)`
@@ -488,7 +500,7 @@ export default function Controller(vRef, fRef, props) {
           </VolumnTab>
         </IconTab>
 
-        <IconTab>
+        <IconSecTab>
           <RateTab
             onClick={() => {
               setRateVal((prev) => !prev);
@@ -581,7 +593,7 @@ export default function Controller(vRef, fRef, props) {
           <motion.div variants={TabVari} whileHover="hover" whileTap="tap">
             <Icon icon={faExpand} onClick={fullHandler}></Icon>
           </motion.div>
-        </IconTab>
+        </IconSecTab>
       </ControlTab>
     </BarWarpper>
   );

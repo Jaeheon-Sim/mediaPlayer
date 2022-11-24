@@ -26,8 +26,8 @@ const Hm = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100vw;
-  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
 `;
 
 const BlockCapBox = styled.div`
@@ -44,7 +44,7 @@ const BlockCapBox = styled.div`
 const Wrapper = styled.div`
   display: grid;
   /* height: 95vh; */
-  grid-template-columns: 78% 22%;
+  grid-template-columns: 79% 22%;
   justify-content: center;
   background-color: rgb(255, 255, 255);
   width: 98%;
@@ -56,12 +56,12 @@ const Wrapper = styled.div`
 `;
 
 const VideoTab = styled.div`
-  height: 100%;
+  min-height: 100%;
   width: 100%;
   position: relative;
 `;
 const BarTab = styled.div`
-  margin-left: 10px;
+  margin-left: 20px;
   height: 100%;
   @media screen and (max-width: 1500px) {
     display: none;
@@ -78,11 +78,11 @@ const Title = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   font-family: "IBM Plex Sans KR", sans-serif;
-  font-size: 3vh;
+  font-size: 2vh;
   margin-bottom: 10px;
-  margin-top: -30px;
+  margin-top: -20px;
   color: black;
 `;
 
@@ -207,6 +207,7 @@ export default function MediaPlayer() {
       .then((e) => e.json())
       .then((res) => {
         setUnitInfo({ title: res.title, unitId: res.unitId, time: res.time });
+
         if (res.fileUrl.includes("http")) {
           setMediaUrl(`${res.fileUrl}`);
         } else {
@@ -231,7 +232,6 @@ export default function MediaPlayer() {
           list.push(e);
         });
         setCourseList(list);
-        // console.log(res);
       })
       .catch((err) => {
         alert(err);
@@ -414,7 +414,6 @@ export default function MediaPlayer() {
         )}
         <VideoTab>
           <Title>{unitInfo?.title}</Title>
-
           <Player />
         </VideoTab>
         <BarTab>

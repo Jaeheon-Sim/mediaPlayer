@@ -51,11 +51,10 @@ const ReviewIconTab = styled.div`
       height: 15vh;
     }
   }
-`;
-
-const DivTab = styled(ReviewIconTab)`
   margin-top: -30px;
 `;
+
+const DivTab = styled(ReviewIconTab)``;
 
 const BtnTab = styled.div`
   margin-top: 5px;
@@ -81,7 +80,7 @@ const Div = styled.div`
 `;
 
 const Form = styled.div`
-  margin-top: 10px;
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -110,6 +109,7 @@ const StartTab = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin-bottom: 40px;
 `;
 
 export default function Coding() {
@@ -216,10 +216,10 @@ export default function Coding() {
         ) : (
           <Star icon={emptyStar} />
         )}
-        <StartTitle>{unitInfo.rating}</StartTitle>
+        <StartTitle>{unitInfo.rating.toFixed(1)}</StartTitle>
       </StartTab>
       <Div>
-        <Title>강의가 만족스러우셨나요?</Title>
+        <Title>강의에 점수를 주세요.</Title>
       </Div>
       <ReviewIconTab>
         {[1, 2, 3, 4, 5].map((e, idx) => {
