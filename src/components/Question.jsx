@@ -97,7 +97,7 @@ const QuestionInfoBox = styled(TitleBox)`
 const QuestionBox = styled(motion.div)`
   width: 100%;
   height: 65vh;
-  /* height: 61vh; */
+  /* height: 61%; */
   /* height: ${(props) => (props.click ? "70vh" : "auto")}; //props 활용 */
   /* display: flex;
   align-items: center;
@@ -202,6 +202,9 @@ export default function Question() {
   const setQuestionVal = useSetRecoilState(QuestionAtom);
   const setOverlappingVal = useSetRecoilState(OverlappingAtom);
   const [visible, setVisible] = useState(true);
+  const [isReply, setIsReply] = useState("");
+  const [questionContent, setQuestionContent] = useState("");
+  const [questionReply, setQuestionReply] = useState("");
   const questionChecker = () => {
     var list = [];
     setNowQ(null);
@@ -220,7 +223,7 @@ export default function Question() {
   async function questionDown() {
     try {
       const res = await axios.get(
-        `${STATICURL}/front/course/unit/${queryList.unitId}/question/`
+        `${STATICURL}/front/unit/${queryList.unitId}/questions`
       );
       setQuestionVal(res.data);
     } catch (error) {
@@ -244,7 +247,7 @@ export default function Question() {
 
       axios
         .post(
-          `${STATICURL}/front/course/unit/${queryList.unitId}/question`,
+          `${STATICURL}/front/unit/${queryList.unitId}/questions`,
           {
             content: q,
             title: qTitle,
@@ -252,8 +255,8 @@ export default function Question() {
           },
           {
             headers: {
-              "Content-Type": "application/json",
               "X-AUTH-TOKEN": accessToken,
+              "Content-Type": "application/json",
               "Access-Control-Allow-Credentials": true,
               "Access-Control-Allow-Origin": "*",
             },
@@ -290,6 +293,73 @@ export default function Question() {
     open: { opacity: 1 },
     closed: { opacity: 0.4 },
   };
+
+  async function getQuestionContent(questionId) {
+    try {
+      const res = await axios.get(`${STATICURL}/front/questions/${questionId}`);
+      setQuestionContent(res.data);
+    } catch (error) {
+      if (error.response.status === 409) {
+        setOverlappingVal(true);
+      } else {
+        alert(error);
+      }
+    }
+  }
+
+  async function getQuestionReply(questionId) {
+    try {
+      const res = await axios.get(
+        `${STATICURL}/front/questions/${questionId}/answers`
+      );
+      setQuestionReply(res.data);
+      console.log(res.data);
+    } catch (error) {
+      if (error.response.status === 409) {
+        setOverlappingVal(true);
+      } else {
+        alert(error);
+      }
+    }
+  }
+
+  // const uploadReply = (e) => {
+  //   e.preventDefault();
+  //   if (isReply === "") {
+  //     alert("답변을 입력하세요.");
+  //   } else {
+  //     if (videoVal.playing === true) {
+  //       setVideoVal({ ...videoVal, playing: false });
+  //     }
+  //     const lecTime = Math.trunc(videoVal.playedSec / 60); // 시간을 단계로 나눠
+
+  //     axios
+  //       .post(
+  //         `${STATICURL}/front/questions/${queryList.unitId}/answers`,
+  //         {
+  //           content: q,
+  //           title: qTitle,
+  //           timeline: lecTime,
+  //         },
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             "X-AUTH-TOKEN": accessToken,
+  //             "Access-Control-Allow-Credentials": true,
+  //             "Access-Control-Allow-Origin": "*",
+  //           },
+  //         }
+  //       )
+  //       .then((response) => {})
+  //       .catch((error) => {
+  //         if (error.response.status === 409) {
+  //           setOverlappingVal(true);
+  //         } else {
+  //           alert(error);
+  //         }
+  //       });
+  //   }
+  // };
 
   useEffect(questionChecker, [videoTimeVal, questionVal]);
   return (
@@ -399,9 +469,24 @@ export default function Question() {
                       </CateTab>
                     </CateBox>
                     {!qData ? (
-                      <ReplyBox>{nowQ[clicked - 1].replyContent}</ReplyBox>
+                      <ReplyBox>{questionReply}</ReplyBox>
                     ) : (
-                      <ReplyBox>{nowQ[clicked - 1].content}</ReplyBox>
+                      <ReplyBox>
+                        {questionContent.content}
+                        {/* <div>
+                          답변
+                          <input
+                            type="text"
+                            placeholder="답변을 해주세요"
+                            required
+                            value={isReply}
+                            onChange={(e) => {
+                              setIsReply(e.target.value);
+                            }}
+                          />
+                          <button onClick={uploadReply}>등록</button>
+                        </div> */}
+                      </ReplyBox>
                     )}
                   </Box>
                 </OverLay>
@@ -412,6 +497,8 @@ export default function Question() {
                 <QuestionTab
                   whileHover={{ border: "1px inset #000000" }}
                   onClick={() => {
+                    getQuestionContent(e.questionId);
+                    getQuestionReply(e.questionId);
                     setQData(true);
                     toggle(idx + 1);
                   }}

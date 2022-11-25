@@ -99,3 +99,8 @@ export const unitInfoAtom = atom({
     rating: 0,
   },
 });
+
+export const CourseInfoAtom = atom({
+  key: "isCourseIndoAtom",
+  default: {},
+});

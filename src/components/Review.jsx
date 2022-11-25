@@ -131,8 +131,8 @@ export default function Coding() {
   const fetchReview = () => {
     axios
       .post(
-        `${STATICURL}/front/course/unit/${queryList.unitId}/rating`,
-        { score: check },
+        `${STATICURL}/front/units/${queryList.unitId}/rating`,
+        { comment: reviewC, score: Number(check) },
         {
           headers: {
             "X-AUTH-TOKEN": accessToken,
@@ -143,7 +143,6 @@ export default function Coding() {
         }
       )
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
           Swal.fire({
             icon: "success",
@@ -189,14 +188,17 @@ export default function Coding() {
   };
 
   const makeRateStarList = () => {
-    const rate = unitInfo.rating;
-
-    const starCnt = parseInt(rate % 5);
-    var isStarHalf = true;
-    if (Number((rate - starCnt).toFixed(1)) < 0.5) {
-      isStarHalf = false;
+    const rate = unitInfo?.rating?.score;
+    if (rate === 5) {
+      const starCnt = 5;
+      const isStarHalf = true;
+    } else {
+      var starCnt = parseInt(rate % 5);
+      var isStarHalf = true;
+      if (Number((rate - starCnt)?.toFixed(1)) < 0.5) {
+        isStarHalf = false;
+      }
     }
-
     setStarList({
       starCnt: starCnt,
       isHalf: isStarHalf,
@@ -208,15 +210,16 @@ export default function Coding() {
   return (
     <Wrapper>
       <StartTab>
-        {[...Array(starList.starCnt).keys()].map((e) => {
+        {[...Array(starList?.starCnt)?.keys()]?.map((e) => {
           return <Star icon={faStar} />;
         })}
-        {starList.isHalf ? (
+        {starList.starCnt === 5 ? null : starList?.isHalf ? (
           <Star icon={faStarHalfStroke} />
         ) : (
           <Star icon={emptyStar} />
         )}
-        <StartTitle>{unitInfo.rating.toFixed(1)}</StartTitle>
+        {}
+        <StartTitle>{unitInfo?.rating?.score?.toFixed(1)}</StartTitle>
       </StartTab>
       <Div>
         <Title>강의에 점수를 주세요.</Title>

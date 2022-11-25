@@ -61,15 +61,27 @@ export default function Manager() {
     formData.append(
       "unitRequestDto",
       new Blob(
-        [JSON.stringify({ courseId: Number(unit), title: String(title) })],
+        [
+          JSON.stringify({
+            description: "test 강의 입니다",
+            objective: "test입니다",
+            title: "test unit3",
+          }),
+        ],
         { type: "application/json" }
       )
     );
 
-    fetch(`${STATICURL}/open/course/unit`, {
+    fetch(`${STATICURL}/open/courses/1/units`, {
       method: "POST",
-
+      headers: {
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": "*",
+        "X-AUTH-TOKEN":
+          "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY2OTM5MTg5MSwiZXhwIjoxNzAwOTI3ODkxfQ.1a1uEI3VnWdD5lyryHH5J97coqw1J96uWMulXnzG1Qo",
+      },
       body: formData,
+      keepalive: true,
     })
       .then((res) => res)
       .then((data) => {

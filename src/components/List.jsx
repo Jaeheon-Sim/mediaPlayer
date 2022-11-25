@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import {
+  CourseInfoAtom,
   CourseListAtom,
   OverlappingAtom,
   QueryListAtom,
@@ -40,6 +41,7 @@ const Tab = styled.div`
 
 const Title = styled.div`
   font-weight: bolder;
+  font-size: 1.4rem;
 `;
 const TitleBox = styled.div`
   font-size: 1.3rem;
@@ -49,6 +51,13 @@ const TitleBox = styled.div`
 
 const ListBox = styled.ul`
   margin-top: 20px;
+`;
+
+const SubInfoBox = styled.div`
+  display: flex;
+  width: 70%;
+  align-items: center;
+  justify-content: flex-end;
 `;
 
 export default function List() {
@@ -64,6 +73,7 @@ export default function List() {
   const unitInfo = useRecoilValue(unitInfoAtom);
   const videoVal = useRecoilValue(VideoAtom);
   const setOverlappingVal = useSetRecoilState(OverlappingAtom);
+  const courseInfo = useRecoilValue(CourseInfoAtom);
 
   async function getAnotherCourseUnit(unitId) {
     try {
@@ -72,7 +82,7 @@ export default function List() {
         isCheck = true;
       }
       const res = await axios.post(
-        `${STATICURL}/front/course/unit/${unitId}`,
+        `${STATICURL}/front/play/units/${unitId}/`,
         {
           complete: isCheck,
           currentUnitId: queryList.unitId,
@@ -111,7 +121,7 @@ export default function List() {
   async function questionDown(unitId) {
     try {
       const res = await axios.get(
-        `${STATICURL}/front/course/unit/${unitId}/question/`
+        `${STATICURL}/front/unit/${unitId}/questions`
       );
       setQuestionVal(res.data);
       getThisUnitRate(unitId);
@@ -126,17 +136,14 @@ export default function List() {
 
   async function getThisUnitRate(unitId) {
     try {
-      const res = await axios.get(
-        `${STATICURL}/front/course/unit/${unitId}/rating`,
-        {
-          headers: {
-            "X-AUTH-TOKEN": userToken,
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Credentials": true,
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      );
+      const res = await axios.get(`${STATICURL}/front/units/${unitId}/rating`, {
+        headers: {
+          "X-AUTH-TOKEN": userToken,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
 
       setUnitInfo((prev) => ({ ...prev, rating: res.data }));
     } catch (error) {
@@ -147,11 +154,16 @@ export default function List() {
       }
     }
   }
-  const courseTitle = "법원 강의";
+
+  console.log(courseInfo);
+
   return (
     <Wrapper>
       <TitleBox>
-        <Title>&lt;{courseTitle}&gt;</Title>
+        <Title>&lt;{courseInfo.title}&gt;</Title>
+        <SubInfoBox>
+          <h2>{courseInfo.subtitle}</h2>-<h3>{courseInfo.instructor}</h3>
+        </SubInfoBox>
       </TitleBox>
       <TitleBox>
         <Title>{unitInfo.title}</Title>

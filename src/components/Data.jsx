@@ -6,6 +6,7 @@ import { faClosedCaptioning as regular } from "@fortawesome/free-regular-svg-ico
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   CourseListAtom,
+  OverlappingAtom,
   QueryListAtom,
   QuestionAtom,
   unitInfoAtom,
@@ -16,6 +17,8 @@ import { useEffect, useRef, useState } from "react";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 import { faStar } from "@fortawesome/free-regular-svg-icons";
+import axios from "axios";
+import { STATICURL } from "../static";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -80,11 +83,33 @@ const PrepareTab = styled.li`
 
 export default function Data() {
   const queryList = useRecoilValue(QueryListAtom);
-  const courseList = useRecoilValue(CourseListAtom);
+  const setOverlappingVal = useSetRecoilState(OverlappingAtom);
   const unitInfo = useRecoilValue(unitInfoAtom);
-
+  const [unitDetail, setUnitDetail] = useState({});
+  async function getUnitDetail() {
+    try {
+      const res = await axios.get(
+        `${STATICURL}/front/units/${queryList.unitId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+      setUnitDetail(res.data);
+    } catch (error) {
+      if (error.response.status === 409) {
+        setOverlappingVal(true);
+      } else {
+        alert(error);
+      }
+    }
+  }
+  console.log(unitDetail);
   useEffect(() => {
-    courseList.map((e) => {});
+    getUnitDetail();
   }, [queryList.unitId]);
 
   return (
@@ -92,14 +117,15 @@ export default function Data() {
       <TitleBox>
         <Title>{unitInfo.title}</Title>
       </TitleBox>
+
       <DetailBox>
         <DetailTab>강의 목표</DetailTab>
-        <PrepareTab>test </PrepareTab>
-        <PrepareTab>test </PrepareTab>
+        <PrepareTab>{unitDetail.objective}</PrepareTab>
+        <PrepareTab>{unitDetail.objective}</PrepareTab>
 
         <br />
         <DetailTab>세부 내용</DetailTab>
-        <Detail>Test....</Detail>
+        <Detail>{unitDetail.description}</Detail>
       </DetailBox>
       <PrepareBox>
         <Title>

@@ -45,6 +45,7 @@ const PlayAni = styled(motion.div)`
   position: absolute;
   bottom: 38%;
   right: 42%;
+  z-index: 10;
 `;
 const Icon = styled(FontAwesomeIcon)`
   width: 150px;
@@ -56,7 +57,11 @@ const ControlTab = styled(motion.div)`
 `;
 
 const LoadingPlayer = styled(motion.div)`
-  height: 90vh;
+  height: 100%;
+`;
+
+const VideoRelativeDiv = styled.div`
+  position: relative;
 `;
 
 export default function Player() {
@@ -172,7 +177,7 @@ export default function Player() {
           }}
         ></LoadingPlayer>
       ) : (
-        <div ref={fullRef}>
+        <VideoRelativeDiv ref={fullRef}>
           <Clicker
             onClick={() => {
               setVideoVal({ ...videoVal, playing: !videoVal.playing });
@@ -223,7 +228,7 @@ export default function Player() {
           >
             <Controller video={videoRef} fullR={fullRef} />
           </ControlTab>
-        </div>
+        </VideoRelativeDiv>
       )}
     </CControl>
   );

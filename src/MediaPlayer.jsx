@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import styled from "styled-components";
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import {
+  CourseInfoAtom,
   CourseListAtom,
   OverlappingAtom,
   QueryListAtom,
@@ -59,10 +60,16 @@ const VideoTab = styled.div`
   min-height: 100%;
   width: 100%;
   position: relative;
+  display: grid;
+  grid-template-rows: 5% 95%;
+  /* align-items: flex-end;
+  justify-content: flex-end;
+  flex-direction: column; */
 `;
 const BarTab = styled.div`
+  height: 90vh;
   margin-left: 20px;
-  height: 100%;
+  /* height: 100%; */
   @media screen and (max-width: 1500px) {
     display: none;
   }
@@ -80,9 +87,8 @@ const Title = styled.div`
   align-items: center;
   justify-content: flex-start;
   font-family: "IBM Plex Sans KR", sans-serif;
-  font-size: 2vh;
-  margin-bottom: 10px;
-  margin-top: -20px;
+  font-size: 3vh;
+
   color: black;
 `;
 
@@ -99,7 +105,7 @@ export default function MediaPlayer() {
   const setQueryList = useSetRecoilState(QueryListAtom);
   const unitInfo = useRecoilValue(unitInfoAtom);
   const setUnitInfo = useSetRecoilState(unitInfoAtom);
-
+  const setCourseInfo = useSetRecoilState(CourseInfoAtom);
   const wrapperRef = useRef();
   const [isUser, setUser] = useState(null);
   const [isCapture, setCapture] = useState(false);
@@ -152,14 +158,14 @@ export default function MediaPlayer() {
 
   async function goRedirect() {
     try {
-      await fetch(`http://34.64.177.193/api/open/player/execute`, {
+      await fetch(`http://34.64.177.193/api/open/execute`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Credentials": true,
           "Access-Control-Allow-Origin": "*",
           "X-AUTH-TOKEN":
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY2OTE5OTA3OCwiZXhwIjoxNzAwNzM1MDc4fQ.ahwmmKHrmf8bmZ8AC9M7AgPIcpCHKrdizy9_dPiG3ak",
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY2OTM5MTg5MSwiZXhwIjoxNzAwOTI3ODkxfQ.1a1uEI3VnWdD5lyryHH5J97coqw1J96uWMulXnzG1Qo",
         },
         body: JSON.stringify({ unitId: 6, courseId: 1 }),
       });
@@ -170,7 +176,7 @@ export default function MediaPlayer() {
 
   async function login() {
     try {
-      const res = await fetch(`${STATICURL}/front/player/on`, {
+      const res = await fetch(`${STATICURL}/front/start`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -190,7 +196,7 @@ export default function MediaPlayer() {
   }
 
   const getMediaUrl = (accessToken) => {
-    fetch(`${STATICURL}/front/course/unit/${getParam("unitId")}`, {
+    fetch(`${STATICURL}/front/play/units/${getParam("unitId")}`, {
       method: "POST",
       headers: {
         "X-AUTH-TOKEN": accessToken,
@@ -222,7 +228,7 @@ export default function MediaPlayer() {
   };
 
   const getCourseList = () => {
-    fetch(`${STATICURL}/open/course/${getParam("courseId")}/unit`, {
+    fetch(`${STATICURL}/front/courses/${getParam("courseId")}/units`, {
       method: "GET",
     })
       .then((e) => e.json())
@@ -239,11 +245,12 @@ export default function MediaPlayer() {
   };
 
   const questionDown = () => {
-    fetch(`${STATICURL}/front/course/unit/${getParam("unitId")}/question/`, {
+    fetch(`${STATICURL}/front/unit/${getParam("unitId")}/questions`, {
       method: "GET",
     })
       .then((e) => e.json())
       .then((res) => {
+        console.log(res);
         setQuestionVal(res);
         getThisUnitRate();
       })
@@ -255,7 +262,7 @@ export default function MediaPlayer() {
   async function getThisUnitRate() {
     try {
       const res = await fetch(
-        `${STATICURL}/front/course/unit/${getParam("unitId")}/rating`,
+        `${STATICURL}/front/units/${getParam("unitId")}/rating`,
         {
           method: "get",
           headers: {
@@ -269,9 +276,24 @@ export default function MediaPlayer() {
       const json = await res.json();
 
       setUnitInfo((prev) => ({ ...prev, rating: json }));
+      getCourseInfo();
     } catch (e) {
       alert(e);
     }
+  }
+
+  async function getCourseInfo() {
+    const res = await axios.get(
+      `${STATICURL}/front/courses/${getParam("courseId")}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
+    setCourseInfo(res.data);
   }
 
   const keyUpHandler = (e) => {
@@ -322,7 +344,7 @@ export default function MediaPlayer() {
   const duplicateLoginController = (keepGo) => {
     axios
       .post(
-        `${STATICURL}/open/auth/conflict`,
+        `${STATICURL}/front/auth/resolve-conflict`,
         {
           accessToken: accessToken,
           keepGoing: keepGo,
@@ -405,7 +427,7 @@ export default function MediaPlayer() {
       ) : (
         <Manager />
       )} */}
-
+      {/* <Manager /> */}
       <Wrapper tabIndex={0} onKeyUp={keyUpHandler} ref={wrapperRef}>
         {!isCapture ? null : (
           <BlockCapBox>

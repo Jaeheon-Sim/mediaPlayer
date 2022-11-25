@@ -34,22 +34,35 @@ import Slider from "@mui/material/Slider";
 import { useEffect, useRef, useState } from "react";
 
 const BarWarpper = styled.div`
-  height: 7vh;
-  min-height: 50px;
+  height: 6vh;
+  min-height: 60px;
   width: 100%;
   padding-bottom: 1vh;
-  padding-top: 10px;
-  margin-bottom: 0.5vh;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: absolute;
   background-color: transparent;
-  background-color: rgba(0, 0, 0, 0.8);
+
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0.5),
+    rgba(0, 0, 0, 0.6),
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.9),
+    rgba(0, 0, 0, 1) 70%
+  );
+
   @media screen and (max-width: 1000px) {
     bottom: 5px;
   }
-  bottom: -5px;
+  bottom: -0.5vh;
   color: white;
 `;
 
