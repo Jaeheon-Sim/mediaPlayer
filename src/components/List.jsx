@@ -155,8 +155,6 @@ export default function List() {
     }
   }
 
-  console.log(courseInfo);
-
   return (
     <Wrapper>
       <TitleBox>

@@ -120,7 +120,7 @@ export default function MediaPlayer() {
     if (videoVal.duration == videoVal.playedSec) {
       isCheck = true;
     }
-    console.log(queryList);
+
     fetch(`${STATICURL}/front/player/off`, {
       method: "POST",
       headers: {
@@ -158,16 +158,17 @@ export default function MediaPlayer() {
 
   async function goRedirect() {
     try {
-      await fetch(`http://34.64.177.193/api/open/execute`, {
+      const res = await fetch(`http://34.64.177.193/api/open/execute`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Credentials": true,
           "Access-Control-Allow-Origin": "*",
           "X-AUTH-TOKEN":
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY2OTM5MTg5MSwiZXhwIjoxNzAwOTI3ODkxfQ.1a1uEI3VnWdD5lyryHH5J97coqw1J96uWMulXnzG1Qo",
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY2OTU2Mjc1NiwiZXhwIjoxNzAxMDk4NzU2fQ._uxyGVnXkDQJrGqY-Na8KdltvDZGvmaNBX9ttI_0lBw",
         },
-        body: JSON.stringify({ unitId: 6, courseId: 1 }),
+        //토큰을 바꿔야지 중복로그인 체크댐 스웨거에서 로그인 새로해서 발급받아 토큰 그리고 여기 넣어
+        body: JSON.stringify({ unitId: 1, courseId: 1 }),
       });
     } catch (error) {
       console.log(error); // 발생한 에러 표시
@@ -195,37 +196,43 @@ export default function MediaPlayer() {
     }
   }
 
-  const getMediaUrl = (accessToken) => {
-    fetch(`${STATICURL}/front/play/units/${getParam("unitId")}`, {
-      method: "POST",
-      headers: {
-        "X-AUTH-TOKEN": accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({
-        complete: true,
-        currentUnitId: -1,
-        recordTime: 0,
-      }),
-    })
-      .then((e) => e.json())
-      .then((res) => {
-        setUnitInfo({ title: res.title, unitId: res.unitId, time: res.time });
-
-        if (res.fileUrl.includes("http")) {
-          setMediaUrl(`${res.fileUrl}`);
-        } else {
-          setMediaUrl(`http://34.64.177.193/${res.fileUrl}`);
+  async function getMediaUrl(accessToken) {
+    try {
+      const res = await axios.post(
+        `${STATICURL}/front/play/units/${getParam("unitId")}/`,
+        {
+          complete: true,
+          currentUnitId: -1,
+          recordTime: 0,
+        },
+        {
+          headers: {
+            "X-AUTH-TOKEN": accessToken,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+          },
         }
-
-        questionDown();
-      })
-      .catch((err) => {
-        alert(err);
+      );
+      setUnitInfo({
+        title: res.data.title,
+        unitId: res.data.unitId,
+        time: res.data.time,
       });
-  };
+      if (res.data.fileUrl.includes("http")) {
+        setMediaUrl(`${res.data.fileUrl}`);
+      } else {
+        setMediaUrl(`http://34.64.177.193/${res.data.fileUrl}`);
+      }
+      questionDown();
+    } catch (error) {
+      if (error.response.status === 409) {
+        setOverlappingVal(true);
+      } else {
+        alert(error);
+      }
+    }
+  }
 
   const getCourseList = () => {
     fetch(`${STATICURL}/front/courses/${getParam("courseId")}/units`, {
@@ -250,7 +257,6 @@ export default function MediaPlayer() {
     })
       .then((e) => e.json())
       .then((res) => {
-        console.log(res);
         setQuestionVal(res);
         getThisUnitRate();
       })
@@ -266,7 +272,6 @@ export default function MediaPlayer() {
         {
           method: "get",
           headers: {
-            "X-AUTH-TOKEN": accessToken,
             "Content-Type": "application/json",
             "Access-Control-Allow-Credentials": true,
             "Access-Control-Allow-Origin": "*",
@@ -277,8 +282,8 @@ export default function MediaPlayer() {
 
       setUnitInfo((prev) => ({ ...prev, rating: json }));
       getCourseInfo();
-    } catch (e) {
-      alert(e);
+    } catch (error) {
+      alert(error);
     }
   }
 

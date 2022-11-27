@@ -263,7 +263,6 @@ export default function Question() {
           }
         )
         .then((response) => {
-          console.log(response.status);
           if (response.status === 200) {
             questionDown();
             Swal.fire({
@@ -280,7 +279,6 @@ export default function Question() {
         })
         .catch((error) => {
           if (error.response.status === 409) {
-            console.log(error.response.status);
             setOverlappingVal(true);
           } else {
             alert(error);
@@ -313,7 +311,6 @@ export default function Question() {
         `${STATICURL}/front/questions/${questionId}/answers`
       );
       setQuestionReply(res.data);
-      console.log(res.data);
     } catch (error) {
       if (error.response.status === 409) {
         setOverlappingVal(true);

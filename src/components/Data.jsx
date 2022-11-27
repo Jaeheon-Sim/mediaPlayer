@@ -107,7 +107,7 @@ export default function Data() {
       }
     }
   }
-  console.log(unitDetail);
+
   useEffect(() => {
     getUnitDetail();
   }, [queryList.unitId]);
