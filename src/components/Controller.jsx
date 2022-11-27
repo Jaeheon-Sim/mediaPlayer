@@ -2,8 +2,7 @@ import { motion } from "framer-motion";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import { faBackwardStep } from "@fortawesome/free-solid-svg-icons";
-import { faForwardStep } from "@fortawesome/free-solid-svg-icons";
+
 import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 import { faVolumeXmark } from "@fortawesome/free-solid-svg-icons";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
@@ -11,12 +10,7 @@ import { faExpand } from "@fortawesome/free-solid-svg-icons";
 import { faPause } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning as regular } from "@fortawesome/free-regular-svg-icons";
-import {
-  useRecoilState,
-  useRecoilValue,
-  useResetRecoilState,
-  useSetRecoilState,
-} from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   CCAtom,
   FullAtom,
@@ -31,14 +25,13 @@ import pip from "../images/pip.png";
 import forward from "../images/plus.png";
 import rewind from "../images/minus.png";
 import Slider from "@mui/material/Slider";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const BarWarpper = styled.div`
   height: 6vh;
   min-height: 60px;
   width: 100%;
   padding-bottom: 1vh;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -69,7 +62,6 @@ const BarWarpper = styled.div`
 const ProgressTab = styled.div`
   margin-left: 15px;
   margin-right: 15px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -188,13 +180,6 @@ const TimeTab = styled.div`
   font-size: 1.2rem;
 `;
 
-const Div = styled(motion.div)`
-  cursor: pointer;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 25px;
-`;
-
 export default function Controller(vRef, fRef, props) {
   const videoRef = vRef;
   const videoVal = useRecoilValue(VideoAtom);
@@ -205,8 +190,6 @@ export default function Controller(vRef, fRef, props) {
   const setVideoTimeVal = useSetRecoilState(VideoTimeCheckAtom);
   const gearVal = useRecoilValue(GearAtom);
   const setGearVal = useSetRecoilState(GearAtom);
-
-  const [sliderChange, setSliderChange] = useState(false);
   const rateVal = useRecoilValue(RateAtom);
   const setRateVal = useSetRecoilState(RateAtom);
   const ccVal = useRecoilValue(CCAtom);
@@ -348,15 +331,6 @@ export default function Controller(vRef, fRef, props) {
     // console.log((duration / 60) * value);
     // _elapsedTime = elapsedTime;
     return format((duration / 100) * value);
-  };
-
-  const test = () => {
-    // 슬라이더 호버일때 그때의 이미지를 가져오면 되는데.. 어캐함?
-    return (
-      <div>
-        <img src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg" />
-      </div>
-    );
   };
 
   const TabVari = {

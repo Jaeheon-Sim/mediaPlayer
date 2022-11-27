@@ -1,9 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import { faClosedCaptioning as regular } from "@fortawesome/free-regular-svg-icons";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   OverlappingAtom,
   QueryListAtom,
@@ -12,17 +10,16 @@ import {
   VideoAtom,
   VideoTimeCheckAtom,
 } from "../atom";
-import { useEffect, useRef, useState } from "react";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { STATICURL, TESTTOKEN, TESTUNIT } from "../static";
+import { STATICURL } from "../static";
 import axios from "axios";
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-
   height: 100%;
 `;
 
@@ -61,7 +58,6 @@ const Input = styled.textarea`
     background-color: white;
     border: 0.5px soild black;
   }
-  /* border: none; */
   margin-bottom: 10px;
 `;
 
@@ -105,7 +101,7 @@ const QuestionBox = styled(motion.div)`
   flex-wrap: nowrap; */
   display: grid;
   position: relative;
-  // width 넓으면 4개로 늘리지 뭐
+
   grid-template-columns: repeat(1, 1fr);
 
   place-items: start center;
@@ -173,7 +169,6 @@ const Form = styled.form`
   display: flex;
   align-items: center;
   flex-direction: column;
-
   height: 50vh;
   justify-content: center;
 `;
@@ -202,9 +197,9 @@ export default function Question() {
   const setQuestionVal = useSetRecoilState(QuestionAtom);
   const setOverlappingVal = useSetRecoilState(OverlappingAtom);
   const [visible, setVisible] = useState(true);
-  const [isReply, setIsReply] = useState("");
   const [questionContent, setQuestionContent] = useState("");
   const [questionReply, setQuestionReply] = useState("");
+
   const questionChecker = () => {
     var list = [];
     setNowQ(null);

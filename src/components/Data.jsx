@@ -1,24 +1,12 @@
-import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
-import { faClosedCaptioning as regular } from "@fortawesome/free-regular-svg-icons";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  CourseListAtom,
-  OverlappingAtom,
-  QueryListAtom,
-  QuestionAtom,
-  unitInfoAtom,
-  VideoAtom,
-  VideoTimeCheckAtom,
-} from "../atom";
-import { useEffect, useRef, useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { OverlappingAtom, QueryListAtom, unitInfoAtom } from "../atom";
+import { useEffect, useState } from "react";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-
-import { faStar } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
 import { STATICURL } from "../static";
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -86,6 +74,7 @@ export default function Data() {
   const setOverlappingVal = useSetRecoilState(OverlappingAtom);
   const unitInfo = useRecoilValue(unitInfoAtom);
   const [unitDetail, setUnitDetail] = useState({});
+
   async function getUnitDetail() {
     try {
       const res = await axios.get(
@@ -117,12 +106,10 @@ export default function Data() {
       <TitleBox>
         <Title>{unitInfo.title}</Title>
       </TitleBox>
-
       <DetailBox>
         <DetailTab>강의 목표</DetailTab>
         <PrepareTab>{unitDetail.objective}</PrepareTab>
         <PrepareTab>{unitDetail.objective}</PrepareTab>
-
         <br />
         <DetailTab>세부 내용</DetailTab>
         <Detail>{unitDetail.description}</Detail>

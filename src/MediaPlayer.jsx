@@ -1,9 +1,7 @@
-import Controller from "./components/Controller";
 import Player from "./components/Player";
 import SideBar from "./components/SideBar";
-import { motion } from "framer-motion";
 import styled from "styled-components";
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   CourseInfoAtom,
   CourseListAtom,
@@ -17,11 +15,8 @@ import {
 } from "./atom";
 import { useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
-import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
-import Manager from "./components/Manager";
 import { STATICURL } from "./static";
 import axios from "axios";
-// import withReactContent from "sweetalert2-react-content";
 
 const Hm = styled.div`
   display: flex;
@@ -62,14 +57,11 @@ const VideoTab = styled.div`
   position: relative;
   display: grid;
   grid-template-rows: 5% 95%;
-  /* align-items: flex-end;
-  justify-content: flex-end;
-  flex-direction: column; */
 `;
 const BarTab = styled.div`
   height: 90vh;
   margin-left: 20px;
-  /* height: 100%; */
+
   @media screen and (max-width: 1500px) {
     display: none;
   }
@@ -107,7 +99,6 @@ export default function MediaPlayer() {
   const setUnitInfo = useSetRecoilState(unitInfoAtom);
   const setCourseInfo = useSetRecoilState(CourseInfoAtom);
   const wrapperRef = useRef();
-  const [isUser, setUser] = useState(null);
   const [isCapture, setCapture] = useState(false);
   // 중복로그인 에러가 일어나면 이 아톰을 바꾸고, 알림창을 띄우자
 
@@ -377,62 +368,8 @@ export default function MediaPlayer() {
 
   useEffect(duplicateLogin, [overlappingVal]);
 
-  // 어떤 강의랑 연결되었는지를 딱 판단해서 아톰값 수정해야함
-
   return (
     <Hm>
-      {/* {isUser === null ? (
-        <div>
-          <div
-            initial={{ backgroundColor: "#000000", color: "#000000" }}
-            animate={{
-              backgroundColor: "#0000007f",
-              color: "#9c9c9c",
-              transition: { duraiton: 1 },
-            }}
-            whileHover={{
-              backgroundColor: "#d8d8d8",
-              transition: { duration: 0.3 },
-              color: "#000000",
-            }}
-            onClick={() => {
-              setUser(true);
-            }}
-          >
-            <H1>플레이어</H1>
-          </div>
-          <div
-            initial={{ backgroundColor: "#ffffff", color: "#000000" }}
-            animate={{
-              backgroundColor: "#0000007f",
-              color: "#626262",
-              transition: { duraiton: 1 },
-            }}
-            whileHover={{
-              backgroundColor: "#d8d8d8",
-              transition: { duration: 0.3 },
-              color: "#000000",
-            }}
-            onClick={() => {
-              setUser(false);
-            }}
-          >
-            <H1>임시 플랫폼</H1>
-          </div>
-        </div>
-      ) : isUser ? (
-        <Wrapper>
-          <VideoTab>
-            <Player />
-          </VideoTab>
-          <BarTab>
-            <SideBar />
-          </BarTab>
-        </Wrapper>
-      ) : (
-        <Manager />
-      )} */}
-      {/* <Manager /> */}
       <Wrapper tabIndex={0} onKeyUp={keyUpHandler} ref={wrapperRef}>
         {!isCapture ? null : (
           <BlockCapBox>

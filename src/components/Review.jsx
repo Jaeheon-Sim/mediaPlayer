@@ -1,23 +1,21 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-regular-svg-icons";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStarHalfStroke } from "@fortawesome/free-solid-svg-icons";
 import { faStar as emptyStar } from "@fortawesome/free-regular-svg-icons";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   OverlappingAtom,
   QueryListAtom,
-  QuestionAtom,
   unitInfoAtom,
   UserTokenAtom,
   VideoAtom,
 } from "../atom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { faCircle as circle } from "@fortawesome/free-solid-svg-icons";
-import { STATICURL, TESTTOKEN, TESTUNIT } from "../static";
+import { STATICURL } from "../static";
 import Swal from "sweetalert2";
 import axios from "axios";
 
@@ -189,12 +187,10 @@ export default function Coding() {
 
   const makeRateStarList = () => {
     const rate = unitInfo?.rating?.score;
-    if (rate === 5) {
-      const starCnt = 5;
-      const isStarHalf = true;
-    } else {
-      var starCnt = parseInt(rate % 5);
-      var isStarHalf = true;
+    var starCnt = 5;
+    var isStarHalf = true;
+    if (rate !== 5) {
+      starCnt = parseInt(rate % 5);
       if (Number((rate - starCnt)?.toFixed(1)) < 0.5) {
         isStarHalf = false;
       }

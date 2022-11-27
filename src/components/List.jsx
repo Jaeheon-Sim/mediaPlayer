@@ -1,8 +1,6 @@
 import axios from "axios";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { useCallback } from "react";
-import { useEffect } from "react";
+
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import {
@@ -16,7 +14,7 @@ import {
   UserTokenAtom,
   VideoAtom,
 } from "../atom";
-import { STATICURL, TESTTOKEN, TESTUNIT } from "../static";
+import { STATICURL } from "../static";
 
 const Wrapper = styled.div`
   max-height: 80vh;
@@ -29,7 +27,6 @@ const Catalog = styled(motion.li)`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-
   color: ${(props) =>
     props.men === props.now ? "#a8a7a7" : "black"}; //props 활용
   margin: 10px 0px;
@@ -188,5 +185,3 @@ export default function List() {
     </Wrapper>
   );
 }
-
-// 리스트클릭 -> 해당 강의 유닛 받아와서 -> url을 바꾸자(reload())

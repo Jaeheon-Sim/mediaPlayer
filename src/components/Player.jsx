@@ -1,7 +1,7 @@
 import ReactPlayer from "react-player/lazy";
-import { useState, useEffect, useRef, forwardRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   CCAtom,
   FullAtom,
@@ -18,7 +18,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { faCirclePause } from "@fortawesome/free-solid-svg-icons";
 import screenfull from "screenfull";
-import { STATICURL, TESTUNIT } from "../static";
 
 const Splayer = styled(ReactPlayer)`
   background-color: black;
@@ -206,15 +205,8 @@ export default function Player() {
               playbackRate={videoVal.playbackRate} // 배속기능
               onProgress={progressHandler} // 재생 및 로드된 시점을 반환
               light={false}
-              onEnded={() => {}}
-              onError={() => {}}
               width="100%"
               height="100%"
-              // config={{
-              //   file: {
-              //     forceAudio: {},
-              //   },
-              // }}
             />
           </Clicker>
           <ControlTab
