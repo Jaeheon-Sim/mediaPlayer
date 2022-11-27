@@ -201,6 +201,17 @@ export default function Coding() {
     });
   };
 
+  const checkIsHalf = () => {
+    if (starList.isStarHalf) {
+      setStarList((prev) => ({
+        ...prev,
+        isHalf: false,
+      }));
+      return true;
+    }
+    return false;
+  };
+
   useEffect(makeRateStarList, []);
 
   return (
@@ -209,12 +220,12 @@ export default function Coding() {
         {[...Array(starList?.starCnt)?.keys()]?.map((e) => {
           return <Star icon={faStar} />;
         })}
-        {starList.starCnt === 5 ? null : starList?.isHalf ? (
-          <Star icon={faStarHalfStroke} />
-        ) : (
-          <Star icon={emptyStar} />
-        )}
-        {}
+        {[...Array(5 - starList?.starCnt)?.keys()]?.map((e) => {
+          if (checkIsHalf()) {
+            return <Star icon={faStarHalfStroke} />;
+          }
+          return <Star icon={emptyStar} />;
+        })}
         <StartTitle>{unitInfo?.rating?.score?.toFixed(1)}</StartTitle>
       </StartTab>
       <Div>

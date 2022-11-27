@@ -156,7 +156,7 @@ export default function MediaPlayer() {
           "Access-Control-Allow-Credentials": true,
           "Access-Control-Allow-Origin": "*",
           "X-AUTH-TOKEN":
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY2OTU2Mjc1NiwiZXhwIjoxNzAxMDk4NzU2fQ._uxyGVnXkDQJrGqY-Na8KdltvDZGvmaNBX9ttI_0lBw",
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY2OTU3NjQ4OSwiZXhwIjoxNzAxMTEyNDg5fQ.IC08emSUE8VWyPdz1TJbQnEnXqEc2m5zSdJstJeOa5M",
         },
         //토큰을 바꿔야지 중복로그인 체크댐 스웨거에서 로그인 새로해서 발급받아 토큰 그리고 여기 넣어
         body: JSON.stringify({ unitId: 1, courseId: 1 }),
@@ -361,9 +361,9 @@ export default function MediaPlayer() {
 
   useEffect(() => {
     getParams();
-    // goRedirect();
-    // setTimeout(() => login(), 1000);
-    login();
+    goRedirect();
+    setTimeout(() => login(), 1000);
+    // login();
   }, []);
 
   useEffect(duplicateLogin, [overlappingVal]);
