@@ -156,7 +156,7 @@ export default function MediaPlayer() {
           "Access-Control-Allow-Credentials": true,
           "Access-Control-Allow-Origin": "*",
           "X-AUTH-TOKEN":
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY2OTU3NjQ4OSwiZXhwIjoxNzAxMTEyNDg5fQ.IC08emSUE8VWyPdz1TJbQnEnXqEc2m5zSdJstJeOa5M",
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjY5NzMwNjMyLCJleHAiOjE3MDEyNjY2MzJ9.B8H2iyx3Q3MpjjigZiNZkthOEcuZj86u1dci10i2tWA",
         },
         //토큰을 바꿔야지 중복로그인 체크댐 스웨거에서 로그인 새로해서 발급받아 토큰 그리고 여기 넣어
         body: JSON.stringify({ unitId: 1, courseId: 1 }),
@@ -180,7 +180,7 @@ export default function MediaPlayer() {
       const json = await res.json(); // json으로 파싱할 수 없을 때
       console.log("로그인 성공");
       setAccesToken(json.accessToken);
-      getCourseList();
+      getCourseList(json.accessToken);
       getMediaUrl(json.accessToken);
     } catch (error) {
       alert(error); // 발생한 에러 표시
@@ -225,12 +225,19 @@ export default function MediaPlayer() {
     }
   }
 
-  const getCourseList = () => {
+  const getCourseList = (accessToken) => {
     fetch(`${STATICURL}/front/courses/${getParam("courseId")}/units`, {
       method: "GET",
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": "*",
+      },
     })
       .then((e) => e.json())
       .then((res) => {
+        console.log(res);
         const list = [];
         res.map((e) => {
           list.push(e);
@@ -361,9 +368,9 @@ export default function MediaPlayer() {
 
   useEffect(() => {
     getParams();
-    goRedirect();
-    setTimeout(() => login(), 1000);
-    // login();
+    // goRedirect();
+    // setTimeout(() => login(), 1000);
+    login();
   }, []);
 
   useEffect(duplicateLogin, [overlappingVal]);

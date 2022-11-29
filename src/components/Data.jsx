@@ -1,7 +1,12 @@
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { OverlappingAtom, QueryListAtom, unitInfoAtom } from "../atom";
+import {
+  OverlappingAtom,
+  QueryListAtom,
+  unitInfoAtom,
+  UserTokenAtom,
+} from "../atom";
 import { useEffect, useState } from "react";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
@@ -73,6 +78,7 @@ export default function Data() {
   const queryList = useRecoilValue(QueryListAtom);
   const setOverlappingVal = useSetRecoilState(OverlappingAtom);
   const unitInfo = useRecoilValue(unitInfoAtom);
+  const accessToken = useRecoilValue(UserTokenAtom);
   const [unitDetail, setUnitDetail] = useState({});
 
   async function getUnitDetail() {
@@ -81,6 +87,7 @@ export default function Data() {
         `${STATICURL}/front/units/${queryList.unitId}`,
         {
           headers: {
+            "X-AUTH-TOKEN": accessToken,
             "Content-Type": "application/json",
             "Access-Control-Allow-Credentials": true,
             "Access-Control-Allow-Origin": "*",

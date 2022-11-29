@@ -1,5 +1,6 @@
 import axios from "axios";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
@@ -27,8 +28,8 @@ const Catalog = styled(motion.li)`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  color: ${(props) =>
-    props.men === props.now ? "#a8a7a7" : "black"}; //props 활용
+  /* color: ${(props) =>
+    props.men === props.now ? "#a8a7a7" : "black"}; //props 활용 */
   margin: 10px 0px;
 `;
 
@@ -58,8 +59,6 @@ const SubInfoBox = styled.div`
 `;
 
 export default function List() {
-  // 강의 목록을 누르면 비디오 url을 바꾸는 형식으로 진행해야할것같음 라우터 없이 -> 성능 업그레이드
-  // api요청 -> 받아옴 -> state에 저장 -> video url 변경 (초기화)
   const queryList = useRecoilValue(QueryListAtom);
   const userToken = useRecoilValue(UserTokenAtom);
   const setQuestionVal = useSetRecoilState(QuestionAtom);
@@ -71,6 +70,7 @@ export default function List() {
   const videoVal = useRecoilValue(VideoAtom);
   const setOverlappingVal = useSetRecoilState(OverlappingAtom);
   const courseInfo = useRecoilValue(CourseInfoAtom);
+  const setCourseList = useSetRecoilState(CourseListAtom);
 
   async function getAnotherCourseUnit(unitId) {
     try {
@@ -106,6 +106,7 @@ export default function List() {
         setMediaUrl(`http://34.64.177.193/${res.data.fileUrl}`);
       }
       questionDown(unitId);
+      getCourseList();
     } catch (error) {
       if (error.response.status === 409) {
         setOverlappingVal(true);
@@ -152,6 +153,29 @@ export default function List() {
     }
   }
 
+  const getCourseList = () => {
+    fetch(`${STATICURL}/front/courses/${queryList.courseId}/units`, {
+      method: "GET",
+      headers: {
+        "X-AUTH-TOKEN": userToken,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+      .then((e) => e.json())
+      .then((res) => {
+        const list = [];
+        res.map((e) => {
+          list.push(e);
+        });
+        setCourseList(list);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  };
+
   return (
     <Wrapper>
       <TitleBox>
@@ -174,6 +198,11 @@ export default function List() {
               now={unitInfo.unitId}
               key={idx}
               whileHover={{ backgroundColor: "#dfdede" }}
+              animate={{
+                color: e.completed ? "#a8a7a7" : "black",
+                backgroundColor:
+                  e.unitId === unitInfo.unitId ? "#a8a7a7" : "transparent",
+              }}
             >
               <Tab>
                 {idx}. {e.title}
