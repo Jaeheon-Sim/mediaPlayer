@@ -218,8 +218,6 @@ export default function Controller(vRef, fRef, props) {
   };
 
   const fullHandler = () => {
-    //커지면 다른것도 다커짐 그러니 state 이용해 css 변경하자
-    // console.log(videoRef.video.current.wrapper);
     setFullVal((prev) => !prev);
   };
 
@@ -295,7 +293,6 @@ export default function Controller(vRef, fRef, props) {
   // 재생 컨트롤러에서 조정을 완료했을 때 (slider onChangeCommitted시 발생하는 함수)
   const seekMouseUpHandler = (e, newValue) => {
     setSeekVal(false);
-
     videoRef.video.current.seekTo(newValue / 100, "fraction");
   };
 

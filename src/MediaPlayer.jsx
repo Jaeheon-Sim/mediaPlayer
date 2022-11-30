@@ -57,6 +57,7 @@ const VideoTab = styled.div`
   position: relative;
   display: grid;
   grid-template-rows: 5% 95%;
+  padding-bottom: 15px;
 `;
 const BarTab = styled.div`
   height: 90vh;
