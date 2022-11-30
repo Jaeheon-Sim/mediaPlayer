@@ -39,13 +39,14 @@ const BlockCapBox = styled.div`
 
 const Wrapper = styled.div`
   display: grid;
+  margin-top: -5vh;
   /* height: 95vh; */
   grid-template-columns: 79% 22%;
   justify-content: center;
   background-color: rgb(255, 255, 255);
   width: 98%;
   max-height: 99vh;
-  @media screen and (max-width: 1500px) {
+  @media screen and (max-width: 1024px) {
     grid-template-columns: 100%;
   }
   position: relative;
@@ -57,13 +58,12 @@ const VideoTab = styled.div`
   position: relative;
   display: grid;
   grid-template-rows: 5% 95%;
-  padding-bottom: 15px;
 `;
 const BarTab = styled.div`
   height: 90vh;
   margin-left: 20px;
 
-  @media screen and (max-width: 1500px) {
+  @media screen and (max-width: 1024px) {
     display: none;
   }
 `;
@@ -157,7 +157,7 @@ export default function MediaPlayer() {
           "Access-Control-Allow-Credentials": true,
           "Access-Control-Allow-Origin": "*",
           "X-AUTH-TOKEN":
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjY5NzMwNjMyLCJleHAiOjE3MDEyNjY2MzJ9.B8H2iyx3Q3MpjjigZiNZkthOEcuZj86u1dci10i2tWA",
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjY5ODEwMzE5LCJleHAiOjE3MDEzNDYzMTl9.VMylrRpDz6ilmdn6pPOr09cvYjXUP1CqhPEWc-hrzAc",
         },
         //토큰을 바꿔야지 중복로그인 체크댐 스웨거에서 로그인 새로해서 발급받아 토큰 그리고 여기 넣어
         body: JSON.stringify({ unitId: 1, courseId: 1 }),
