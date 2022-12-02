@@ -52,6 +52,7 @@ const ListBox = styled.ul`
 `;
 
 const SubInfoBox = styled.div`
+  margin-top: 10px;
   display: flex;
   width: 70%;
   align-items: center;
@@ -181,7 +182,8 @@ export default function List() {
       <TitleBox>
         <Title>&lt;{courseInfo.title}&gt;</Title>
         <SubInfoBox>
-          <h2>{courseInfo.subtitle}</h2>-<h3>{courseInfo.instructor}</h3>
+          <h2>{courseInfo.subtitle}</h2>-<h3>조대호</h3>
+          {/* <h3>{courseInfo.instructor}</h3> */}
         </SubInfoBox>
       </TitleBox>
       <TitleBox>

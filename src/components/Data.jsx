@@ -116,7 +116,7 @@ export default function Data() {
       <DetailBox>
         <DetailTab>강의 목표</DetailTab>
         <PrepareTab>{unitDetail.objective}</PrepareTab>
-        <PrepareTab>{unitDetail.objective}</PrepareTab>
+
         <br />
         <DetailTab>세부 내용</DetailTab>
         <Detail>{unitDetail.description}</Detail>
