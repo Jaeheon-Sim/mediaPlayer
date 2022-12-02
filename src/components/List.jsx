@@ -54,7 +54,7 @@ const ListBox = styled.ul`
 const SubInfoBox = styled.div`
   margin-top: 10px;
   display: flex;
-  width: 70%;
+  width: 100%;
   align-items: center;
   justify-content: flex-end;
 `;
