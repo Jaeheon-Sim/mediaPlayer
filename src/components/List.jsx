@@ -182,7 +182,7 @@ export default function List() {
       <TitleBox>
         <Title>&lt;{courseInfo.title}&gt;</Title>
         <SubInfoBox>
-          <h2>{courseInfo.subtitle}</h2>-<h3>조대호</h3>
+          <h2>{courseInfo.subtitle}</h2>
           {/* <h3>{courseInfo.instructor}</h3> */}
         </SubInfoBox>
       </TitleBox>
